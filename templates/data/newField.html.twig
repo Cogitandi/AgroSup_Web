@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+
+{% block body %}
+<section id="content">
+    <div class="container-fluid row mt-3">
+        <div class="col-2 mr-3">
+            <ul class="nav nav-pills flex-column">
+                <a class="nav-link" href="/data/yearPlan" >Plany roczne</a>
+                <a class="nav-link" href="/data/yearPlan/add" >nowy Plan roczny</a>
+                <a class="nav-link" href="/data/parcel" >Działki</a>
+                <a class="nav-link" href="/data/parcel/add" >Nowa działka</a>
+                <a class="nav-link" href="/data/field" >Pola</a>
+                <a class="nav-link active" href="/data/field/add" >Nowe Pole</a>
+            </ul>
+        </div>
+        <div class="col-9">
+            <div class="m-5 container col-7">
+                {{ form_start(newFieldForm) }}
+                {{ form_errors(newFieldForm )}}
+                <div class="form-group">
+                    <label for="startYear">Nazwa pola</label>
+                    {{ form_widget(newFieldForm.name, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'nazwa pola',
+                    'id': 'inputStartYear', 
+                    'aria-describedby': 'startYear',
+                    'onblur':   'sprawdzPole("new_year_plan_form_startYear",startYear_reg)'}
+                    })}}
+                    <small id="startYear" class="form-text text-muted">Podaj nazwę pola.</small>
+                    <button type="submit" class="btn btn-primary">Dodaj nowe pole</button>
+                    {{ form_end(newFieldForm) }}
+                </div>
+                <div id="parcels">
+                    <script src="/newParcel.js"></script>
+                    <script>show();</script>
+                    
+                    <form class="form-inline" name="addParcelForm" onsubmit = "addNewParcel()">
+                        <div class="form-row align-items-center">
+                            <div class="col-sm-3 my-1">
+
+                                <label for="inlineFormInputName">nr działki</label>
+                                <input type="text" class="form-control" name="number" placeholder="835/2">
+                            </div>
+                            <div class="col-sm-3 my-1">
+                                <label  for="inlineFormInputGroupUsername">powierzchnia(w m2)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="area" placeholder="15000">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 my-1">
+                                <label for="inputState">Operator</label>
+                                <select name="operator" class="form-control">
+                                    <option selected>Brak</option>
+                                    {% for operator in operators %}
+                                    <option>{{operator.firstName}} {{operator.surname}}</option>
+                                    {% endfor %}                          
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="fuel">
+                                    <label class="form-check-label" for="autoSizingCheck2">
+                                        paliwo
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-auto my-auto">
+                                <button type="submit" class="btn btn-primary" >Zapisz</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+
+                
+
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

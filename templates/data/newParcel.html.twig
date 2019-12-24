@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+
+{% block body %}
+<section id="content">
+    <div class="container-fluid row mt-3">
+        <div class="col-2 mr-3">
+            <ul class="nav nav-pills flex-column">
+                <a class="nav-link" href="/data/yearPlan" >Plany roczne</a>
+                <a class="nav-link" href="/data/yearPlan/add" >nowy Plan roczny</a>
+                <a class="nav-link" href="/data/parcel" >Działki</a>
+                <a class="nav-link active" href="/data/parcel/add" >Nowa działka</a>
+                <a class="nav-link" href="/data/field" >Pola</a>
+                <a class="nav-link" href="/data/field/add" >Nowe Pole</a>
+            </ul>
+        </div>
+        <div class="col-9">
+            <div class="m-5 container col-7">
+                {{ form_start(newYearPlanForm) }}
+                {{ form_errors(newYearPlanForm.startYear )}}
+                <div class="form-group">
+                    <label for="startYear">Rok rozpoczęcia</label>
+                    {{ form_widget(newYearPlanForm.startYear, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'Rok',
+                    'id': 'inputStartYear', 
+                    'aria-describedby': 'startYear',
+                    'onblur':   'sprawdzPole("new_year_plan_form_startYear",startYear_reg)'}
+                    })}}
+                    <small id="startYear" class="form-text text-muted">Podaj rok rozpoczęcia sezony.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+
+                {{ form_end(newYearPlanForm) }}
+            </div>
+
+
+        </div>
+    </div>
+</section>
+<script src="/validate.js"></script>
+{% endblock %}

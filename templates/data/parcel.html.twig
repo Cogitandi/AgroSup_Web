@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+
+{% block body %}
+<section id="content">
+    <div class="container-fluid row mt-3">
+        <div class="col-2 mr-3">
+            <ul class="nav nav-pills flex-column">
+                <a class="nav-link" href="/data/yearPlan" >Plany roczne</a>
+                <a class="nav-link" href="/data/yearPlan/add" >nowy Plan roczny</a>
+                <a class="nav-link active" href="/data/parcel" >Działki</a>
+                <a class="nav-link" href="/data/parcel/add" >Nowa działka</a>
+                <a class="nav-link" href="/data/field" >Pola</a>
+                <a class="nav-link" href="/data/field/add" >Nowe Pole</a>
+            </ul>
+        </div>
+        <div class="col-9">
+            
+            <h2 class="text-center">Osoby w gospodarstwie  </h2>                  
+            <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope ="col">#</th>
+                        <th scope ="col">Imię</th>
+                        <th scope ="col">Nazwisko</th>
+                        <th scope ="col">numer ARiMR</th>
+                        <th scope ="col"></th> 
+                    </tr>
+                </thead>
+                <tbody >
+                    {% set licznik = 1 %}
+                    {% for item in operator %}
+                    {% if item.disable == 0 %}
+                    <tr>
+                        <th class="align-middle" scope="row">{{ licznik }}</th>
+                        <td>{{ item.firstName }}</td>
+                        <td>{{ item.surName }}</td>
+                        <td class="align-middle">{{ item.arimrNumber }}</td>
+
+                        <td class="align-middle"><input type="submit" value="Usuń" onClick="location.href='{{ path('delete', {'id': item.id}) }}'"/></td>
+                    </tr>
+                    {% set licznik = licznik+1 %}
+                    {%endif%}
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+#intro {
+    background-image: url("img/start.jpg");
+    height:50vh;
+    background-position: center;
+    background-size: 100% cover;
+    background-repeat: no-repeat;
+}
+.bg-transparent {
+    background-color: rgba(0,0,0,.30) !important;
+    font-family: 'Lora', serif;
+}
+
+#nav .nav-link {
+    color: #fff;
+}
+.table-hover > tbody > tr:hover > th,
+.table-hover > tbody > tr:hover > td
+{
+    background-color: yellow;
+
+}
+
+#crops tbody .detail {
+    display: none;
+}
+
+#fields tbody {
+    padding: 0px auto;
+}
+#fields tbody {
+    white-space: pre-line;
+}
+
+
+#aside-nav {
+
+    
+}
+
+footer {
+    background-color: black;
+    color: #fff;
+}

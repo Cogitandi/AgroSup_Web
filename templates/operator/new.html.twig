@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+
+{% block body %}
+<section id="content">
+    <div class="container-fluid row mt-3">
+        <div class="col-2 mr-3">
+            <ul class="nav nav-pills flex-column">
+                <a class="nav-link" href="/operator" >Lista osób</a>
+                <a class="nav-link active" href="/operator/add" >Dodaj</a>
+            </ul>
+        </div>
+        <div class="col-9">
+            <div class="m-5 container col-7">
+                {{ form_start(addNewOperatorForm) }}
+                
+                {{ form_errors(addNewOperatorForm.firstName) }}
+                {{ form_errors(addNewOperatorForm.surname) }}
+                {{ form_errors(addNewOperatorForm.arimrNumber) }}
+                
+                <div class="form-group">
+                    <label for="firstName">Imię</label>
+                    {{ form_widget(addNewOperatorForm.firstName, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'imie',
+                    'id': 'inputFirstName', 
+                    'aria-describedby': 'emailHelp',
+                    'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
+                    })}}
+                    <small id="emailHelp" class="form-text text-muted">Podaj imię osoby, która zarządza gospodarstwem.</small>
+                </div>
+                <div class="form-group">
+                    <label for="surname">Nazwisko</label>
+                    {{ form_widget(addNewOperatorForm.surname, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'nazwisko',
+                    'id': 'inputSurname', 
+                    'aria-describedby': 'emailHelp',
+                    'onblur':   'sprawdzPole("add_operator_form_surname",surname_reg)'}
+                    })}}
+                    <small id="emailHelp" class="form-text text-muted">Podaj nazwiso osoby, która zarządza gospodarstwem.</small>
+                </div>
+                <div class="form-group">
+                    <label for="arimrNumber">Numer ARIMR</label>
+                    {{ form_widget(addNewOperatorForm.arimrNumber, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'numer ARIMR',
+                    'id': 'inputArimrNumber', 
+                    'aria-describedby': 'emailHelp',
+                    'onblur':   'sprawdzPole("add_operator_form_arimrNumber",arimrNumber_reg)'}
+                    })}}
+                    <small id="emailHelp" class="form-text text-muted">Podaj numer otrzymany od ARIMR.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+
+                {{ form_end(addNewOperatorForm) }}
+            </div>
+
+
+        </div>
+    </div>
+</section>
+<script src="/validate.js"></script>
+{% endblock %}
