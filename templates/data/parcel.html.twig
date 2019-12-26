@@ -10,7 +10,6 @@
                 <a class="nav-link" href="/data/yearPlan" >Plany roczne</a>
                 <a class="nav-link" href="/data/yearPlan/add" >nowy Plan roczny</a>
                 <a class="nav-link active" href="/data/parcel" >Działki</a>
-                <a class="nav-link" href="/data/parcel/add" >Nowa działka</a>
                 <a class="nav-link" href="/data/field" >Pola</a>
                 <a class="nav-link" href="/data/field/add" >Nowe Pole</a>
             </ul>
@@ -30,18 +29,13 @@
                 </thead>
                 <tbody >
                     {% set licznik = 1 %}
-                    {% for item in operator %}
-                    {% if item.disable == 0 %}
+                    {% for item in parcels %}
+                    
                     <tr>
                         <th class="align-middle" scope="row">{{ licznik }}</th>
-                        <td>{{ item.firstName }}</td>
-                        <td>{{ item.surName }}</td>
-                        <td class="align-middle">{{ item.arimrNumber }}</td>
-
-                        <td class="align-middle"><input type="submit" value="Usuń" onClick="location.href='{{ path('delete', {'id': item.id}) }}'"/></td>
-                    </tr>
+              </tr>
                     {% set licznik = licznik+1 %}
-                    {%endif%}
+                    
                     {% endfor %}
 
                 </tbody>

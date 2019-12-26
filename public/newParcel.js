@@ -1,42 +1,60 @@
-function addNewParcel() {
-    var number = document.forms["addParcelForm"]["number"].value;
-    var area = document.forms["addParcelForm"]["area"].value;
-    var operator = document.forms["addParcelForm"]["operator"].value;
-    var fuel = document.forms["addParcelForm"]["fuel"].checked;
+// setup an "add a tag" link
+var $addTagLink = $('<a href="#" class="add_tag_link">Nowa działka</a>');
+var $newLinkLi = $('<div></div>').append($addTagLink);
 
-
-    var parcels = JSON.parse(sessionStorage.getItem('parcels'));
-    if (parcels == null )  parcels = [];
-    var parcel = {
-        'number':   number,
-        'area':     area,
-        'operator': operator,
-        'fuel':     fuel
-    }
-    parcels.push(parcel);
-
-    sessionStorage.setItem('parcels', JSON.stringify(parcels)); //zapisz nową listę
-
-    var pathname = window.location.pathname;
-
-    $.post(pathname, parcels, function (returnedData)    {
-        console.log(returnedData); 
+jQuery(document).ready(function() {
+    // Get the ul that holds the collection of tags
+   var $collectionHolder = $('div.tags');
+    
+    // add the "add a tag" anchor and li to the tags ul
+    $collectionHolder.append($newLinkLi);
+    
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+    
+    $addTagLink.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+        
+        // add a new tag form (see code block below)
+        addTagForm($collectionHolder, $newLinkLi);
     });
+    
+    
+});
 
-
-
-}
-function show() {
-
-    var parcels = JSON.parse(sessionStorage.getItem('parcels'));
-
-    if (parcels!=null){
-
-        html ='';
-        for(i=0;i<parcels.length;i++)
-        {
-            html += parcels[i].number + parcels[i].area + parcels[i].operator + parcels[i].fuel;
-        }
-        document.getElementById('parcels').innerHTML = html;
-    }
+function addTagForm($collectionHolder, $newLinkLi) {
+    // Get the data-prototype explained earlier
+    var prototype = $collectionHolder.data('prototype');
+    
+    // get the new index
+    var index = $collectionHolder.data('index');
+    
+    // Replace '$$name$$' in the prototype's HTML to
+    // instead be a number based on how many items we have
+    var newForm = prototype.replace(/__name__/g, index);
+    
+    // increase the index with one for the next item
+    $collectionHolder.data('index', index + 1);
+    
+    $newFormLi ="<button class='remove-tag btn btn-primary mb-2'>Usuń</button></div>";
+    
+    // Display the form in the page in an li, before the "Add a tag" link li
+    var $newFormLi = $('<div></div>').append(newForm+$newFormLi);
+    
+    // also add a remove button, just for this example
+    //
+    //$newFormLi.append("<button class='remove-tag btn btn-primary mb-2'>Usuń</button>");
+    
+    $newLinkLi.before($newFormLi);
+    
+    // handle the removal, just for this example
+    $('.remove-tag').click(function(e) {
+        e.preventDefault();
+        
+        $(this).parent().remove();
+        
+        return false;
+    });
 }
