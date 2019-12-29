@@ -6,14 +6,25 @@
 <section id="content">
     <div class="container-fluid row mt-3">
         <div class="col-2 mr-3">
-            <ul class="nav nav-pills flex-column">
-                <a class="nav-link" href="/data/yearPlan" >Plany roczne</a>
-                <a class="nav-link active" href="/data/yearPlan/add" >nowy Plan roczny</a>
-                <a class="nav-link" href="/data/parcel" >Działki</a>
-                <a class="nav-link" href="/data/field" >Pola</a>
-                <a class="nav-link" href="/data/field/add" >Nowe Pole</a>
-            </ul>
-        </div>
+                <ul class="nav nav-pills flex-column">
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                    <div style="padding-left: 20px">
+                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
+                    </div>
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                    <div style="padding-left: 20px">
+                        <a class="d1 nav-link" href="/data/yearPlan" >Lista</a>
+                        <a class="d1 nav-link active" href="/data/yearPlan/add" >Stwórz nowy plan</a>
+                    </div>
+                    <a class="nav-link font-weight-bold" href="/data/parcel" >Działki</a>
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                    <div style="padding-left: 20px">
+                        <a class="d2 nav-link collapse" href="/data/field" >Lista</a>
+                        <a class="d2 nav-link collapse" href="/data/field/yearPlan" >Stwórz nowe pole</a>
+                    </div>
+                </ul>
+            </div>
         <div class="col-9">
             <div class="m-5 container col-7">
                 {{ form_start(newYearPlanForm) }}

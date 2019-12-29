@@ -136,7 +136,12 @@ class User implements UserInterface
      */
     public function getOperators(): Collection
     {
-        return $this->operators;
+        $out = new ArrayCollection();
+        foreach( $this->operators as $operator ) {
+            if($operator->getDisable() == false )
+                $out->add($operator);
+        }
+        return $out;
     }
 
     public function addOperator(Operator $operator): self

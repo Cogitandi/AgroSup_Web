@@ -1,60 +1,85 @@
-// setup an "add a tag" link
-var $addTagLink = $('<a href="#" class="add_tag_link">Nowa działka</a>');
-var $newLinkLi = $('<div></div>').append($addTagLink);
-
-jQuery(document).ready(function() {
-    // Get the ul that holds the collection of tags
-   var $collectionHolder = $('div.tags');
-    
-    // add the "add a tag" anchor and li to the tags ul
-    $collectionHolder.append($newLinkLi);
-    
-    // count the current form inputs we have (e.g. 2), use that as the new
-    // index when inserting a new item (e.g. 2)
-    $collectionHolder.data('index', $collectionHolder.find(':input').length);
-    
-    $addTagLink.on('click', function(e) {
-        // prevent the link from creating a "#" on the URL
-        e.preventDefault();
-        
-        // add a new tag form (see code block below)
-        addTagForm($collectionHolder, $newLinkLi);
+// this variable is the list in the dom, it's initiliazed when the document is ready
+var $collectionHolder;
+// the link which we click on to add new items
+var $addNewItem = $('<a href="#" class="btn btn-info">Dodaj działke</a>');
+// when the page is loaded and ready
+$(document).ready(function () {
+    // get the collectionHolder, initilize the var by getting the list;
+    $collectionHolder = $('div.tags');
+    // append the add new item link to the collectionHolder
+    $collectionHolder.append($addNewItem);
+    // add an index property to the collectionHolder which helps track the count of forms we have in the list
+    $collectionHolder.data('index', $collectionHolder.find('.panel').length)
+    // finds all the panels in the list and foreach one of them we add a remove button to it
+    // add remove button to existing items
+    $collectionHolder.find('.panel').each(function () {
+        // $(this) means the current panel that we are at
+        // which means we pass the panel to the addRemoveButton function
+        // inside the function we create a footer and remove link and append them to the panel
+        // more informations in the function inside
+        //$(this).find('')
+        addRemoveButton($(this));
     });
-    
-    
+    // handle the click event for addNewItem
+    $addNewItem.click(function (e) {
+        // preventDefault() is your  homework if you don't know what it is
+        // also look up preventPropagation both are usefull
+        e.preventDefault();
+        // create a new form and append it to the collectionHolder
+        // and by form we mean a new panel which contains the form
+        addNewForm();
+    })
 });
-
-function addTagForm($collectionHolder, $newLinkLi) {
-    // Get the data-prototype explained earlier
+/*
+ * creates a new form and appends it to the collectionHolder
+ */
+function addNewForm() {
+    // getting the prototype
+    // the prototype is the form itself, plain html
+   
     var prototype = $collectionHolder.data('prototype');
-    
-    // get the new index
+    // get the index
+    // this is the index we set when the document was ready, look above for more info
     var index = $collectionHolder.data('index');
-    
-    // Replace '$$name$$' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    var newForm = prototype.replace(/__name__/g, index);
-    
-    // increase the index with one for the next item
-    $collectionHolder.data('index', index + 1);
-    
-    $newFormLi ="<button class='remove-tag btn btn-primary mb-2'>Usuń</button></div>";
-    
-    // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<div></div>').append(newForm+$newFormLi);
-    
-    // also add a remove button, just for this example
-    //
-    //$newFormLi.append("<button class='remove-tag btn btn-primary mb-2'>Usuń</button>");
-    
-    $newLinkLi.before($newFormLi);
-    
-    // handle the removal, just for this example
-    $('.remove-tag').click(function(e) {
+    // create the form
+    var newForm = prototype;
+    // replace the __name__ string in the html using a regular expression with the index value
+    newForm = newForm.replace(/__name__/g, index);
+    // incrementing the index data and setting it again to the collectionHolder
+    $collectionHolder.data('index', index+1);
+    // create the panel
+    // this is the panel that will be appending to the collectionHolder
+    var $panel = $('<div class="panel panel-warning"><div class="panel-heading"></div></div>');
+    // create the panel-body and append the form to it
+    var $panelBody = $('<div class="panel-body"></div>').append(newForm);
+    // append the body to the panel
+    $panel.append($panelBody);
+    // append the removebutton to the new panel
+    addRemoveButton($panel);
+    // append the panel to the addNewItem
+    // we are doing it this way to that the link is always at the bottom of the collectionHolder
+     
+    $addNewItem.before($panel);
+}
+
+/**
+ * adds a remove button to the panel that is passed in the parameter
+ * @param $panel
+ */
+function addRemoveButton ($panel) {
+    // create remove button
+    var $removeButton = $('<a href="#" class="btn btn-danger">Usuń</a>');
+    // appending the removebutton to the panel footer
+    var $panelFooter = $('<div class="panel-footer"></div>').append($removeButton);
+    // handle the click event of the remove button
+    $removeButton.click(function (e) {
         e.preventDefault();
-        
-        $(this).parent().remove();
-        
-        return false;
+        // gets the parent of the button that we clicked on "the panel" and animates it
+        // after the animation is done the element (the panel) is removed from the html
+        $(e.target).parents('.panel').slideUp(1000, function () {
+            $(this).remove();
+        })
     });
+    // append the footer to the panel
+    $panel.find('.form-inline').append($removeButton);
 }

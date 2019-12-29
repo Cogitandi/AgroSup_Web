@@ -5,20 +5,19 @@
 {% block body %}
     <section id="content">
         <div class="container-fluid row mt-3">
-             <div class="container-fluid row mt-3">
             <div class="col-2 mr-3">
                 <ul class="nav nav-pills flex-column">
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
                     <div style="padding-left: 20px">
-                        <a class="d3 nav-link active" href="/operator" >Lista</a>
-                        <a class="d3 nav-link" href="/operator/add" >Dodaj</a>
+                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
                     </div>
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
                     <div style="padding-left: 20px">
                         <a class="d1 nav-link collapse" href="/data/yearPlan" >Lista</a>
                         <a class="d1 nav-link collapse" href="/data/yearPlan/add" >Stwórz nowy plan</a>
                     </div>
-                    <a class="nav-link font-weight-bold" href="/data/parcel" >Działki</a>
+                    <a class="nav-link font-weight-bold active" href="/data/parcel" >Działki</a>
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
                     <div style="padding-left: 20px">
                         <a class="d2 nav-link collapse" href="/data/field" >Lista</a>
@@ -28,27 +27,31 @@
             </div>
             <div class="col-9">
 
-                <h2 class="text-center">Osoby w gospodarstwie  </h2>                  
+                <h2 class="text-center">Wybierz sezon</h2>                  
                 <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
                     <thead>
                         <tr>
                             <th scope ="col">#</th>
-                            <th scope ="col">Imię</th>
-                            <th scope ="col">Nazwisko</th>
-                            <th scope ="col">numer ARiMR</th>
+                            <th scope ="col">Rok rozpoczęcia</th>
+                            <th scope ="col">Rok zakończenia</th>
                             <th scope ="col"></th> 
                         </tr>
                     </thead>
                     <tbody >
                         {% set licznik = 1 %}
-                        {% for item in operator %}
+                        {% for item in yearPlanCollection %}
                             <tr>
                                 <th class="align-middle" scope="row">{{ licznik }}</th>
-                                <td>{{ item.firstName }}</td>
-                                <td>{{ item.surName }}</td>
-                                <td class="align-middle">{{ item.arimrNumber }}</td>
+                                <td>{{ item.startYear }}</td>
+                                <td>{{ item.endYear }}</td>
+                                <td>
+                                    <form method="POST" action="/data/parcel/">
+                                        <input type="hidden" name='option' value='choose'/>
+                                        <input type="hidden" name='yearPlan' value={{ item.id }}/>
+                                        <input type="submit" value="Wybierz"/>
+                                    </form>
+                                </td>
 
-                                <td class="align-middle"><input type="submit" value="Usuń" onClick="location.href = '{{ path('delete', {'id': item.id}) }}'"/></td>
                             </tr>
                             {% set licznik = licznik+1 %}
                         {% endfor %}

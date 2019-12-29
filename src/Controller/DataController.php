@@ -9,19 +9,12 @@ use App\Form\NewFieldFormType;
 use App\Form\NewYearPlanFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 class DataController extends AbstractController {
-
-    /**
-     * @Route("/data", name="data")
-     */
-    public function index() {
-        return $this->render('data/yearPlan.html.twig', [
-                    'controller_name' => 'DataController',
-        ]);
-    }
 
     /**
      * @Route("/data/yearPlan", name="yearPlan")
@@ -34,6 +27,30 @@ class DataController extends AbstractController {
         return $this->render('data/yearPlan.html.twig', [
                     'yearPlan' => $user->getYearPlans(),
         ]);
+    }
+
+    /**
+     * @Route("/data/yearPlan/status", name="yearPlanStatus")
+     */
+    public function yearPlanStatus(Request $request) {
+        $user = $this->getUser();
+        $yearPlanId = $request->request->get('yearPlan');
+        $status = $request->request->get('status');
+        $yearPlan = $this->getDoctrine()->getRepository(YearPlan::class)->find($yearPlanId);
+
+        if ($status == "open") {
+            $yearPlan->setIsClosed(true);
+        }
+        if ($status == "closed") {
+            $yearPlan->setIsClosed(false);
+        }
+
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($yearPlan);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('yearPlan');
     }
 
     /**
@@ -66,115 +83,167 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/data/parcel", name="parcel")
+     * @Route("data/parcel/", name="parcelList")
      */
-    public function parcel() {
-        $user = $this->getUser();
-        $operators = $user->getOperators();
-       
-        
-        /*foreach($operators as $operator) {
-            array_push($parcels, $operator->getParcels() );
-        }*/
-        $parcels = $operators[0]->getParcels()[0]->getParcelNumber();
-        echo'<pre>'.var_dump($parcels).'</pre>';
-        return $this->render('data/parcel.html.twig', [
-                    'parcels' => $parcels,
-        ]);
+    public function parcelList(Request $request) {
+        $yearPlanId = $request->request->get('yearPlan');
+        if ($yearPlanId == null) {
+            $user = $this->getUser();
+            $yearPlanCollection = $user->getYearPlans();
+            return $this->render('data/yearPlanToChooseParcel.html.twig', ['yearPlanCollection' => $yearPlanCollection]);
+        } else {
+            // Show list of available yearPlans
+            $user = $this->getUser();
+            //$operators = $user->getOperators();
+            $yearPlan = $this->getDoctrine()->getRepository(YearPlan::class)->find($yearPlanId);
+            $parcels = new ArrayCollection();
+            foreach ($yearPlan->getParcels() as $parcel) {
+                $parcels->add($parcel);
+            }
+            $orderBy = (Criteria::create())->orderBy([
+                'field' => Criteria::ASC,
+            ]);
+            $parcels = $parcels->matching($orderBy)->toArray();
+            return $this->render('data/parcel.html.twig', ['parcels' => $parcels, 'start' => $yearPlan->getStartYear()]);
+        }
     }
 
     /**
      * @Route("data/field", name="field")
      */
-    public function field() {
-        // TODO: 
-        // poprawnosc id przesylanego getem
+    public function field(Request $request) {
+        $user = $this->getUser();
+        $yearPlanId = $request->request->get('yearPlan');
+        $operators = $user->getOperators();
 
-        $request = Request::createFromGlobals();
-        $yearPlanId = $request->query->get('y');
-        if ($yearPlanId != null) {
-            $user = $this->getUser();
-            $field = $this->getDoctrine()->getRepository(Field::class)->findBy(array('yearPlan' => $yearPlanId));
-            $cultivatedArea = Array();
-            foreach ($field as $item) {
-                $parcels = $this->getDoctrine()->getRepository(Parcel::class)->findBy(array('field' => $item->getId()));
-                $cultivatedAreaSum = 0;
-                foreach ($parcels as $each) {
-                    $cultivatedAreaSum += $each->getCultivatedArea();
-                }
-                array_push($cultivatedArea, $cultivatedAreaSum);
-            }
 
-            return $this->render('data/field.html.twig', ['showField' => true, 'field' => $field, 'cultivatedArea' => $cultivatedArea]);
+        if ($yearPlanId == null) { // lista do planow rocznych do wyboru
+            $yearPlanCollection = $user->getYearPlans();
+            return $this->render('data/yearPlanToChooseFieldList.html.twig', ['yearPlanCollection' => $yearPlanCollection]);
+        } else { // wybrano plan roczny
+            $yearPlan = $this->getDoctrine()->getRepository(YearPlan::class)->find($yearPlanId);
+            $fields = $this->getDoctrine()->getRepository(Field::class)->findBy(array('yearPlan' => $yearPlanId));
+            $cultivatedArea = DataController::sumAreaEachField($fields);
+
+            $parameters = [
+                'yearPlan' => $yearPlan,
+                'start' => $yearPlan->getStartYear(),
+                'showField' => true,
+                'field' => $fields,
+                'cultivatedArea' => $cultivatedArea
+            ];
+            return $this->render('data/field.html.twig', $parameters);
+        }
+        $yearPlanCollection = $user->getYearPlans();
+        $parameters = [
+            'yearPlanCollection' => $yearPlanCollection,
+            'showField' => false
+        ];
+        return $this->render('data/field.html.twig', $parameters);
+    }
+
+    /**
+     * @Route("data/field/yearPlan", name="chooseYearToAddField")
+     */
+    public function chooseYearToAddField(Request $request) {
+        $user = $this->getUser();
+        $yearPlanId = $request->request->get('yearPlan');
+
+        if ($yearPlanId == null) {
+            $yearPlanCollection = $user->getYearPlans();
+            return $this->render('data/yearPlanToChooseField.html.twig', ['yearPlanCollection' => $yearPlanCollection]);
+        } else {
+            
+        }
+    }
+
+    /**
+     * @Route("data/field/add", name="addField")
+     */
+    public function addField(Request $request) {
+        $user = $this->getUser();
+        $operators = $user->getOperators();
+        $entityManager = $this->getDoctrine()->getManager();
+        $field = new Field();
+        $yearPlanId = $request->request->get('yearPlan');
+
+        // List of yearPlans
+        if ($yearPlanId != NULL) {
+            $yearPlan = $this->getDoctrine()->getRepository(YearPlan::class)->find($yearPlanId);
+            $field->setYearPlan($yearPlan);
         }
 
-        // Show list of available yearPlans
-        $user = $this->getUser();
-        $yearPlanCollection = $user->getYearPlans();
+        $form = $this->createForm(NewFieldFormType::class, $field, ['operators' => $operators]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało utworzone');
+            $entityManager->persist($field);
 
-        return $this->render('data/field.html.twig', ['yearPlanCollection' => $yearPlanCollection, 'showField' => false]);
+            foreach ($field->getParcels() as $item) {
+                $item->setYearPlan($field->getYearPlan());
+                $entityManager->persist($item);
+            }
+            $entityManager->flush();
+            //return $this->redirect($request->getUri());
+        }
+
+        $parameters = [
+            'yearPlan' => $yearPlan,
+            'newFieldForm' => $form->createView(),
+            'operators' => $operators
+        ];
+        return $this->render('data/newField.html.twig', $parameters);
     }
 
     /**
-     * @Route("data/field/add", name="chooseField")
+     * @Route("data/field/edit/{id}", name="editField")
      */
-    public function chooseYearPlan() {
-        // Show list of available yearPlans
+    public function editField($id, Request $request) {
+        // ACCESS TO POST FIELD
         $user = $this->getUser();
-        $yearPlanCollection = $user->getYearPlans();
+        $field = $this->getDoctrine()->getRepository(Field::class)->find($id);
+        $operators = $user->getOperators();
+        $yearPlan = $field->getYearPlan();
 
-        return $this->render('data/yearPlanToChoose.html.twig', ['yearPlanCollection' => $yearPlanCollection]);
-    }
 
-    /**
-     * @Route("data/field/add/{id}", name="addField")
-     */
-    public function addField($id, Request $request) {
-        // TODO
-        // check access to plan
-        // 
-        // find yearPlan
-        $user = $this->getUser();
-        $yearPlan = $this->getDoctrine()->getRepository(YearPlan::class)->find($id);
-        //findBy(array('yearPlan' => $yearPlanId));
-        if (!$yearPlan) throw $this->createNotFoundException('Year plan not found ');
-       
-        $field = $this->getDoctrine()->getRepository(FIeld::class)->find($id);
-        
-        // form 
-        $field = new Field();
-        $field->setYearPlan($yearPlan);
-        
-        /*
-        $parcel = new Parcel();
-        $parcel->setParcelNumber('tag1');
-        $parcel->setCultivatedArea(10000);
-        $parcel->setFuelApplication(true);
-        
-        $parcel->setField($field);
-        
-        $field->getParcels()->add($parcel);*/
-        
-        
-        $form = $this->createForm(NewFieldFormType::class, $field, array('operators' => $user->getOperators()));
+
+        $form = $this->createForm(NewFieldFormType::class, $field, array('operators' => $operators));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
+            foreach ($field->getParcels() as $parcel) {
+                $parcel->setYearPlan($yearPlan);
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($field);
-            
-            foreach($field->getParcels() as $item ) {
-                $item->setYearPlan($yearPlan);
-               $entityManager->persist($item); 
-            }
             $entityManager->flush();
-            return $this->redirectToRoute('field');
+            $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikwoane');
+            //return $this->redirectToRoute('field');
         }
 
-        $operators = $user->getOperators();
-        return $this->render('data/newField.html.twig', ['newFieldForm' => $form->createView(), 'operators' => $operators]);
+        $parameters = [
+            'yearPlan' => $yearPlan,
+            'editFieldForm' => $form->createView(),
+            'operators' => $operators
+        ];
 
+        return $this->render('data/editField.html.twig', $parameters);
+    }
+
+    // Functions
+    public function sumAreaEachField(Array $fields) {
+        $user = $this->getUser();
+        $cultivatedArea = Array();
+        foreach ($fields as $item) {
+            $parcels = $this->getDoctrine()->getRepository(Parcel::class)->findBy(array('field' => $item->getId()));
+            $cultivatedAreaSum = 0;
+            foreach ($parcels as $each) {
+                $cultivatedAreaSum += $each->getCultivatedArea();
+            }
+            array_push($cultivatedArea, $cultivatedAreaSum);
+        }
+        return $cultivatedArea;
     }
 
 }

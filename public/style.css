@@ -1,3 +1,6 @@
+body  { 
+    padding-bottom: 70px;
+}
 #intro {
     background-image: url("img/start.jpg");
     height:50vh;
@@ -34,7 +37,7 @@
 
 #aside-nav {
 
-    
+
 }
 
 footer {

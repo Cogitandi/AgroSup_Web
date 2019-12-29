@@ -1,15 +1,65 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Rejestracja{% endblock %}
+
 
 {% block body %}
-    <h1>Register</h1>
-
+    <style>
+        .container {
+            max-width: 500px;
+        }
+    </style>
+    <h2 class="text-center">Rejestracja  </h2>    
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
+    <div class="container">
+        {% if not registrationForm.vars.valid %}
+            {# Loop through every form item #}
+            {% for child in registrationForm.children %}
+                {# Display the errors of the form item #}
+                {%for error in child.vars.errors%}
+                    <div class="alert alert-danger">{{error.message}}</div>
+                {%endfor%}
+            {%endfor%}
+        {%endif%}
+        <div class="form-group">
+            <label for="email">Email</label>
+            {{ form_widget(registrationForm.email, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'Email',
+                    'id': 'inputEmail', 
+                    'aria-describedby': 'emailHelp',
+                    'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
+                    })}}
+            <small id="emailHelp" class="form-text text-muted">Email, służący do logowania.</small>
+        </div>
+        <div class="form-group">
+            <label for="password">Hasło</label>
+            {{ form_widget(registrationForm.plainPassword, {'attr': 
+                    {'class': 'form-control',
+                    'placeholder': 'Hasło',
+                    'id': 'inputPassword', 
+                    'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
+                    })}}
+        </div>
         {{ form_row(registrationForm.agreeTerms) }}
 
-        <button class="btn">Register</button>
+        {#
+            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+            See https://symfony.com/doc/current/security/remember_me.html
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Remember me
+                </label>
+            </div>
+        #}
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary" type="submit">
+                Rejestracja 
+            </button>
+        </div>
+    </div>
+
     {{ form_end(registrationForm) }}
+</form>
 {% endblock %}

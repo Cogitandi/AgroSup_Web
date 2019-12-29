@@ -9,48 +9,35 @@ use App\Entity\Operator;
 use App\Form\AddOperatorFormType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class OperatorController extends AbstractController
-{
+class OperatorController extends AbstractController {
+
     /**
      * @Route("/operator", name="operator")
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $user = $this->getUser();
         $operator = new Operator();
 
-        $form = $this->createForm(AddOperatorFormType::class, $operator);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() ) {
-
-            $operator->setDisable(false);
-            $operator->setUser($user);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($operator);
-            $entityManager->flush();
-            return $this->redirectToRoute('operator');
-        }
-
         $operators = $user->getOperators();
 
-        $parameters = ['addNewOperatorForm' => $form->createView(),
-                       'operator' => $operators
-                      ];
+        $parameters = [
+            'operator' => $operators
+        ];
 
-        return $this->render('operator/index.html.twig',$parameters);
-
+        return $this->render('operator/index.html.twig', $parameters);
     }
 
     /**
      * @Route("/operator/delete/{id}", name="delete")
      */
-    public function deleteOperator($id){
-
+    public function deleteOperator($id) {
+        $user = $this->getUser();
         // czy operator nalezy do uzytkownika
         $operator = $this->getDoctrine()->getRepository(Operator::class)->find($id);
 
-        if (!$operator) {throw $this->createNotFoundException('No product found for id '.$id);}
+        if (!$operator) {
+            throw $this->createNotFoundException('No product found for id ' . $id);
+        }
 
 
         $operator->setDisable(true);
@@ -59,22 +46,19 @@ class OperatorController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('operator');
-
     }
-
-
 
     /**
      * @Route("/operator/add", name="add")
      */
-    public function addOperator(Request $request, ValidatorInterface $validator){
+    public function addOperator(Request $request, ValidatorInterface $validator) {
         $user = $this->getUser();
         $operator = new Operator();
 
         $form = $this->createForm(AddOperatorFormType::class, $operator);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid() ) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $operator->setDisable(false);
             $operator->setUser($user);
@@ -84,10 +68,7 @@ class OperatorController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('operator');
         }
-        return $this->render('operator/new.html.twig', ['addNewOperatorForm' => $form->createView() ]);
+        return $this->render('operator/new.html.twig', ['addNewOperatorForm' => $form->createView()]);
     }
-
-
-
 
 }

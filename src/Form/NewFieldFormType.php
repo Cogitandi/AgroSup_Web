@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Field;
 use App\Entity\Operator;
+use App\Entity\YearPlan;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,6 +22,7 @@ class NewFieldFormType extends AbstractType {
             'entry_type' => ParcelType::class,
             'entry_options' => ['label' => false, 'operators'=>$options['operators']],
             'allow_add' => true,
+            'allow_delete' => true,
             'by_reference' => false,
             'label' =>false
         ]);

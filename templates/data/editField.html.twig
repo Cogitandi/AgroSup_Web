@@ -3,6 +3,7 @@
 {% block title %} {{ parent() }} {% endblock %}
 
 {% block body %}
+
     <section id="content">
         <div class="container-fluid row mt-3">
             <div class="col-2 mr-3">
@@ -21,7 +22,7 @@
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
                     <div style="padding-left: 20px">
                         <a class="d2 nav-link" href="/data/field" >Lista</a>
-                        <a class="d2 nav-link active" href="/data/field/yearPlan" >Stwórz nowe pole</a>
+                        <a class="d2 nav-link" href="/data/field/yearPlan" >Stwórz nowe pole</a>
                     </div>
                 </ul>
             </div>
@@ -32,10 +33,10 @@
                         {{ message }}
                     </div>
                 {% endfor %}
-                {{ form_start(newFieldForm) }}
+                {{ form_start(editFieldForm) }}
                 <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
                 <label  for="inlineFormInputName2">Nazwa pola</label>
-                {{ form_widget(newFieldForm.name, {'attr': 
+                {{ form_widget(editFieldForm.name, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Nazwa',
                     'id': 'inlineFormInputName2', 
@@ -46,35 +47,71 @@
                 <div class="tags" data-prototype="
                      <div class='form-inline'>
                      <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
+                     {{ form_widget(editFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Numer działki',
                     'id': 'parcelNumberInput', 
                     }})|e }}
                      <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
+                     {{ form_widget(editFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Powierzchnia',
                     'id': 'cultivatedAreaInput', 
                     }})|e }}
                      <label class='sr-only' for='operatorInput'>Operator</label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
+                     {{ form_widget(editFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
                     {'class': 'custom-select mb-2 mr-sm-2',
                     'id': 'operatorInput',
                     'selected': 'ja',
                     }})|e }}
                      <div class='form-check mb-2 mr-sm-2'>
                      <label class='form-check-label' for='fuel'>Paliwo </label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
+                     {{ form_widget(editFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
                     {'class': 'form-check-input',
                     'type': 'checkbox',
                     'id': 'fuel', 
                     }})|e }}    
                      </div>
                      ">
+                    {% for row in editFieldForm.parcels %}
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div class='form-inline'>
+                                    <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
+                                    {{ form_widget(row.parcelNumber,{'attr': 
+                    {'class': 'form-control mb-2 mr-sm-2',
+                    'placeholder': 'Numer działki',
+                    'id': 'parcelNumberInput', 
+                    }}) }}
+                                    <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
+                                    {{ form_widget(row.cultivatedArea,{'attr': 
+                    {'class': 'form-control mb-2 mr-sm-2',
+                    'placeholder': 'Powierzchnia',
+                    'id': 'cultivatedAreaInput', 
+                    }}) }}
+                                    <label class='sr-only' for='operatorInput'>Operator</label>
+                                    {{ form_widget(row.ArimrOperator,{'attr': 
+                    {'class': 'custom-select mb-2 mr-sm-2',
+                    'id': 'operatorInput',
+                    'selected': 'ja',
+                    }}) }}
+                                    <div class='form-check mb-2 mr-sm-2'>
+                                        <label class='form-check-label' for='fuel'>Paliwo </label>
+                                        {{ form_widget(row.fuelApplication,{'attr': 
+                    {'class': 'form-check-input',
+                    'type': 'checkbox',
+                    'id': 'fuel', 
+                    }}) }}    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
                 <button type="submit" class="btn btn-primary">Zapisz</button>
-                {{ form_end(newFieldForm) }}
+                {{ form_end(editFieldForm) }}
             </div>
         </div>
 

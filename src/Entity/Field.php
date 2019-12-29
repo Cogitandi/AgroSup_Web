@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FieldRepository")
  */
-class Field
-{
+class Field {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -30,39 +30,33 @@ class Field
     private $yearPlan;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parcel", mappedBy="field")
+     * @ORM\OneToMany(targetEntity="App\Entity\Parcel", cascade={"persist"}, mappedBy="field")
      */
     private $parcels;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->parcels = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
+    public function getName(): ?string {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getYearPlan(): ?yearPlan
-    {
+    public function getYearPlan(): ?yearPlan {
         return $this->yearPlan;
     }
 
-    public function setYearPlan(?yearPlan $yearPlan): self
-    {
+    public function setYearPlan(?yearPlan $yearPlan): self {
         $this->yearPlan = $yearPlan;
 
         return $this;
@@ -71,13 +65,12 @@ class Field
     /**
      * @return Collection|Parcel[]
      */
-    public function getParcels(): Collection
-    {
+    public function getParcels(): Collection {
         return $this->parcels;
     }
 
-    public function addParcel(Parcel $parcel): self
-    {
+    public function addParcel(Parcel $parcel): self {
+
         if (!$this->parcels->contains($parcel)) {
             $this->parcels[] = $parcel;
             $parcel->setField($this);
@@ -86,8 +79,7 @@ class Field
         return $this;
     }
 
-    public function removeParcel(Parcel $parcel): self
-    {
+    public function removeParcel(Parcel $parcel): self {
         if ($this->parcels->contains($parcel)) {
             $this->parcels->removeElement($parcel);
             // set the owning side to null (unless already changed)
@@ -98,4 +90,5 @@ class Field
 
         return $this;
     }
+
 }

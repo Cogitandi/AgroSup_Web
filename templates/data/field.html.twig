@@ -3,78 +3,64 @@
 {% block title %} {{ parent() }} {% endblock %}
 
 {% block body %}
-<section id="content">
-    <div class="container-fluid row mt-3">
-        <div class="col-2 mr-3">
-            <ul class="nav nav-pills flex-column">
-                <a class="nav-link" href="/data/yearPlan" >Plany roczne</a>
-                <a class="nav-link" href="/data/yearPlan/add" >nowy Plan roczny</a>
-                <a class="nav-link" href="/data/parcel" >Działki</a>
-                <a class="nav-link active" href="/data/field" >Pola</a>
-                <a class="nav-link" href="/data/field/add" >Nowe Pole</a>
-            </ul>
+    <section id="content">
+        <div class="container-fluid row mt-3">
+            <div class="col-2 mr-3">
+                <ul class="nav nav-pills flex-column">
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                    <div style="padding-left: 20px">
+                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
+                    </div>
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                    <div style="padding-left: 20px">
+                        <a class="d1 nav-link collapse" href="/data/yearPlan" >Lista</a>
+                        <a class="d1 nav-link collapse" href="/data/yearPlan/add" >Stwórz nowy plan</a>
+                    </div>
+                    <a class="nav-link font-weight-bold" href="/data/parcel" >Działki</a>
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                    <div style="padding-left: 20px">
+                        <a class="d2 nav-link active" href="/data/field" >Lista</a>
+                        <a class="d2 nav-link" href="/data/field/yearPlan" >Stwórz nowe pole</a>
+                    </div>
+                </ul>
+            </div>
+            <div class="col-9">
+                {% if showField == true %}
+                    <h2 class="text-center">Twoje pole w sezonie {{ start }}/{{ start+1 }}</h2>                  
+                    <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope ="col">#</th>
+                                <th scope ="col">Nazwa</th>
+                                <th scope ="col">Powierzchnia</th>
+                                <th scope ="col"></th> 
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% set licznik = 1 %}
+                            {% for item in field %}
+                                <tr>
+                                    <th class="align-middle" scope="row">{{ licznik }}</th>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ cultivatedArea[licznik-1] }}</td>
+                                    <td>
+                                        <form method="POST" action="/data/field/edit/{{ item.id }}">
+                                            
+                                            
+                                            <input type="submit" value="Modyfikuj"/>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% set licznik = licznik+1 %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                {% endif %}
+
+
+            </div>
         </div>
-        <div class="col-9">
-            {% if showField == true %}
-            <h2 class="text-center">Twoje pole</h2>                  
-            <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope ="col">#</th>
-                        <th scope ="col">Nazwa</th>
-                        <th scope ="col">Powierzchnia</th>
-                        <th scope ="col">Zamknięty</th>
-                        <th scope ="col"></th> 
-                    </tr>
-                </thead>
-                <tbody >
-                    {% set licznik = 1 %}
-                    {% for item in field %}
-                    <tr>
-                        <th class="align-middle" scope="row">{{ licznik }}</th>
-                        <td>{{ item.name }}</td>
-                        <td>{{ cultivatedArea[licznik-1] }}</td>
-                        <td class="align-middle">{{ item.name }}</td>
-
-                        <td class="align-middle"><input type="submit" value="Wybierz" onClick="location.href='{{ path('field', {'id': item.id}) }}'"/></td>
-                    </tr>
-                    {% set licznik = licznik+1 %}
-                    {% endfor %}
-
-                </tbody>
-            </table>
-            {% else %}
-            <h2 class="text-center">Wybierz plan roczny</h2>                  
-            <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope ="col">#</th>
-                        <th scope ="col">Rok rozpoczęcia</th>
-                        <th scope ="col">Rok zakończenia</th>
-                        <th scope ="col">Zamknięty</th>
-                        <th scope ="col"></th> 
-                    </tr>
-                </thead>
-                <tbody >
-                    {% set licznik = 1 %}
-                    {% for item in yearPlanCollection %}
-                    <tr>
-                        <th class="align-middle" scope="row">{{ licznik }}</th>
-                        <td>{{ item.startYear }}</td>
-                        <td>{{ item.endYear }}</td>
-                        <td class="align-middle">{{ item.isClosed }}</td>
-
-                        <td class="align-middle"><input type="submit" value="Wybierz" onClick="location.href='{{ path('field', {'y': item.id}) }}'"/></td>
-                    </tr>
-                    {% set licznik = licznik+1 %}
-                    {% endfor %}
-
-                </tbody>
-            </table>
-            {% endif %}
-            
-
-        </div>
-    </div>
-</section>
+    </section>
 {% endblock %}

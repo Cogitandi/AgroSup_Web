@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -125,6 +125,20 @@ class Operator
     public function getParcels(): Collection
     {
         return $this->parcels;
+    }
+    /**
+     * @return Collection|Parcel[]
+     */
+     public function getParcelsInYearPlan(YearPlan $yearPlan): Collection
+    {
+         $parcels = $this->parcels;
+         $out = new ArrayCollection();
+         foreach($parcels as $parcel) {
+             if( $parcel->getField()->getYearPlan() == $yearPlan) {
+                 $out->add($parcel);
+             }
+         }
+         return $out;
     }
 
     public function addParcel(Parcel $parcel): self
