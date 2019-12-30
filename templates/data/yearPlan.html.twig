@@ -49,8 +49,8 @@
 
                             <tr>
                                 <th class="align-middle" scope="row">{{ licznik }}</th>
-                                <td>{{ item.startYear }}</td>
-                                <td>{{ item.endYear }}</td>
+                                <td class="align-middle">{{ item.startYear }}</td>
+                                <td class="align-middle">{{ item.endYear }}</td>
                                 <td class="align-middle">{{ status }}</td>
 
                                 <td class="align-middle">
@@ -58,11 +58,11 @@
                                         {% if status == "TAK" %}
                                             <input type="hidden" name='status' value="closed"/>
                                             <input type="hidden" name='yearPlan' value={{ item.id }}/>
-                                            <input type="submit" value="Kontynuuj"/>
+                                            <input type="submit" class="btn btn-secondary" value="Kontynuuj"/>
                                         {% else %}
                                             <input type="hidden" name='status' value="open"/>
                                             <input type="hidden" name='yearPlan' value={{ item.id }}/>
-                                            <input type="submit" value="Zakończ"/>
+                                            <input type="submit" class="btn btn-secondary" value="Zakończ"/>
                                         {% endif %}
 
                                     </form>

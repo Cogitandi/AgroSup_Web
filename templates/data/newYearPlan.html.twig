@@ -3,9 +3,9 @@
 {% block title %} {{ parent() }} {% endblock %}
 
 {% block body %}
-<section id="content">
-    <div class="container-fluid row mt-3">
-        <div class="col-2 mr-3">
+    <section id="content">
+        <div class="container-fluid row mt-3">
+            <div class="col-2 mr-3">
                 <ul class="nav nav-pills flex-column">
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
                     <div style="padding-left: 20px">
@@ -25,30 +25,40 @@
                     </div>
                 </ul>
             </div>
-        <div class="col-9">
-            <div class="m-5 container col-7">
-                {{ form_start(newYearPlanForm) }}
-                {{ form_errors(newYearPlanForm.startYear )}}
-                <div class="form-group">
-                    <label for="startYear">Rok rozpoczęcia</label>
-                    {{ form_widget(newYearPlanForm.startYear, {'attr': 
+            <div class="col-9">
+                <div class="m-5 container col-7">
+                    {{ form_start(newYearPlanForm) }}       
+                    
+                    {% if not newYearPlanForm.vars.valid %}
+                            {# Loop through every form item #}
+                            {% for child in newYearPlanForm.children %}
+                                {# Display the errors of the form item #}
+                                {%for error in child.vars.errors%}
+                                    <div class="alert alert-danger">{{error.message}}</div>
+                                {%endfor%}
+                            {%endfor%}
+                        {%endif%}
+                    
+                    <div class="form-group">
+                        <label for="startYear">Rok rozpoczęcia</label>
+                        {{ form_widget(newYearPlanForm.startYear, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'Rok',
                     'id': 'inputStartYear', 
                     'aria-describedby': 'startYear',
                     'onblur':   'sprawdzPole("new_year_plan_form_startYear",startYear_reg)'}
                     })}}
-                    <small id="startYear" class="form-text text-muted">Podaj rok rozpoczęcia sezony.</small>
+                        <small id="startYear" class="form-text text-muted">Podaj rok rozpoczęcia sezony.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Dodaj</button>
+
+                    {{ form_end(newYearPlanForm) }}
                 </div>
 
-                <button type="submit" class="btn btn-primary">Dodaj</button>
 
-                {{ form_end(newYearPlanForm) }}
             </div>
-
-
         </div>
-    </div>
-</section>
-<script src="/validate.js"></script>
+    </section>
+    <script src="/validate.js"></script>
 {% endblock %}

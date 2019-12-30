@@ -42,13 +42,13 @@
                             {% for item in field %}
                                 <tr>
                                     <th class="align-middle" scope="row">{{ licznik }}</th>
-                                    <td>{{ item.name }}</td>
-                                    <td>{{ cultivatedArea[licznik-1] }}</td>
+                                    <td class="align-middle">{{ item.name }}</td>
+                                    <td class="align-middle">{{ cultivatedArea[licznik-1] }}</td>
                                     <td>
                                         <form method="POST" action="/data/field/edit/{{ item.id }}">
                                             
                                             
-                                            <input type="submit" value="Modyfikuj"/>
+                                            <input type="submit" class="btn btn-secondary" value="Modyfikuj"/>
                                         </form>
                                     </td>
                                 </tr>

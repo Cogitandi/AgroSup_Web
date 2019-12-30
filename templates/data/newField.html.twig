@@ -33,12 +33,23 @@
                     </div>
                 {% endfor %}
                 {{ form_start(newFieldForm) }}
+                {% if not newFieldForm.vars.valid %}
+                    {# Loop through every form item #}
+                    {% for child in newFieldForm.children %}
+                        {# Display the errors of the form item #}
+                        {%for error in child.vars.errors%}
+                            <div class="alert alert-danger">{{error.message}}</div>
+                        {%endfor%}
+                    {%endfor%}
+                {%endif%}
                 <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
-                <label  for="inlineFormInputName2">Nazwa pola</label>
+                <label  for="inputFieldName">Nazwa pola</label>
                 {{ form_widget(newFieldForm.name, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Nazwa',
-                    'id': 'inlineFormInputName2', 
+                    'id': 'inputFieldName',
+                    'value': ' ',
+                    'onblur':   'sprawdzPole("inputFieldName",inputFieldName_reg)',
                     }
                     })}}
                 <h6>Działki</h6>
@@ -50,12 +61,14 @@
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Numer działki',
                     'id': 'parcelNumberInput', 
+                    'onblur':   'sprawdzPole("parcelNumberInput",parcelNumberInput_reg)',
                     }})|e }}
                      <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
                      {{ form_widget(newFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Powierzchnia',
-                    'id': 'cultivatedAreaInput', 
+                    'id': 'cultivatedAreaInput',    
+                    'onblur':   'sprawdzPole("cultivatedAreaInput",cultivatedAreaInput_reg)',
                     }})|e }}
                      <label class='sr-only' for='operatorInput'>Operator</label>
                      {{ form_widget(newFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
@@ -73,7 +86,7 @@
                      </div>
                      ">
                 </div>
-                <button type="submit" class="btn btn-primary">Zapisz</button>
+                <button style="margin-top: 5px" type="submit" class="btn btn-primary">Zapisz</button>
                 {{ form_end(newFieldForm) }}
             </div>
         </div>

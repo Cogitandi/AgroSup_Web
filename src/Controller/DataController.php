@@ -161,6 +161,8 @@ class DataController extends AbstractController {
      * @Route("data/field/add", name="addField")
      */
     public function addField(Request $request) {
+        // ISTNIEJE POLE O TEJ NAZWIE
+
         $user = $this->getUser();
         $operators = $user->getOperators();
         $entityManager = $this->getDoctrine()->getManager();
@@ -176,6 +178,7 @@ class DataController extends AbstractController {
         $form = $this->createForm(NewFieldFormType::class, $field, ['operators' => $operators]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało utworzone');
             $entityManager->persist($field);
 
@@ -184,7 +187,11 @@ class DataController extends AbstractController {
                 $entityManager->persist($item);
             }
             $entityManager->flush();
-            //return $this->redirect($request->getUri());
+
+            unset($field);
+            unset($form);
+            $field = new Field();
+            $form = $this->createForm(NewFieldFormType::class, $field, ['operators' => $operators]);
         }
 
         $parameters = [

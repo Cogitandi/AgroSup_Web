@@ -42,12 +42,12 @@
                         {% for item in yearPlanCollection %}
                             <tr>
                                 <th class="align-middle" scope="row">{{ licznik }}</th>
-                                <td>{{ item.startYear }}</td>
-                                <td>{{ item.endYear }}</td>
+                                <td class="align-middle">{{ item.startYear }}</td>
+                                <td class="align-middle">{{ item.endYear }}</td>
                                 <td>
                                     <form method="POST" action="/data/field">
                                         <input type="hidden" name='yearPlan' value={{ item.id }}/>
-                                        <input type="submit" value="Wybierz"/>
+                                        <input type="submit" class="btn btn-secondary" value="Wybierz"/>
                                     </form>
                                 </td>
                             </tr>

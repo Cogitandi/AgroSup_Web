@@ -48,7 +48,7 @@
                                 <td>{{ item.surName }}</td>
                                 <td class="align-middle">{{ item.arimrNumber }}</td>
 
-                                <td class="align-middle"><input type="submit" value="Usuń" onClick="location.href = '{{ path('delete', {'id': item.id}) }}'"/></td>
+                                <td class="align-middle"><input type="submit" value="Usuń" class="btn btn-danger" onClick="location.href = '{{ path('delete', {'id': item.id}) }}'"/></td>
                             </tr>
                             {% set licznik = licznik+1 %}
                         {% endfor %}

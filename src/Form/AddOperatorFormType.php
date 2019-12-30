@@ -25,7 +25,7 @@ class AddOperatorFormType extends AbstractType
                 'constraints' => [
                     new Regex([
                         'pattern' => '/^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]{2,20}$/',
-                        'message' => 'zle imię',
+                        'message' => 'niepoprawne imię',
                     ]),
                 ]
 
