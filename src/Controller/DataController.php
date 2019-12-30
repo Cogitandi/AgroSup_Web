@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Field;
 use App\Entity\Parcel;
+use App\Entity\User;
 use App\Entity\YearPlan;
 use App\Form\NewFieldFormType;
 use App\Form\NewYearPlanFormType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DataController extends AbstractController {
 
@@ -53,18 +54,30 @@ class DataController extends AbstractController {
         return $this->redirectToRoute('yearPlan');
     }
 
+    public function isExistYearPlan(YearPlan $yearPlan, User $user) {
+        $yearPlanYearStart = $yearPlan->getStartYear();
+        $yearPlans = $user->getYearPlans();
+        foreach ($yearPlans as $yearPlan) {
+            if ($yearPlan->getStartYear() == $yearPlanYearStart)
+                return false;
+        }
+        return true;
+    }
+
     /**
      * @Route("/data/yearPlan/add", name="addYearPlan")
      */
-    public function addYearPlan(Request $request) {
+    public function addYearPlan(ValidatorInterface $validator, Request $request) {
         // TODO:
         // Jeden plan na jeden sezon
         $user = $this->getUser();
         $yearPlan = new YearPlan();
-
+        $yearPlan->setUser($user);
         // create newYearPlanFormType
         $form = $this->createForm(NewYearPlanFormType::class, $yearPlan);
         $form->handleRequest($request);
+
+        $errors = $validator->validate($yearPlan);
 
         //add to database new yearplan
         if ($form->isSubmitted() && $form->isValid()) {
@@ -79,7 +92,7 @@ class DataController extends AbstractController {
             return $this->redirectToRoute('yearPlan');
         }
 
-        return $this->render('data/newYearPlan.html.twig', ['newYearPlanForm' => $form->createView()]);
+        return $this->render('data/newYearPlan.html.twig', ['newYearPlanForm' => $form->createView(), 'errors' => $errors]);
     }
 
     /**
@@ -248,7 +261,6 @@ class DataController extends AbstractController {
             foreach ($parcels as $each) {
                 $cultivatedAreaSum += $each->getCultivatedArea();
             }
-            array_push($cultivatedArea, $cultivatedAreaSum);
         }
         return $cultivatedArea;
     }

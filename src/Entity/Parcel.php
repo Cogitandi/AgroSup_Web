@@ -68,6 +68,10 @@ class Parcel
     {
         return $this->cultivatedArea;
     }
+    public function getCultivatedAreaHa(): ?float
+    {
+        return round(($this->cultivatedArea/100),2);
+    }
 
     public function setCultivatedArea(int $cultivatedArea): self
     {

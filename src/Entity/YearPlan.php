@@ -5,12 +5,13 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\YearPlanRepository")
  */
-class YearPlan
-{
+class YearPlan {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -49,60 +50,50 @@ class YearPlan
      */
     private $fields;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->parcels = new ArrayCollection();
         $this->fields = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getStartYear(): ?int
-    {
+    public function getStartYear(): ?int {
         return $this->startYear;
     }
 
-    public function setStartYear(int $startYear): self
-    {
+    public function setStartYear(int $startYear): self {
         $this->startYear = $startYear;
 
         return $this;
     }
 
-    public function getEndYear(): ?int
-    {
+    public function getEndYear(): ?int {
         return $this->endYear;
     }
 
-    public function setEndYear(int $endYear): self
-    {
+    public function setEndYear(int $endYear): self {
         $this->endYear = $endYear;
 
         return $this;
     }
 
-    public function getIsClosed(): ?bool
-    {
+    public function getIsClosed(): ?bool {
         return $this->isClosed;
     }
 
-    public function setIsClosed(bool $isClosed): self
-    {
+    public function setIsClosed(bool $isClosed): self {
         $this->isClosed = $isClosed;
 
         return $this;
     }
 
-    public function getUser(): ?user
-    {
+    public function getUser(): ?user {
         return $this->user;
     }
 
-    public function setUser(?user $user): self
-    {
+    public function setUser(?user $user): self {
         $this->user = $user;
 
         return $this;
@@ -111,13 +102,11 @@ class YearPlan
     /**
      * @return Collection|Parcel[]
      */
-    public function getParcels(): Collection
-    {
+    public function getParcels(): Collection {
         return $this->parcels;
     }
 
-    public function addParcel(Parcel $parcel): self
-    {
+    public function addParcel(Parcel $parcel): self {
         if (!$this->parcels->contains($parcel)) {
             $this->parcels[] = $parcel;
             $parcel->setYearPlan($this);
@@ -126,8 +115,7 @@ class YearPlan
         return $this;
     }
 
-    public function removeParcel(Parcel $parcel): self
-    {
+    public function removeParcel(Parcel $parcel): self {
         if ($this->parcels->contains($parcel)) {
             $this->parcels->removeElement($parcel);
             // set the owning side to null (unless already changed)
@@ -142,13 +130,17 @@ class YearPlan
     /**
      * @return Collection|Field[]
      */
-    public function getFields(): Collection
-    {
-        return $this->fields;
+    public function getFields(): Collection {
+        $out = new ArrayCollection();
+        foreach ($this->fields as $field) {
+            if ($field->getDisabled() == NULL) {
+                $out . add($field);
+            }
+        }
+        return $out;
     }
 
-    public function addField(Field $field): self
-    {
+    public function addField(Field $field): self {
         if (!$this->fields->contains($field)) {
             $this->fields[] = $field;
             $field->setYearPlan($this);
@@ -157,8 +149,7 @@ class YearPlan
         return $this;
     }
 
-    public function removeField(Field $field): self
-    {
+    public function removeField(Field $field): self {
         if ($this->fields->contains($field)) {
             $this->fields->removeElement($field);
             // set the owning side to null (unless already changed)
@@ -169,4 +160,18 @@ class YearPlan
 
         return $this;
     }
+
+    /**
+     * @Assert\IsTrue(message="Nie możesz stworzyć dwóch planów do jednego roku")
+     */
+    public function isUniqueStartYear() {
+        $yearPlanYearStart = $this->getStartYear();
+        $yearPlans = $this->getUser()->getYearPlans();
+        foreach ($yearPlans as $yearPlan) {
+            if ($yearPlan->getStartYear() == $yearPlanYearStart)
+                return false;
+        }
+        return true;
+    }
+
 }

@@ -3,11 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Parcel;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ParcelType extends AbstractType {
@@ -21,6 +19,9 @@ class ParcelType extends AbstractType {
                     'class' => 'App:Operator',
                     'choices' => $options['operators'],
                     'choice_label' => 'firstName',
+                    'choice_label' => function ($operator) {
+                        return $operator->getfirstName() . ' ' . $operator->getSurname();
+                    },
                     'placeholder' => 'brak dopłat',
                     'required' => false,
                 ))

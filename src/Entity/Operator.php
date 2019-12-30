@@ -29,7 +29,7 @@ class Operator
     private $surname;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=11, nullable=true)
      */
     private $arimrNumber;
 
@@ -88,7 +88,7 @@ class Operator
         return $this->arimrNumber;
     }
 
-    public function setArimrNumber(int $arimrNumber): self
+    public function setArimrNumber(string $arimrNumber): self
     {
         $this->arimrNumber = $arimrNumber;
 

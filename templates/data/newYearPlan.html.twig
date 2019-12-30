@@ -28,17 +28,23 @@
             <div class="col-9">
                 <div class="m-5 container col-7">
                     {{ form_start(newYearPlanForm) }}       
-                    
+                    {% if errors %}
+                        {%for error in errors%}
+
+                            <div class="alert alert-danger">{{error.message}}</div>
+                        {%endfor%}
+                    {% endif %}
                     {% if not newYearPlanForm.vars.valid %}
-                            {# Loop through every form item #}
-                            {% for child in newYearPlanForm.children %}
-                                {# Display the errors of the form item #}
-                                {%for error in child.vars.errors%}
-                                    <div class="alert alert-danger">{{error.message}}</div>
-                                {%endfor%}
+                        {# Loop through every form item #}
+                        {% for child in newYearPlanForm.children %}
+                            {# Display the errors of the form item #}
+                            {%for error in child.vars.errors%}
+
+                                <div class="alert alert-danger">{{error.message}}</div>
                             {%endfor%}
-                        {%endif%}
-                    
+                        {%endfor%}
+                    {%endif%}
+
                     <div class="form-group">
                         <label for="startYear">Rok rozpoczęcia</label>
                         {{ form_widget(newYearPlanForm.startYear, {'attr': 
