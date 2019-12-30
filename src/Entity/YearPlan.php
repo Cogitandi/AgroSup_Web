@@ -30,7 +30,7 @@ class YearPlan {
     private $endYear;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $isClosed;
 
@@ -50,9 +50,15 @@ class YearPlan {
      */
     private $fields;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Operator", mappedBy="yearPlan")
+     */
+    private $operators;
+
     public function __construct() {
         $this->parcels = new ArrayCollection();
         $this->fields = new ArrayCollection();
+        $this->operators = new ArrayCollection();
     }
 
     public function getId(): ?int {
@@ -131,13 +137,13 @@ class YearPlan {
      * @return Collection|Field[]
      */
     public function getFields(): Collection {
-        $out = new ArrayCollection();
-        foreach ($this->fields as $field) {
-            if ($field->getDisabled() == NULL) {
-                $out . add($field);
-            }
-        }
-        return $out;
+//        $out = new ArrayCollection();
+//        foreach ($this->fields as $field) {
+//            if ($field->getDisabled() == NULL) {
+//                $out . add($field);
+//            }
+//        }
+        return $this->fields;
     }
 
     public function addField(Field $field): self {
@@ -172,6 +178,37 @@ class YearPlan {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * @return Collection|Operator[]
+     */
+    public function getOperators(): Collection
+    {
+        return $this->operators;
+    }
+
+    public function addOperator(Operator $operator): self
+    {
+        if (!$this->operators->contains($operator)) {
+            $this->operators[] = $operator;
+            $operator->setYearPlan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperator(Operator $operator): self
+    {
+        if ($this->operators->contains($operator)) {
+            $this->operators->removeElement($operator);
+            // set the owning side to null (unless already changed)
+            if ($operator->getYearPlan() === $this) {
+                $operator->setYearPlan(null);
+            }
+        }
+
+        return $this;
     }
 
 }

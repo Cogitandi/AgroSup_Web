@@ -26,38 +26,34 @@
                 </ul>
             </div>
             <div class="col-9">
-                {% if showField == true %}
-                    <h2 class="text-center">Twoje pole w sezonie {{ start }}/{{ start+1 }}</h2>                  
-                    <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
-                        <thead>
+                <h2 class="text-center">Twoje pole w sezonie {{ start }}/{{ start+1 }}</h2>                  
+                <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope ="col">#</th>
+                            <th scope ="col">Nazwa</th>
+                            <th scope ="col">Powierzchnia [ha]</th>
+                            <th scope ="col"></th> 
+                        </tr>
+                    </thead>
+                    <tbody >
+                        {% set licznik = 1 %}
+                        {% for item in field %}
                             <tr>
-                                <th scope ="col">#</th>
-                                <th scope ="col">Nazwa</th>
-                                <th scope ="col">Powierzchnia [ha]</th>
-                                <th scope ="col"></th> 
+                                <th class="align-middle" scope="row">{{ licznik }}</th>
+                                <td class="align-middle">{{ item.name }}</td>
+                                <td class="align-middle">{{ cultivatedArea[licznik-1] }}</td>
+                                <td>
+                                    <form method="POST" action="/data/field/edit/{{ item.id }}">
+                                        <input type="submit" class="btn btn-secondary" value="Modyfikuj"/>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody >
-                            {% set licznik = 1 %}
-                            {% for item in field %}
-                                <tr>
-                                    <th class="align-middle" scope="row">{{ licznik }}</th>
-                                    <td class="align-middle">{{ item.name }}</td>
-                                    <td class="align-middle">{{ cultivatedArea[licznik-1] }}</td>
-                                    <td>
-                                        <form method="POST" action="/data/field/edit/{{ item.id }}">
-                                            
-                                            
-                                            <input type="submit" class="btn btn-secondary" value="Modyfikuj"/>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% set licznik = licznik+1 %}
-                            {% endfor %}
+                            {% set licznik = licznik+1 %}
+                        {% endfor %}
 
-                        </tbody>
-                    </table>
-                {% endif %}
+                    </tbody>
+                </table>
 
 
             </div>

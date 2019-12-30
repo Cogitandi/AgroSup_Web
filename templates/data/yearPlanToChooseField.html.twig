@@ -46,7 +46,7 @@
                                 <td class="align-middle">{{ item.endYear }}</td>
                                 <td>
                                     <form method="POST" action="/data/field/add">
-                                        <input type="hidden" name='yearPlan' value={{ item.id }}/>
+                                        <input type="hidden" name='yearPlan' value="{{ item.id }}"/>
                                         <input type="submit" class="btn btn-secondary" value="Wybierz"/>
                                     </form>
                                 </td>

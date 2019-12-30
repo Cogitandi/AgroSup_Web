@@ -45,7 +45,7 @@
                                 <td class="align-middle">{{ item.startYear }}</td>
                                 <td class="align-middle">{{ item.endYear }}</td>
                                 <td>
-                                    <form method="POST" action="/data/field">
+                                    <form method="POST" action="/data/field/list">
                                         <input type="hidden" name='yearPlan' value={{ item.id }}/>
                                         <input type="submit" class="btn btn-secondary" value="Wybierz"/>
                                     </form>

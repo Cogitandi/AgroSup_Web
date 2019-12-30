@@ -49,6 +49,12 @@ class Operator
      */
     private $parcels;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\yearPlan", inversedBy="operators")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $yearPlan;
+
     public function __construct()
     {
         $this->parcels = new ArrayCollection();
@@ -160,6 +166,18 @@ class Operator
                 $parcel->setArimrOperator(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getYearPlan(): ?yearPlan
+    {
+        return $this->yearPlan;
+    }
+
+    public function setYearPlan(?yearPlan $yearPlan): self
+    {
+        $this->yearPlan = $yearPlan;
 
         return $this;
     }
