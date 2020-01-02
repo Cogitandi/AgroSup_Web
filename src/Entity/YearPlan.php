@@ -171,10 +171,10 @@ class YearPlan {
      * @Assert\IsTrue(message="Nie możesz stworzyć dwóch planów do jednego roku")
      */
     public function isUniqueStartYear() {
-        $yearPlanYearStart = $this->getStartYear();
+        $yearPlanGiven = $this;
         $yearPlans = $this->getUser()->getYearPlans();
         foreach ($yearPlans as $yearPlan) {
-            if ($yearPlan->getStartYear() == $yearPlanYearStart)
+            if (($yearPlan != $yearPlanGiven) && ($yearPlan->getStartYear() == $yearPlanGiven->getStartYear()))
                 return false;
         }
         return true;

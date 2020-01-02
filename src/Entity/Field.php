@@ -104,12 +104,12 @@ class Field {
 
     public function getPlantVariety(): ?string
     {
-        return $this->plant_variety;
+        return $this->plantVariety;
     }
 
     public function setPlantVariety(?string $plant_variety): self
     {
-        $this->plant_variety = $plant_variety;
+        $this->plantVariety = $plant_variety;
 
         return $this;
     }

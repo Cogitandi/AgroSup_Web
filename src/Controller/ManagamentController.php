@@ -3,25 +3,39 @@
 namespace App\Controller;
 
 use App\Entity\YearPlan;
+use App\Form\CropPlanType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\Request;
 
 class ManagamentController extends AbstractController {
 
     /**
      * @Route("/cropPlan", name="cropPlan")
      */
-    public function cropPlan() {
+    public function cropPlan(Request $request) {
         $user = $this->getUser();
         $yearPlan = $user->getChoosedYearPlan();
         if ($yearPlan) {
             $yearPlan2 = ManagamentController::findYearPlanByYearBack(2, $yearPlan);
             $yearPlan1 = ManagamentController::findYearPlanByYearBack(2, $yearPlan);
 
+
+            $form = $this->createForm(CropPlanType::class, $yearPlan);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->flush();
+            }
+
             $parameters = [
                 'yearPlan2' => ManagamentController::findMatchingPlant($yearPlan, $yearPlan2),
                 'yearPlan1' => ManagamentController::findMatchingPlant($yearPlan, $yearPlan1),
-                'yearPlan' => $yearPlan
+                'yearPlanAreas' => ManagamentController::sumAreaEachField($yearPlan->getFields()),
+                'yearPlan' => $yearPlan,
+                'form' => $form->createView(),
             ];
             return $this->render('managament/cropPlan.twig', $parameters);
         }
@@ -60,6 +74,21 @@ class ManagamentController extends AbstractController {
         }
         return $plantArray;
     }
+
+    public function sumAreaEachField(Collection $fields) {
+        $user = $this->getUser();
+        $cultivatedArea = Array();
+        foreach ($fields as $item) {
+            $parcels = $item->getParcels();
+            $cultivatedAreaSum = 0;
+            foreach ($parcels as $each) {
+                $cultivatedAreaSum += $each->getCultivatedArea();
+            }
+            array_push($cultivatedArea, $cultivatedAreaSum / 100);
+        }
+        return $cultivatedArea;
+    }
+
 
     // stworzyc w polu referencje od jakiego pola pochodzi
 }
