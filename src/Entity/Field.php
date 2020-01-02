@@ -34,6 +34,17 @@ class Field {
      */
     private $parcels;
 
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $plantVariety;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Plant")
+     */
+    private $plant;
+
+
     public function __construct() {
         $this->parcels = new ArrayCollection();
     }
@@ -90,5 +101,30 @@ class Field {
 
         return $this;
     }
+
+    public function getPlantVariety(): ?string
+    {
+        return $this->plant_variety;
+    }
+
+    public function setPlantVariety(?string $plant_variety): self
+    {
+        $this->plant_variety = $plant_variety;
+
+        return $this;
+    }
+
+    public function getPlant(): ?Plant
+    {
+        return $this->plant;
+    }
+
+    public function setPlant(?Plant $plant): self
+    {
+        $this->plant = $plant;
+
+        return $this;
+    }
+
 
 }

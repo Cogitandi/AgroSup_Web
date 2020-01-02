@@ -27,9 +27,8 @@
             {{ form_widget(registrationForm.email, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'Email',
-                    'id': 'inputEmail', 
                     'aria-describedby': 'emailHelp',
-                    'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
+                    'onblur':   'sprawdzPole("registration_form_email",email_reg)'}
                     })}}
             <small id="emailHelp" class="form-text text-muted">Email, służący do logowania.</small>
         </div>
@@ -38,8 +37,7 @@
             {{ form_widget(registrationForm.plainPassword, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'Hasło',
-                    'id': 'inputPassword', 
-                    'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
+                    'onblur':   'sprawdzPole("registration_form_plainPassword",firstName_reg)'}
                     })}}
         </div>
         {{ form_row(registrationForm.agreeTerms) }}
@@ -61,5 +59,4 @@
     </div>
 
     {{ form_end(registrationForm) }}
-</form>
 {% endblock %}

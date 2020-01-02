@@ -38,14 +38,14 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Operator", mappedBy="user")
-     */
-    private $operators;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\YearPlan", mappedBy="user")
      */
     private $yearPlans;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\yearPlan")
+     */
+    private $choosedYearPlan;
 
     public function __construct()
     {
@@ -132,42 +132,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Operator[]
-     */
-    public function getOperators(): Collection
-    {
-        $out = new ArrayCollection();
-        foreach( $this->operators as $operator ) {
-            if($operator->getDisable() == false )
-                $out->add($operator);
-        }
-        return $out;
-    }
-
-    public function addOperator(Operator $operator): self
-    {
-        if (!$this->operators->contains($operator)) {
-            $this->operators[] = $operator;
-            $operator->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOperator(Operator $operator): self
-    {
-        if ($this->operators->contains($operator)) {
-            $this->operators->removeElement($operator);
-            // set the owning side to null (unless already changed)
-            if ($operator->getUser() === $this) {
-                $operator->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|YearPlan[]
      */
     public function getYearPlans(): Collection
@@ -194,6 +158,18 @@ class User implements UserInterface
                 $yearPlan->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getChoosedYearPlan(): ?yearPlan
+    {
+        return $this->choosedYearPlan;
+    }
+
+    public function setChoosedYearPlan(?yearPlan $choosedYearPlan): self
+    {
+        $this->choosedYearPlan = $choosedYearPlan;
 
         return $this;
     }

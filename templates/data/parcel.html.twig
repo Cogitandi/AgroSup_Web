@@ -7,25 +7,24 @@
         <div class="container-fluid row mt-3">
             <div class="col-2 mr-3">
                 <ul class="nav nav-pills flex-column">
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                    <div style="padding-left: 20px">
+                        <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
+                        <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+                    </div>
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
                     <div style="padding-left: 20px">
                         <a class="d3 nav-link collapse" href="/operator" >Lista</a>
                         <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
                     </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link collapse" href="/data/yearPlan" >Lista</a>
-                        <a class="d1 nav-link collapse" href="/data/yearPlan/add" >Stwórz nowy plan</a>
-                    </div>
-                    <a class="nav-link font-weight-bold active" href="/data/parcel" >Działki</a>
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
                     <div style="padding-left: 20px">
-                        <a class="d2 nav-link collapse" href="/data/field" >Lista</a>
-                        <a class="d2 nav-link collapse" href="/data/field/yearPlan" >Stwórz nowe pole</a>
+                        <a class="d2 nav-link collapse" href="/field" >Lista</a>
+                        <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
                     </div>
+                    <a class="nav-link font-weight-bold active" href="/parcel" >Działki</a>
                 </ul>
             </div>
-
             <div class="col-9">
                 <h2 class="text-center">Działki w sezonie {{ start }}/{{ start+1 }} </h2>                  
                 <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">

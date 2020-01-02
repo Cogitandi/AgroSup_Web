@@ -8,22 +8,22 @@
         <div class="container-fluid row mt-3">
             <div class="col-2 mr-3">
                 <ul class="nav nav-pills flex-column">
+                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                    <div style="padding-left: 20px">
+                        <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
+                        <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+                    </div>
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
                     <div style="padding-left: 20px">
                         <a class="d3 nav-link collapse" href="/operator" >Lista</a>
                         <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
                     </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link collapse" href="/data/yearPlan" >Lista</a>
-                        <a class="d1 nav-link collapse" href="/data/yearPlan/add" >Stwórz nowy plan</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" href="/data/parcel" >Działki</a>
                     <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
                     <div style="padding-left: 20px">
-                        <a class="d2 nav-link" href="/data/field" >Lista</a>
-                        <a class="d2 nav-link" href="/data/field/yearPlan" >Stwórz nowe pole</a>
+                        <a class="d2 nav-link" href="/field" >Lista</a>
+                        <a class="d2 nav-link" href="/field/add" >Stwórz nowe pole</a>
                     </div>
+                    <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
                 </ul>
             </div>
             <div class="col-9">
@@ -39,7 +39,7 @@
                 {{ form_widget(editFieldForm.name, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Nazwa',
-                    'id': 'inlineFormInputName2', 
+                    'onblur':   'sprawdzPole("edit_field_form_name",inputFieldName_reg)',
                     }
                     })}}
                 <h6>Działki</h6>
@@ -50,26 +50,23 @@
                      {{ form_widget(editFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Numer działki',
-                    'id': 'parcelNumberInput', 
+                    'onblur':   'sprawdzPole("edit_field_form_parcels___name___parcelNumber",parcelNumber_reg)',
                     }})|e }}
                      <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
                      {{ form_widget(editFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Powierzchnia [ar]',
-                    'id': 'cultivatedAreaInput', 
+                    'onblur':   'sprawdzPole("edit_field_form_parcels___name___cultivatedArea",cultivatedArea_reg)',
                     }})|e }}
                      <label class='sr-only' for='operatorInput'>Operator</label>
                      {{ form_widget(editFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
                     {'class': 'custom-select mb-2 mr-sm-2',
-                    'id': 'operatorInput',
-                    'selected': 'ja',
                     }})|e }}
                      <div class='form-check mb-2 mr-sm-2'>
                      <label class='form-check-label' for='fuel'>Paliwo </label>
                      {{ form_widget(editFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
                     {'class': 'form-check-input',
                     'type': 'checkbox',
-                    'id': 'fuel', 
                     }})|e }}    
                      </div>
                      ">
@@ -79,30 +76,26 @@
                             </div>
                             <div class="panel-body">
                                 <div class='form-inline'>
-                                    <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
+                                    <label class='sr-only' for='{{ row.vars.id }}_parcelNumber'>Numer działki</label>
+                                    {%set desc = "s"%}
                                     {{ form_widget(row.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Numer działki',
-                    'id': 'parcelNumberInput', 
                     }}) }}
                                     <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
                                     {{ form_widget(row.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'Powierzchnia',
-                    'id': 'cultivatedAreaInput', 
                     }}) }}
-                                    <label class='sr-only' for='operatorInput'>Operator</label>
+                                    <label class='sr-only' for='{{ row.vars.id }}_ArimrOperator'>Operator</label>
                                     {{ form_widget(row.ArimrOperator,{'attr': 
                     {'class': 'custom-select mb-2 mr-sm-2',
-                    'id': 'operatorInput',
-                    'selected': 'ja',
                     }}) }}
                                     <div class='form-check mb-2 mr-sm-2'>
-                                        <label class='form-check-label' for='fuel'>Paliwo </label>
+                                        <label class='form-check-label' for='{{ row.vars.id }}_fuel'>Paliwo </label>
                                         {{ form_widget(row.fuelApplication,{'attr': 
                     {'class': 'form-check-input',
                     'type': 'checkbox',
-                    'id': 'fuel', 
                     }}) }}    
                                     </div>
                                 </div>

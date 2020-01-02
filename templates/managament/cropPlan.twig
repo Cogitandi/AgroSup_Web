@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+
+{% block body %}
+    <section id="content">
+        <div class="container-fluid row mt-3">
+            <div class="container-fluid row mt-3">
+                <div class="col-2 mr-3">
+                    <ul class="nav nav-pills flex-column">
+                        <a class="nav-link font-weight-bold" href="/data/parcel" >Planuj uprawy</a>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                        <div style="padding-left: 20px">
+                            <a class="d2 nav-link collapse" href="/data/field" >Lista</a>
+                            <a class="d2 nav-link collapse" href="/data/field/yearPlan" >Stwórz nowe pole</a>
+                        </div>
+                    </ul>
+                </div>
+                <div class="col-9">
+
+                    <h2 class="text-center">Uprawy {{ yearPlan.startYear }}/{{ yearPlan.endYear }}  </h2>                  
+                    <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope ="col">Pole</th>
+                                <th scope ="col">Powierzchnia</th>
+                                <th scope ="col">{{ yearPlan.startYear-2 }}/{{ yearPlan.startYear-1 }}</th>
+                                <th scope ="col">{{ yearPlan.startYear-1 }}/{{ yearPlan.startYear }}</th>
+                                <th scope ="col">{{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for field in yearPlan.getFields %}
+                                {% set index = 0 %}
+                                {% set area = 0 %}
+                                {% for parcel in field.getParcels %}
+                                    {% set area = area+parcel.getCultivatedArea %}
+                                {% endfor %}
+                                {% set area = area/100 %}
+                                <tr>
+                                    <td>{{ field.name }}</td>
+                                    <td>{{ area }}</td>
+                                    <td>{{ yearPlan2[index] }}</td>
+                                    <td>{{ yearPlan1[index] }}</td>
+                                    <td>Brak danych</td>
+                                </tr>
+                                {% set index = index+1 %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+    </section>
+{% endblock %}

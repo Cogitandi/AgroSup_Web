@@ -183,13 +183,17 @@ class YearPlan {
     /**
      * @return Collection|Operator[]
      */
-    public function getOperators(): Collection
-    {
-        return $this->operators;
+    public function getOperators(): Collection {
+        $out = new ArrayCollection();
+
+        foreach ($this->operators as $operator) {
+            if (!$operator->getDisable())
+                $out->add($operator);
+        }
+        return $out;
     }
 
-    public function addOperator(Operator $operator): self
-    {
+    public function addOperator(Operator $operator): self {
         if (!$this->operators->contains($operator)) {
             $this->operators[] = $operator;
             $operator->setYearPlan($this);
@@ -198,8 +202,7 @@ class YearPlan {
         return $this;
     }
 
-    public function removeOperator(Operator $operator): self
-    {
+    public function removeOperator(Operator $operator): self {
         if ($this->operators->contains($operator)) {
             $this->operators->removeElement($operator);
             // set the owning side to null (unless already changed)

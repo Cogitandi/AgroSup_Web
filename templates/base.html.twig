@@ -32,12 +32,15 @@
 
                     <ul class="nav navbar-nav mr-auto"></ul>
                     <ul class="nav navbar-nav">
+
                         {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                            <a class="nav-link" href="/yearPlan">Plan {{ app.user.ChoosedYearPlan.startYear }} / {{ app.user.ChoosedYearPlan.startYear+1 }}</a>
+
                             <li class="nav-item">
-                                <a class="nav-link" href="cropPlan.html">Plan upraw</a>
+                                <a class="nav-link" href="/cropPlan">Plan upraw</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/operator">Dane</a>
+                                <a class="nav-link" href="/yearPlan">Dane</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/logout">Wyloguj</a>
@@ -56,7 +59,7 @@
         </section>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
-        
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <footer class="page-footer font-small blue fixed-bottom">

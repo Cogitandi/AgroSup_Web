@@ -18,7 +18,6 @@ class RegistrationFormType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->add('email', EmailType::class, [
-                    'mapped' => false,
                     'constraints' => [
                         new NotBlank([
                             'message' => 'Wprowadz nazwe',

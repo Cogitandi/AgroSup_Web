@@ -34,7 +34,7 @@ class Operator
     private $arimrNumber;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $disable;
 
