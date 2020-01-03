@@ -41,8 +41,10 @@ class OperatorController extends AbstractController {
             $operator = OperatorController::findEntityById($yearPlan->getOperators(), $id);
 
             if ($operator) {
-                $operator->setDisable(true);
+                //$operator->setDisable(true);
+                OperatorController::setNulltoParcels($operator);
                 $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($operator);
                 $entityManager->flush();
             }
             return $this->redirectToRoute('operator');
@@ -63,7 +65,6 @@ class OperatorController extends AbstractController {
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $operator->setUser($user);
                 $operator->setYearPlan($yearPlan);
 
                 $entityManager = $this->getDoctrine()->getManager();
@@ -80,6 +81,12 @@ class OperatorController extends AbstractController {
         foreach ($collection as $item) {
             if ($item->getId() == $id)
                 return $item;
+        }
+    }
+
+    public function setNulltoParcels($operator) {
+        foreach ($operator->getParcels() as $parcel) {
+            $parcel->setArimrOperator(null);
         }
     }
 

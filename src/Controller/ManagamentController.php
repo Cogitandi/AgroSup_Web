@@ -19,7 +19,7 @@ class ManagamentController extends AbstractController {
         $yearPlan = $user->getChoosedYearPlan();
         if ($yearPlan) {
             $yearPlan2 = ManagamentController::findYearPlanByYearBack(2, $yearPlan);
-            $yearPlan1 = ManagamentController::findYearPlanByYearBack(2, $yearPlan);
+            $yearPlan1 = ManagamentController::findYearPlanByYearBack(1, $yearPlan);
 
 
             $form = $this->createForm(CropPlanType::class, $yearPlan);
@@ -39,7 +39,7 @@ class ManagamentController extends AbstractController {
             ];
             return $this->render('managament/cropPlan.twig', $parameters);
         }
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('yearPlan');
     }
 
     public function findYearPlanByYearBack($yearBack, YearPlan $yearPlanGiven) {

@@ -14,6 +14,7 @@ class CropPlanType extends AbstractType {
 
         $builder->add('fields', CollectionType::class, [
             'entry_type' => PlantForFieldType::class,
+            'label' => false,
             'entry_options' => ['label' => false],
         ]);
         ;

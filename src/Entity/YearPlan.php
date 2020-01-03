@@ -41,7 +41,7 @@ class YearPlan {
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parcel", mappedBy="yearPlan")
+     * @ORM\OneToMany(targetEntity="App\Entity\Parcel", mappedBy="yearPlan", orphanRemoval=true)
      */
     private $parcels;
 

@@ -104,6 +104,11 @@
                     {% endfor %}
                 </div>
                 <button style="margin-top: 5px" type="submit" class="btn btn-primary">Zapisz</button>
+                {{ form_widget(editFieldForm.remove, {
+                    'attr': {'class': 'btn btn-danger',
+                             'style': 'margin-top: 5px'},
+                    'label': 'Delete field',
+                     }) }}
                 {{ form_end(editFieldForm) }}
             </div>
         </div>

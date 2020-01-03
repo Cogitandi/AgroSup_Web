@@ -26,7 +26,7 @@
             <label for="email">Email</label>
             {{ form_widget(registrationForm.email, {'attr': 
                     {'class': 'form-control',
-                    'placeholder': 'Email',
+                    'placeholder': 'email',
                     'aria-describedby': 'emailHelp',
                     'onblur':   'sprawdzPole("registration_form_email",email_reg)'}
                     })}}
@@ -36,7 +36,7 @@
             <label for="password">Hasło</label>
             {{ form_widget(registrationForm.plainPassword, {'attr': 
                     {'class': 'form-control',
-                    'placeholder': 'Hasło',
+                    'placeholder': 'password',
                     'onblur':   'sprawdzPole("registration_form_plainPassword",firstName_reg)'}
                     })}}
         </div>

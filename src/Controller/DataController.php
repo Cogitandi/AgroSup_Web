@@ -205,24 +205,27 @@ class DataController extends AbstractController {
                     $entityManager = $this->getDoctrine()->getManager();
 
                     if ($form->get('remove')->isClicked()) {
-                        DataController::deleteField($field, $entityManager);
+                        //DataController::deleteField($field, $entityManager);
+                        $entityManager->remove($field);
+                        $entityManager->flush();
                         return $this->redirectToRoute('field');
                     }
+
+                    DataController::addYearToParcels($field, $entityManager);
+
+                    $entityManager->persist($field);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikwoane');
                 }
-                DataController::addYearToParcels($field, $entityManager);
 
-                $entityManager->persist($field);
-                $entityManager->flush();
-                $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikwoane');
+                $parameters = [
+                    'yearPlan' => $yearPlan,
+                    'editFieldForm' => $form->createView(),
+                    'operators' => $operators
+                ];
+
+                return $this->render('data/editField.html.twig', $parameters);
             }
-
-            $parameters = [
-                'yearPlan' => $yearPlan,
-                'editFieldForm' => $form->createView(),
-                'operators' => $operators
-            ];
-
-            return $this->render('data/editField.html.twig', $parameters);
         }
         return $this->redirectToRoute('field');
     }

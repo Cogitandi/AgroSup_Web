@@ -30,7 +30,7 @@ class Field {
     private $yearPlan;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parcel", cascade={"persist"}, mappedBy="field")
+     * @ORM\OneToMany(targetEntity="App\Entity\Parcel", cascade={"persist"}, mappedBy="field", orphanRemoval=true)
      */
     private $parcels;
 

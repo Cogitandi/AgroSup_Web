@@ -81,6 +81,7 @@
                      ">
                 </div>
                 <button style="margin-top: 5px" type="submit" class="btn btn-primary">Zapisz</button>
+                {% do newFieldForm.remove.setRendered() %}
                 {{ form_end(newFieldForm) }}
             </div>
         </div>
