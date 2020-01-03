@@ -43,7 +43,7 @@
                         <label for="firstName">Imię</label>
                         {{ form_widget(addNewOperatorForm.firstName, {'attr': 
                     {'class': 'form-control',
-                    'placeholder': 'imie', 
+                    'placeholder': 'firstName', 
                     'aria-describedby': 'firstNameHelp',
                     'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
                     })}}
@@ -53,7 +53,7 @@
                         <label for="surname">Nazwisko</label>
                         {{ form_widget(addNewOperatorForm.surname, {'attr': 
                     {'class': 'form-control',
-                    'placeholder': 'nazwisko',
+                    'placeholder': 'surname',
                     'aria-describedby': 'surnameHelp',
                     'onblur':   'sprawdzPole("add_operator_form_surname",surname_reg)'}
                     })}}
@@ -63,7 +63,7 @@
                         <label for="arimrNumber">Numer ARIMR</label>
                         {{ form_widget(addNewOperatorForm.arimrNumber, {'attr': 
                     {'class': 'form-control',
-                    'placeholder': 'numer ARIMR',
+                    'placeholder': 'ARIMR number',
                     'aria-describedby': 'arimrNumberHelp',
                     'onblur':   'sprawdzPole("add_operator_form_arimrNumber",arimrNumber_reg)'}
                     })}}

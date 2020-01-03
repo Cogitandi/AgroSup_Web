@@ -49,7 +49,6 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->operators = new ArrayCollection();
         $this->yearPlans = new ArrayCollection();
     }
 

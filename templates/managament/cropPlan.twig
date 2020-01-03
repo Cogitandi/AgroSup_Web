@@ -33,9 +33,8 @@
                         <tbody >
 
                             {# iterate over each existing tag and render its only field: name #}
+                            {% set index = 0 %}
                             {% for field in form.fields %}
-                                {% set index = 0 %}
-
                                 <tr>
                                     <td> {{ field.vars.value.name }}</td>
                                     <td>{{ yearPlanAreas[index] }}</td>

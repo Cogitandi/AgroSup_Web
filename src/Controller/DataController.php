@@ -12,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use DeepCopy\DeepCopy;
 
 class DataController extends AbstractController {
 
@@ -73,15 +75,20 @@ class DataController extends AbstractController {
         $yearPlan = new YearPlan();
         $yearPlan->setUser($user);
 
-        $form = $this->createForm(NewYearPlanFormType::class, $yearPlan);
+        $form = $this->createForm(NewYearPlanFormType::class, $yearPlan, ['yearPlans' => $user->getYearPlans()]);
         $form->handleRequest($request);
 
         $errors = $validator->validate($yearPlan);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $yearPlan->setEndYear($yearPlan->getStartYear() + 1);
             $entityManager = $this->getDoctrine()->getManager();
+            $yearPlanToImport = $form->get('import')->getData();
+            $yearPlan->setEndYear($yearPlan->getStartYear() + 1);
             $entityManager->persist($yearPlan);
+
+            if ($yearPlanToImport) { //Import settings from other YearPlan
+                DataController::deepSave($yearPlanToImport, $yearPlan);
+            }
             $entityManager->flush();
             return $this->redirectToRoute('yearPlan');
         }
@@ -264,13 +271,38 @@ class DataController extends AbstractController {
         }
     }
 
-    /**
-     * @Route("data/field", name="chooseYearToFieldList")
-     */
-    public function chooseYearToFieldList() {
-        $user = $this->getUser();
-        $userYearPlans = $user->getYearPlans();
-        return $this->render('data/yearPlanToChooseFieldList.html.twig', ['yearPlanCollection' => $userYearPlans]);
+    public function deepSave($yearPlanToImport, $yearPlanOutput) {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $operatorsList = new ArrayCollection();
+        foreach ($yearPlanToImport->getOperators() as $operator) {
+            $operatorNew = clone $operator;
+            $operatorNew->setYearPlan($yearPlanOutput);
+            $entityManager->persist($operatorNew);
+            $operatorsList->add($operatorNew);
+        }
+
+        foreach ($yearPlanToImport->getFields() as $field) {
+            $fieldNew = clone $field;
+            $fieldNew->setYearPlan($yearPlanOutput);
+            foreach ($field->getParcels() as $parcel) {
+                $parcelNew = clone $parcel;
+                $parcelNew->setYearPlan($yearPlanOutput);
+                $parcelNew->setField($fieldNew);
+                $parcelNew->setArimrOperator(null);
+                foreach ($operatorsList as $operator) {
+                    if (!$parcel->getArimrOperator())
+                        break;
+                    if ($operator->getFirstName() == $parcel->getArimrOperator()->getFirstName() &&
+                            $operator->getSurname() == $parcel->getArimrOperator()->getSurname()
+                    ) {
+                        $parcelNew->setArimrOperator($operator);
+                    }
+                }
+                $entityManager->persist($parcelNew);
+            }
+            $entityManager->persist($fieldNew);
+        }
     }
 
 }

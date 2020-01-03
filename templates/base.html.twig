@@ -34,8 +34,12 @@
                     <ul class="nav navbar-nav">
 
                         {% if is_granted("IS_AUTHENTICATED_FULLY") %}
-                            <a class="nav-link" href="/yearPlan">Plan {{ app.user.ChoosedYearPlan.startYear }} / {{ app.user.ChoosedYearPlan.startYear+1 }}</a>
+                            {% if app.user.ChoosedYearPlan %}
+                                <a class="nav-link" href="/yearPlan">Plan {{ app.user.ChoosedYearPlan.startYear }} / {{ app.user.ChoosedYearPlan.startYear+1 }}</a>
+                            {% else %}
+                                <a class="nav-link" href="/yearPlan">Wybierz plan</a>
 
+                            {% endif %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/cropPlan">Plan upraw</a>
                             </li>

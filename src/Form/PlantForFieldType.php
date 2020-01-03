@@ -21,7 +21,7 @@ class PlantForFieldType extends AbstractType {
                             },
                             'choice_label' => 'name',
                             'required' => false,
-                            'placeholder' => 'nie ustalono',
+                            'placeholder' => 'not defined',
                             'label' => false,
                 ])
 

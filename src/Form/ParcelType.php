@@ -22,7 +22,7 @@ class ParcelType extends AbstractType {
                     'choice_label' => function ($operator) {
                         return $operator->getfirstName() . ' ' . $operator->getSurname();
                     },
-                    'placeholder' => 'brak dopłat',
+                    'placeholder' => 'no payments',
                     'required' => false,
                 ))
         ;

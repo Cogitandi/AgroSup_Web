@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class NewYearPlanFormType extends AbstractType
 {
@@ -18,7 +19,16 @@ class NewYearPlanFormType extends AbstractType
                     'min' => 2005,
                     'max' => 2030
                 ]])
-            
+            ->add('import', EntityType::class, array(
+                    'class' => 'App:YearPlan',
+                    'mapped' => false,
+                    'choices' => $options['yearPlans'],
+                    'choice_label' => function ($yearPlan) {
+                        return $yearPlan->getStartYear() . '/' . $yearPlan->getEndYear();
+                    },
+                    'placeholder' => 'nie importuj',
+                    'required' => false,
+                ))
             ;
     }
 
@@ -26,6 +36,7 @@ class NewYearPlanFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => YearPlan::class,
+            'yearPlans' => array(),
         ]);
     }
 }

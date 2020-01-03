@@ -57,7 +57,6 @@ class ManagamentController extends AbstractController {
         $plantArray = Array();
         if ($searchedYP == null) {
             foreach ($soughtFields as $soughtField) {
-
                 array_push($plantArray, "Brak danych");
             }
             return $plantArray;
@@ -66,7 +65,11 @@ class ManagamentController extends AbstractController {
         $searchedFields = $searchedYP->getFields();
         foreach ($soughtFields as $soughtField) {
             foreach ($searchedFields as $searchedField) {
-                if ($searchedField->getName() == $soughtField->getName()) {
+                if ($searchedField->getPlant() == NULL) {
+                    array_push($plantArray, "Brak danych");
+                    break;
+                }
+                if ($searchedField->getName() == $soughtField->getName() && $searchedField->getPlant() != NULL) {
                     array_push($plantArray, $searchedField->getPlant()->getName());
                     break;
                 }
@@ -88,7 +91,6 @@ class ManagamentController extends AbstractController {
         }
         return $cultivatedArea;
     }
-
 
     // stworzyc w polu referencje od jakiego pola pochodzi
 }

@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OperatorRepository")
  */
-class Operator
-{
+class Operator {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -39,12 +39,6 @@ class Operator
     private $disable;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="operators")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Parcel", mappedBy="ArimrOperator")
      */
     private $parcels;
@@ -55,100 +49,76 @@ class Operator
      */
     private $yearPlan;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->parcels = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getFirstName(): ?string
-    {
+    public function getFirstName(): ?string {
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): self
-    {
+    public function setFirstName(string $firstName): self {
         $this->firstName = $firstName;
 
         return $this;
     }
 
-    public function getSurname(): ?string
-    {
+    public function getSurname(): ?string {
         return $this->surname;
     }
 
-    public function setSurname(string $surname): self
-    {
+    public function setSurname(string $surname): self {
         $this->surname = $surname;
 
         return $this;
     }
 
-    public function getArimrNumber(): ?int
-    {
+    public function getArimrNumber(): ?int {
         return $this->arimrNumber;
     }
 
-    public function setArimrNumber(string $arimrNumber): self
-    {
+    public function setArimrNumber(string $arimrNumber): self {
         $this->arimrNumber = $arimrNumber;
 
         return $this;
     }
 
-    public function getDisable(): ?bool
-    {
+    public function getDisable(): ?bool {
         return $this->disable;
     }
 
-    public function setDisable(bool $disable): self
-    {
+    public function setDisable(bool $disable): self {
         $this->disable = $disable;
 
         return $this;
     }
 
-    public function getUser(): ?user
-    {
-        return $this->user;
-    }
-
-    public function setUser(?user $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Parcel[]
      */
-    public function getParcels(): Collection
-    {
+    public function getParcels(): Collection {
         return $this->parcels;
     }
+
     /**
      * @return Collection|Parcel[]
      */
-     public function getParcelsInYearPlan(YearPlan $yearPlan): Collection
-    {
-         $parcels = $this->parcels;
-         $out = new ArrayCollection();
-         foreach($parcels as $parcel) {
-             if( $parcel->getField()->getYearPlan() == $yearPlan) {
-                 $out->add($parcel);
-             }
-         }
-         return $out;
+    public function getParcelsInYearPlan(YearPlan $yearPlan): Collection {
+        $parcels = $this->parcels;
+        $out = new ArrayCollection();
+        foreach ($parcels as $parcel) {
+            if ($parcel->getField()->getYearPlan() == $yearPlan) {
+                $out->add($parcel);
+            }
+        }
+        return $out;
     }
 
-    public function addParcel(Parcel $parcel): self
-    {
+    public function addParcel(Parcel $parcel): self {
         if (!$this->parcels->contains($parcel)) {
             $this->parcels[] = $parcel;
             $parcel->setArimrOperator($this);
@@ -157,8 +127,7 @@ class Operator
         return $this;
     }
 
-    public function removeParcel(Parcel $parcel): self
-    {
+    public function removeParcel(Parcel $parcel): self {
         if ($this->parcels->contains($parcel)) {
             $this->parcels->removeElement($parcel);
             // set the owning side to null (unless already changed)
@@ -170,15 +139,14 @@ class Operator
         return $this;
     }
 
-    public function getYearPlan(): ?yearPlan
-    {
+    public function getYearPlan(): ?yearPlan {
         return $this->yearPlan;
     }
 
-    public function setYearPlan(?yearPlan $yearPlan): self
-    {
+    public function setYearPlan(?yearPlan $yearPlan): self {
         $this->yearPlan = $yearPlan;
 
         return $this;
     }
+
 }
