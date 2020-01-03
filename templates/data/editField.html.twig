@@ -38,7 +38,7 @@
                 <label  for="inlineFormInputName2">Nazwa pola</label>
                 {{ form_widget(editFieldForm.name, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
-                    'placeholder': 'Nazwa',
+                    'placeholder': 'name',
                     'onblur':   'sprawdzPole("edit_field_form_name",inputFieldName_reg)',
                     }
                     })}}
@@ -49,13 +49,13 @@
                      <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
                      {{ form_widget(editFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
-                    'placeholder': 'Numer działki',
+                    'placeholder': 'parcel number',
                     'onblur':   'sprawdzPole("edit_field_form_parcels___name___parcelNumber",parcelNumber_reg)',
                     }})|e }}
                      <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
                      {{ form_widget(editFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
-                    'placeholder': 'Powierzchnia [ar]',
+                    'placeholder': 'area [ar]',
                     'onblur':   'sprawdzPole("edit_field_form_parcels___name___cultivatedArea",cultivatedArea_reg)',
                     }})|e }}
                      <label class='sr-only' for='operatorInput'>Operator</label>
@@ -80,12 +80,12 @@
                                     {%set desc = "s"%}
                                     {{ form_widget(row.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
-                    'placeholder': 'Numer działki',
+                    'placeholder': 'parcel number',
                     }}) }}
                                     <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
                                     {{ form_widget(row.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
-                    'placeholder': 'Powierzchnia',
+                    'placeholder': 'area',
                     }}) }}
                                     <label class='sr-only' for='{{ row.vars.id }}_ArimrOperator'>Operator</label>
                                     {{ form_widget(row.ArimrOperator,{'attr': 

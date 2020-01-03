@@ -9,6 +9,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class NewFieldFormType extends AbstractType {
 
@@ -20,6 +22,9 @@ class NewFieldFormType extends AbstractType {
                             'message' => 'Wprowadź nazwę',
                                 ]),
                     ],
+                ])
+                ->add('remove', SubmitType::class, [
+                    'attr' => ['class' => 'save'],
                 ])
         ;
         $builder->add('parcels', CollectionType::class, [

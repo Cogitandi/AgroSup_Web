@@ -203,21 +203,26 @@ class DataController extends AbstractController {
 
                 if ($form->isSubmitted() && $form->isValid()) {
                     $entityManager = $this->getDoctrine()->getManager();
-                    DataController::addYearToParcels($field, $entityManager);
 
-                    $entityManager->persist($field);
-                    $entityManager->flush();
-                    $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikwoane');
+                    if ($form->get('remove')->isClicked()) {
+                        DataController::deleteField($field, $entityManager);
+                        return $this->redirectToRoute('field');
+                    }
                 }
+                DataController::addYearToParcels($field, $entityManager);
 
-                $parameters = [
-                    'yearPlan' => $yearPlan,
-                    'editFieldForm' => $form->createView(),
-                    'operators' => $operators
-                ];
-
-                return $this->render('data/editField.html.twig', $parameters);
+                $entityManager->persist($field);
+                $entityManager->flush();
+                $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikwoane');
             }
+
+            $parameters = [
+                'yearPlan' => $yearPlan,
+                'editFieldForm' => $form->createView(),
+                'operators' => $operators
+            ];
+
+            return $this->render('data/editField.html.twig', $parameters);
         }
         return $this->redirectToRoute('field');
     }
@@ -303,6 +308,15 @@ class DataController extends AbstractController {
             }
             $entityManager->persist($fieldNew);
         }
+    }
+
+    public function deleteField($field, $entityManager) {
+        // with all parcels
+        foreach ($field->getParcels() as $parcel) {
+            $entityManager->remove($parcel);
+        }
+        $entityManager->remove($field);
+        $entityManager->flush();
     }
 
 }
