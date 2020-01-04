@@ -31,33 +31,35 @@
                 <!--- Content -->
                 <div class="col-md-10">
                     <div class="container-md mx-4">
-                        <h2 class="text-center">Osoby w gospodarstwie  </h2>                  
-                        <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope ="col">#</th>
-                                    <th scope ="col">Imię</th>
-                                    <th scope ="col">Nazwisko</th>
-                                    <th scope ="col">numer ARiMR</th>
-                                    <th scope ="col"></th> 
-                                </tr>
-                            </thead>
-                            <tbody >
-                                {% set licznik = 1 %}
-                                {% for item in operator %}
+                        <h2 class="text-center">Osoby w gospodarstwie  </h2>         
+                        <div class="table-responsive">
+                            <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                                <thead>
                                     <tr>
-                                        <th class="align-middle" scope="row">{{ licznik }}</th>
-                                        <td class="align-middle">{{ item.firstName }}</td>
-                                        <td class="align-middle">{{ item.surName }}</td>
-                                        <td class="align-middle">{{ item.arimrNumber }}</td>
-
-                                        <td class="align-middle"><input type="submit" value="Usuń" class="btn btn-danger" onClick="location.href = '{{ path('delete', {'id': item.id}) }}'"/></td>
+                                        <th scope ="col">#</th>
+                                        <th scope ="col">Imię</th>
+                                        <th scope ="col">Nazwisko</th>
+                                        <th scope ="col">numer ARiMR</th>
+                                        <th scope ="col"></th> 
                                     </tr>
-                                    {% set licznik = licznik+1 %}
-                                {% endfor %}
+                                </thead>
+                                <tbody >
+                                    {% set licznik = 1 %}
+                                    {% for item in operator %}
+                                        <tr>
+                                            <th class="align-middle" scope="row">{{ licznik }}</th>
+                                            <td class="align-middle">{{ item.firstName }}</td>
+                                            <td class="align-middle">{{ item.surName }}</td>
+                                            <td class="align-middle">{{ item.arimrNumber }}</td>
 
-                            </tbody>
-                        </table>
+                                            <td class="align-middle"><input type="submit" value="Usuń" class="btn btn-danger" onClick="location.href = '{{ path('delete', {'id': item.id}) }}'"/></td>
+                                        </tr>
+                                        {% set licznik = licznik+1 %}
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!--- End content -->
