@@ -1,91 +1,100 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} {% endblock %}
+{% block title %} Nowe pole {% endblock %}
 
 {% block body %}
     <section id="content">
-        <div class="container-fluid row mt-3">
-            <div class="col-2 mr-3">
-                <ul class="nav nav-pills flex-column">
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
-                        <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
-                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
-                    <div style="padding-left: 20px">
-                        <a class="d2 nav-link" href="/field" >Lista</a>
-                        <a class="d2 nav-link active" href="/field/add" >Stwórz nowe pole</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
-                </ul>
-            </div>
-            <div class="col-9">
-                <h2 class="text-center">Pole w sezonie {{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</h2>  
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {{ form_start(newFieldForm) }}
-                {% if not newFieldForm.vars.valid %}
-                    {# Loop through every form item #}
-                    {% for child in newFieldForm.children %}
-                        {# Display the errors of the form item #}
-                        {%for error in child.vars.errors%}
-                            <div class="alert alert-danger">{{error.message}}</div>
-                        {%endfor%}
-                    {%endfor%}
-                {%endif%}
-                <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
-                <label  for="inputFieldName">Nazwa pola</label>
-                {{ form_widget(newFieldForm.name, {'attr': 
+        <div class="container-fluid mt-3">
+            <div class="row">
+
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4">  
+                    <ul class="nav nav-pills flex-column">
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
+                            <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                            <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                        <div style="padding-left: 20px">
+                            <a class="d2 nav-link" href="/field" >Lista</a>
+                            <a class="d2 nav-link active" href="/field/add" >Stwórz nowe pole</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
+                    </ul>
+                </div>
+
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+                        <h2 class="text-center">Pole w sezonie {{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</h2>  
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        {{ form_start(newFieldForm) }}
+                        {% if not newFieldForm.vars.valid %}
+                            {# Loop through every form item #}
+                            {% for child in newFieldForm.children %}
+                                {# Display the errors of the form item #}
+                                {%for error in child.vars.errors%}
+                                    <div class="alert alert-danger">{{error.message}}</div>
+                                {%endfor%}
+                            {%endfor%}
+                        {%endif%}
+                        <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
+                        <label  for="inputFieldName">Nazwa pola</label>
+                        {{ form_widget(newFieldForm.name, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'name',
                     'onblur':   'sprawdzPole("new_field_form_name",FieldName_reg)',
                     }
                     })}}
-                <h6>Działki</h6>
+                        <h6>Działki</h6>
 
-                <div class="tags" data-prototype="
-                     
-                     <div class='form-inline'>
-                     <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
+                        <div class="tags" data-prototype="
+
+                             <div class='form-inline'>
+                             <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
+                             {{ form_widget(newFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'parcel number',
                     'onblur':   'sprawdzPole("new_field_form_parcels___name___parcelNumber",parcelNumber_reg)',
                     }})|e }}
-                     <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
+                             <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
+                             {{ form_widget(newFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'area [ar]',
                     'onblur':   'sprawdzPole("new_field_form_parcels___name___cultivatedArea",cultivatedArea_reg)',
                     }})|e }}
-                     <label class='sr-only' for='operatorInput'>Operator</label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
+                             <label class='sr-only' for='operatorInput'>Operator</label>
+                             {{ form_widget(newFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
                     {'class': 'custom-select mb-2 mr-sm-2',
                     }})|e }}
-                     <div class='form-check mb-2 mr-sm-2'>
-                     <label class='form-check-label' for='fuel'>Paliwo </label>
-                     {{ form_widget(newFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
+                             <div class='form-check mb-2 mr-sm-2'>
+                             <label class='form-check-label' for='fuel'>Paliwo </label>
+                             {{ form_widget(newFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
                     {'class': 'form-check-input',
                     'type': 'checkbox',
                     }})|e }}    
-                     </div>
-                     ">
+                             </div>
+                             ">
+                        </div>
+                        <button style="margin-top: 5px" type="submit" class="btn btn-primary">Utwórz pole</button>
+                        {% do newFieldForm.remove.setRendered() %}
+                        {{ form_end(newFieldForm) }}
+                    </div>
                 </div>
-                <button style="margin-top: 5px" type="submit" class="btn btn-primary">Zapisz</button>
-                {% do newFieldForm.remove.setRendered() %}
-                {{ form_end(newFieldForm) }}
-            </div>
-        </div>
+                <!--- End content -->
 
+            </div>
+        </div>                   
     </section>
 
 {% endblock %}

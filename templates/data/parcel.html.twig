@@ -1,73 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} {% endblock %}
+{% block title %} Lista działek {% endblock %}
 
 {% block body %}
     <section id="content">
-        <div class="container-fluid row mt-3">
-            <div class="col-2 mr-3">
-                <ul class="nav nav-pills flex-column">
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
-                        <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+        <div class="container-fluid mt-3">
+            <div class="row">
+
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4">  
+                    <ul class="nav nav-pills flex-column">
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
+                            <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                            <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                        <div style="padding-left: 20px">
+                            <a class="d2 nav-link collapse" href="/field" >Lista</a>
+                            <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
+                        </div>
+                        <a class="nav-link font-weight-bold active" href="/parcel" >Działki</a>
+                    </ul>
+                </div>
+
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+                        <h2 class="text-center">Działki w sezonie {{ start }}/{{ start+1 }} </h2>                  
+                        <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope ="col">#</th>
+                                    <th scope ="col">Numer</th>
+                                    <th scope ="col">Powierzchnia[ha]</th>
+                                    <th scope ="col">Paliwo</th>
+                                    <th scope ="col">Dopłaty</th>
+                                    <th scope ="col">Pole</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {% set licznik = 1 %}
+                                {% for item in parcels %}
+                                    {% if item.fuelApplication == 1 %}
+                                        {% set fuel = "TAK" %}
+                                    {% else %}
+                                        {% set fuel = "NIE" %}
+                                    {% endif %}
+
+                                    {% if item.arimrOperator == NULL %}
+                                        {% set operator = "Brak" %}
+                                    {% else %}
+                                        {% set operator = item.arimrOperator.firstname  %}
+                                    {% endif %}
+                                    <tr>
+                                        <td class="align-middle" scope="row">{{ licznik }}</th>
+                                        <td class="align-middle" scope="row">{{ item.parcelNumber }}</th>
+                                        <td class="align-middle" scope="row">{{ item.getCultivatedAreaHa }}</th>
+                                        <td class="align-middle" scope="row">{{ fuel }}</th>
+                                        <td class="align-middle" scope="row">{{ operator }}</th>
+                                        <td class="align-middle" scope="row">{{ item.Field.name }}</th>
+                                    </tr>
+                                    {% set licznik = licznik+1 %}
+
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
                     </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
-                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
-                    <div style="padding-left: 20px">
-                        <a class="d2 nav-link collapse" href="/field" >Lista</a>
-                        <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
-                    </div>
-                    <a class="nav-link font-weight-bold active" href="/parcel" >Działki</a>
-                </ul>
+                </div>
+                <!--- End content -->
+
             </div>
-            <div class="col-9">
-                <h2 class="text-center">Działki w sezonie {{ start }}/{{ start+1 }} </h2>                  
-                <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope ="col">#</th>
-                            <th scope ="col">Numer</th>
-                            <th scope ="col">Powierzchnia[ha]</th>
-                            <th scope ="col">Paliwo</th>
-                            <th scope ="col">Dopłaty</th>
-                            <th scope ="col">Pole</th>
-                        </tr>
-                    </thead>
-                    <tbody >
-                        {% set licznik = 1 %}
-                        {% for item in parcels %}
-                            {% if item.fuelApplication == 1 %}
-                                {% set fuel = "TAK" %}
-                            {% else %}
-                                {% set fuel = "NIE" %}
-                            {% endif %}
-
-                            {% if item.arimrOperator == NULL %}
-                                {% set operator = "Brak" %}
-                            {% else %}
-                                {% set operator = item.arimrOperator.firstname  %}
-                            {% endif %}
-                            <tr>
-                                <td class="align-middle" scope="row">{{ licznik }}</th>
-                                <td class="align-middle" scope="row">{{ item.parcelNumber }}</th>
-                                <td class="align-middle" scope="row">{{ item.getCultivatedAreaHa }}</th>
-                                <td class="align-middle" scope="row">{{ fuel }}</th>
-                                <td class="align-middle" scope="row">{{ operator }}</th>
-                                <td class="align-middle" scope="row">{{ item.Field.name }}</th>
-                            </tr>
-                            {% set licznik = licznik+1 %}
-
-                        {% endfor %}
-
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
+        </div>                   
     </section>
 {% endblock %}

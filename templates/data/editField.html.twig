@@ -1,118 +1,124 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} {% endblock %}
+{% block title %} Edycja pola {% endblock %}
 
 {% block body %}
-
     <section id="content">
-        <div class="container-fluid row mt-3">
-            <div class="col-2 mr-3">
-                <ul class="nav nav-pills flex-column">
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
-                        <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
-                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
-                    <div style="padding-left: 20px">
-                        <a class="d2 nav-link" href="/field" >Lista</a>
-                        <a class="d2 nav-link" href="/field/add" >Stwórz nowe pole</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
-                </ul>
-            </div>
-            <div class="col-9">
-                <h2 class="text-center">Pole w sezonie {{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</h2>  
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {{ form_start(editFieldForm) }}
-                <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
-                <label  for="inlineFormInputName2">Nazwa pola</label>
-                {{ form_widget(editFieldForm.name, {'attr': 
+        <div class="container-fluid mt-3">
+            <div class="row">
+
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4 text-center">  
+                    <ul class="nav nav-pills flex-column">
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
+                            <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                            <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                        <div style="padding-left: 20px">
+                            <a class="d2 nav-link" href="/field" >Lista</a>
+                            <a class="d2 nav-link" href="/field/add" >Stwórz nowe pole</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
+                    </ul>
+                </div>
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+                        <h2 class="text-center">Pole w sezonie {{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</h2>  
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        {{ form_start(editFieldForm) }}
+                        <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
+                        <label  for="inlineFormInputName2">Nazwa pola</label>
+                        {{ form_widget(editFieldForm.name, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'name',
                     'onblur':   'sprawdzPole("edit_field_form_name",inputFieldName_reg)',
                     }
                     })}}
-                <h6>Działki</h6>
+                        <h6>Działki</h6>
 
-                <div class="tags" data-prototype="
-                     <div class='form-inline'>
-                     <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
-                     {{ form_widget(editFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
+                        <div class="tags" data-prototype="
+                             <div class='form-inline'>
+                             <label class='sr-only' for='parcelNumberInput'>Numer działki</label>
+                             {{ form_widget(editFieldForm.parcels.vars.prototype.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'parcel number',
                     'onblur':   'sprawdzPole("edit_field_form_parcels___name___parcelNumber",parcelNumber_reg)',
                     }})|e }}
-                     <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
-                     {{ form_widget(editFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
+                             <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
+                             {{ form_widget(editFieldForm.parcels.vars.prototype.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'area [ar]',
                     'onblur':   'sprawdzPole("edit_field_form_parcels___name___cultivatedArea",cultivatedArea_reg)',
                     }})|e }}
-                     <label class='sr-only' for='operatorInput'>Operator</label>
-                     {{ form_widget(editFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
+                             <label class='sr-only' for='operatorInput'>Operator</label>
+                             {{ form_widget(editFieldForm.parcels.vars.prototype.ArimrOperator,{'attr': 
                     {'class': 'custom-select mb-2 mr-sm-2',
                     }})|e }}
-                     <div class='form-check mb-2 mr-sm-2'>
-                     <label class='form-check-label' for='fuel'>Paliwo </label>
-                     {{ form_widget(editFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
+                             <div class='form-check mb-2 mr-sm-2'>
+                             <label class='form-check-label' for='fuel'>Paliwo </label>
+                             {{ form_widget(editFieldForm.parcels.vars.prototype.fuelApplication,{'attr': 
                     {'class': 'form-check-input',
                     'type': 'checkbox',
                     }})|e }}    
-                     </div>
-                     ">
-                    {% for row in editFieldForm.parcels %}
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">
-                            </div>
-                            <div class="panel-body">
-                                <div class='form-inline'>
-                                    <label class='sr-only' for='{{ row.vars.id }}_parcelNumber'>Numer działki</label>
-                                    {%set desc = "s"%}
-                                    {{ form_widget(row.parcelNumber,{'attr': 
+                             </div>
+                             ">
+                            {% for row in editFieldForm.parcels %}
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class='form-inline'>
+                                            <label class='sr-only' for='{{ row.vars.id }}_parcelNumber'>Numer działki</label>
+                                            {%set desc = "s"%}
+                                            {{ form_widget(row.parcelNumber,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'parcel number',
                     }}) }}
-                                    <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
-                                    {{ form_widget(row.cultivatedArea,{'attr': 
+                                            <label class='sr-only' for='cultivatedAreaInput'>Powierzchnia</label>
+                                            {{ form_widget(row.cultivatedArea,{'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
                     'placeholder': 'area',
                     }}) }}
-                                    <label class='sr-only' for='{{ row.vars.id }}_ArimrOperator'>Operator</label>
-                                    {{ form_widget(row.ArimrOperator,{'attr': 
+                                            <label class='sr-only' for='{{ row.vars.id }}_ArimrOperator'>Operator</label>
+                                            {{ form_widget(row.ArimrOperator,{'attr': 
                     {'class': 'custom-select mb-2 mr-sm-2',
                     }}) }}
-                                    <div class='form-check mb-2 mr-sm-2'>
-                                        <label class='form-check-label' for='{{ row.vars.id }}_fuel'>Paliwo </label>
-                                        {{ form_widget(row.fuelApplication,{'attr': 
+                                            <div class='form-check mb-2 mr-sm-2'>
+                                                <label class='form-check-label' for='{{ row.vars.id }}_fuel'>Paliwo </label>
+                                                {{ form_widget(row.fuelApplication,{'attr': 
                     {'class': 'form-check-input',
                     'type': 'checkbox',
                     }}) }}    
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                </div>
-                <button style="margin-top: 5px" type="submit" class="btn btn-primary">Zapisz</button>
-                {{ form_widget(editFieldForm.remove, {
+                        <button style="margin-top: 5px" type="submit" class="btn btn-primary">Zapisz</button>
+                        {{ form_widget(editFieldForm.remove, {
                     'attr': {'class': 'btn btn-danger',
                              'style': 'margin-top: 5px'},
                     'label': 'Delete field',
                      }) }}
-                {{ form_end(editFieldForm) }}
+                        {{ form_end(editFieldForm) }}
+                    </div>
+                </div>
+                <!--- End content -->    
             </div>
         </div>
-
     </section>
 
 {% endblock %}

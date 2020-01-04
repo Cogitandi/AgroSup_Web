@@ -64,7 +64,7 @@ class DataController extends AbstractController {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
         }
-        return $this->redirectToRoute('yearPlan');
+        return $this->redirectToRoute('yearPlanList');
     }
 
     /**
@@ -101,7 +101,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/yearPlan", name="yearPlan")
+     * @Route("/yearPlanList", name="yearPlanList")
      */
     public function yearPlan() {
         $user = $this->getUser();

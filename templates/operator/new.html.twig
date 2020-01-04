@@ -1,83 +1,90 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} {% endblock %}
+{% block title %} Dodaj osobe {% endblock %}
 
 {% block body %}
     <section id="content">
-        <div class="container-fluid row mt-3">
-            <div class="col-2 mr-3">
-                <ul class="nav nav-pills flex-column">
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
-                        <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d3 nav-link " href="/operator" >Lista</a>
-                        <a class="d3 nav-link active" href="/operator/add" >Dodaj</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
-                    <div style="padding-left: 20px">
-                        <a class="d2 nav-link collapse" href="/field" >Lista</a>
-                        <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
-                </ul>
-            </div>
-            <div class="col-9">
-                <div class="m-5 container col-7">
-                    {{ form_start(addNewOperatorForm) }}
+        <div class="container-fluid mt-3">
+            <div class="row">
 
-                    {% if not addNewOperatorForm.vars.valid %}
-                        {# Loop through every form item #}
-                        {% for child in addNewOperatorForm.children %}
-                            {# Display the errors of the form item #}
-                            {%for error in child.vars.errors%}
-                                <div class="alert alert-danger">{{error.message}}</div>
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4">  
+                    <ul class="nav nav-pills flex-column">
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
+                            <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d3 nav-link " href="/operator" >Lista</a>
+                            <a class="d3 nav-link active" href="/operator/add" >Dodaj</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                        <div style="padding-left: 20px">
+                            <a class="d2 nav-link collapse" href="/field" >Lista</a>
+                            <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
+                    </ul>
+                </div>
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+                        {{ form_start(addNewOperatorForm) }}
+
+                        {% if not addNewOperatorForm.vars.valid %}
+                            {# Loop through every form item #}
+                            {% for child in addNewOperatorForm.children %}
+                                {# Display the errors of the form item #}
+                                {%for error in child.vars.errors%}
+                                    <div class="alert alert-danger">{{error.message}}</div>
+                                {%endfor%}
                             {%endfor%}
-                        {%endfor%}
-                    {%endif%}
+                        {%endif%}
 
-                    <div class="form-group">
-                        <label for="firstName">Imię</label>
-                        {{ form_widget(addNewOperatorForm.firstName, {'attr': 
+                        <div class="form-group">
+                            <label for="firstName">Imię</label>
+                            {{ form_widget(addNewOperatorForm.firstName, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'firstName', 
                     'aria-describedby': 'firstNameHelp',
                     'onblur':   'sprawdzPole("add_operator_form_firstName",firstName_reg)'}
                     })}}
-                        <small id="firstNameHelp" class="form-text text-muted">Podaj imię osoby, która zarządza gospodarstwem.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="surname">Nazwisko</label>
-                        {{ form_widget(addNewOperatorForm.surname, {'attr': 
+                            <small id="firstNameHelp" class="form-text text-muted">Podaj imię osoby, która zarządza gospodarstwem.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="surname">Nazwisko</label>
+                            {{ form_widget(addNewOperatorForm.surname, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'surname',
                     'aria-describedby': 'surnameHelp',
                     'onblur':   'sprawdzPole("add_operator_form_surname",surname_reg)'}
                     })}}
-                        <small id="surnameHelp" class="form-text text-muted">Podaj nazwiso osoby, która zarządza gospodarstwem.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="arimrNumber">Numer ARIMR</label>
-                        {{ form_widget(addNewOperatorForm.arimrNumber, {'attr': 
+                            <small id="surnameHelp" class="form-text text-muted">Podaj nazwiso osoby, która zarządza gospodarstwem.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="arimrNumber">Numer ARIMR</label>
+                            {{ form_widget(addNewOperatorForm.arimrNumber, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'ARIMR number',
                     'aria-describedby': 'arimrNumberHelp',
                     'onblur':   'sprawdzPole("add_operator_form_arimrNumber",arimrNumber_reg)'}
                     })}}
-                        <small id="arimrNumberHelp" class="form-text text-muted">Podaj numer otrzymany od ARIMR.</small>
+                            <small id="arimrNumberHelp" class="form-text text-muted">Podaj numer otrzymany od ARIMR.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+
+                        {{ form_end(addNewOperatorForm) }}
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
-
-                    {{ form_end(addNewOperatorForm) }}
                 </div>
-
-
+                <!--- End content -->
             </div>
-        </div>
+        </div>               
     </section>
+{% endblock %}
+
+{% block javascripts %}
     <script src="/validate.js"></script>
 {% endblock %}

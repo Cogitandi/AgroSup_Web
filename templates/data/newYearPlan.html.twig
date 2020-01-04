@@ -1,68 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} {% endblock %}
+{% block title %} Nowe plan {% endblock %}
 
 {% block body %}
     <section id="content">
-        <div class="container-fluid row mt-3">
-            <div class="col-2 mr-3">
-                <ul class="nav nav-pills flex-column">
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d1 nav-link" href="/yearPlan" >Lista</a>
-                        <a class="d1 nav-link active" href="/yearPlan/add" >Stwórz nowy plan</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
-                    <div style="padding-left: 20px">
-                        <a class="d3 nav-link collapse" href="/operator" >Lista</a>
-                        <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
-                    <div style="padding-left: 20px">
-                        <a class="d2 nav-link collapse" href="/field" >Lista</a>
-                        <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
-                    </div>
-                    <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
-                </ul>
-            </div>
-            <div class="col-9">
-                <div class="m-5 container col-7">
-                    {{ form_start(newYearPlanForm) }}       
-                    {% if errors %}
-                        {%for error in errors%}
+        <div class="container-fluid mt-3">
+            <div class="row">
 
-                            <div class="alert alert-danger">{{error.message}}</div>
-                        {%endfor%}
-                    {% endif %}
-                    {% if not newYearPlanForm.vars.valid %}
-                        {# Loop through every form item #}
-                        {% for child in newYearPlanForm.children %}
-                            {# Display the errors of the form item #}
-                            {%for error in child.vars.errors%}
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4">  
+                    <ul class="nav nav-pills flex-column">
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d1 nav-link" href="/yearPlan" >Lista</a>
+                            <a class="d1 nav-link active" href="/yearPlan/add" >Stwórz nowy plan</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
+                        <div style="padding-left: 20px">
+                            <a class="d3 nav-link collapse" href="/operator" >Lista</a>
+                            <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
+                        <div style="padding-left: 20px">
+                            <a class="d2 nav-link collapse" href="/field" >Lista</a>
+                            <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
+                        </div>
+                        <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
+                    </ul>
+                </div>
+
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+
+                        {{ form_start(newYearPlanForm) }}       
+                        {% if errors %}
+                            {%for error in errors%}
 
                                 <div class="alert alert-danger">{{error.message}}</div>
                             {%endfor%}
-                        {%endfor%}
-                    {%endif%}
+                        {% endif %}
+                        {% if not newYearPlanForm.vars.valid %}
+                            {# Loop through every form item #}
+                            {% for child in newYearPlanForm.children %}
+                                {# Display the errors of the form item #}
+                                {%for error in child.vars.errors%}
 
-                    <div class="form-group">
-                        <label for="startYear">Rok rozpoczęcia</label>
-                        {{ form_widget(newYearPlanForm.startYear, {'attr': 
+                                    <div class="alert alert-danger">{{error.message}}</div>
+                                {%endfor%}
+                            {%endfor%}
+                        {%endif%}
+
+                        <div class="form-group">
+                            <label for="startYear">Rok rozpoczęcia</label>
+                            {{ form_widget(newYearPlanForm.startYear, {'attr': 
                     {'class': 'form-control',
                     'placeholder': 'Rok',
                     'aria-describedby': 'startYear',
                     }})}}
-                        <small id="startYear" class="form-text text-muted">Podaj rok rozpoczęcia sezony.</small>
+                            <small id="startYear" class="form-text text-muted">Podaj rok rozpoczęcia sezony.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+
+                        {{ form_end(newYearPlanForm) }}
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
-
-                    {{ form_end(newYearPlanForm) }}
                 </div>
-
+                <!--- End content -->
 
             </div>
-        </div>
+        </div>                   
     </section>
+{% endblock %}
+
+{% block javascripts %}
     <script src="/validate.js"></script>
 {% endblock %}
