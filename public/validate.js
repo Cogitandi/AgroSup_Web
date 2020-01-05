@@ -13,11 +13,11 @@ message_reg = /^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]{10,40}$/; //reg tex
 FieldName_reg = /^([\w ]+)$/;
 arimrNumber_reg = /^[0-9]{11}$/;
 parcelNumber_reg = /^[0-9|/]+$/;
-cultivatedArea_reg= /^[0-9]+$/;
+cultivatedArea_reg = /^[0-9]+$/;
 
 function sprawdzPole(pole_id, obiektRegex) {
-    if(pole_id === "radio") {
-        if(document.getElementById("polecam").checked == false && document.getElementById("niePolecam").checked == false ) {
+    if (pole_id === "radio") {
+        if (document.getElementById("polecam").checked == false && document.getElementById("niePolecam").checked == false) {
             polecam.classList.add('is-invalid');
             niePolecam.classList.add('is-invalid');
         } else {
@@ -26,38 +26,21 @@ function sprawdzPole(pole_id, obiektRegex) {
         }
         return true;
     }
-    if(pole_id === "allContact") {
-        sprawdzPole('name',name_reg);
-        sprawdzPole('lastname',lastname_reg);
-        sprawdzPole('email',email_reg);
-        sprawdzPole('adres',adres_reg);
-        sprawdzPole('city',city_reg);
-        sprawdzPole('wojewodztwo',woj_reg);
-        sprawdzPole('message',message_reg);
-        sprawdzPole('post-code',postcode_reg)
-        return true;
-    }
-    if(pole_id === "allOpinion") {
-        sprawdzPole('name',name_reg);
-        sprawdzPole('lastname',lastname_reg);
-        sprawdzPole('message',message_reg);
-        sprawdzPole('radio',name_reg);
-        
-        return true;
-    }
-    //console.log("zle"); 
     //---------------------------------
     var obiektPole = document.getElementById(pole_id);
-    if(!obiektRegex.test(obiektPole.value))  
-    {
-        obiektPole.classList.remove('is-valid');
-        obiektPole.classList.add('is-invalid');
+    if (obiektPole.value != "") {
+        if (!obiektRegex.test(obiektPole.value))
+        {
+            obiektPole.classList.remove('is-valid');
+            obiektPole.classList.add('is-invalid');
 
-    } else { 
-        obiektPole.classList.add('is-valid');
-        obiektPole.classList.remove('is-invalid');
-       // console.log("git"); 
-    } 
-    return true;
+        } else {
+            obiektPole.classList.add('is-valid');
+            obiektPole.classList.remove('is-invalid');
+            // console.log("git"); 
+        }
+        return true;
+    }
+
 
 }

@@ -15,14 +15,16 @@ class CropPlanType extends AbstractType {
         $builder->add('fields', CollectionType::class, [
             'entry_type' => PlantForFieldType::class,
             'label' => false,
-            'entry_options' => ['label' => false],
+            'entry_options' => ['label' => false,
+                'userPlantList' => $options['userPlantList'],
+            ],
         ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
             'data_class' => YearPlan::class,
+            'userPlantList' => array(),
         ]);
     }
 

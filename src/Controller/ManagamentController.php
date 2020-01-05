@@ -21,15 +21,16 @@ class ManagamentController extends AbstractController {
             $yearPlan2 = ManagamentController::findYearPlanByYearBack(2, $yearPlan);
             $yearPlan1 = ManagamentController::findYearPlanByYearBack(1, $yearPlan);
 
-
-            $form = $this->createForm(CropPlanType::class, $yearPlan);
+            $form = $this->createForm(CropPlanType::class, $yearPlan, ['userPlantList' => $user->getUserPlants()]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->flush();
             }
-
+            foreach ($user->getUserPlants() as $item) {
+                echo $item->getPlant()->getName();
+            }
             $parameters = [
                 'yearPlan2' => ManagamentController::findMatchingPlant($yearPlan, $yearPlan2),
                 'yearPlan1' => ManagamentController::findMatchingPlant($yearPlan, $yearPlan1),
@@ -38,6 +39,22 @@ class ManagamentController extends AbstractController {
                 'form' => $form->createView(),
             ];
             return $this->render('managament/cropPlan.twig', $parameters);
+        }
+        return $this->redirectToRoute('yearPlan');
+    }
+
+    /**
+     * @Route("/summary", name="summary")
+     */
+    public function summary() {
+        $user = $this->getUser();
+        $yearPlan = $user->getChoosedYearPlan();
+        if ($yearPlan) {
+
+
+            $parameters = [
+            ];
+            return $this->render('managament/summary.twig', $parameters);
         }
         return $this->redirectToRoute('yearPlan');
     }

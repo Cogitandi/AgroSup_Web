@@ -18,7 +18,7 @@ class ParcelType extends AbstractType {
                 ->add('ArimrOperator', EntityType::class, array(
                     'class' => 'App:Operator',
                     'choices' => $options['operators'],
-                    'choice_label' => 'firstName',
+                    //'choice_label' => 'firstName',
                     'choice_label' => function ($operator) {
                         return $operator->getfirstName() . ' ' . $operator->getSurname();
                     },

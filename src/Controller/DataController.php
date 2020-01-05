@@ -3,17 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Field;
+use App\Entity\UserPlant;
 use App\Entity\YearPlan;
+use App\Entity\Plant;
 use App\Form\NewFieldFormType;
 use App\Form\NewYearPlanFormType;
+use App\Form\UserPlantsType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use DeepCopy\DeepCopy;
 
 class DataController extends AbstractController {
 
@@ -32,7 +34,7 @@ class DataController extends AbstractController {
     public function setYearPlan(Request $request) {
         $user = $this->getUser();
 
-        // From POST
+// From POST
         $yearPlanId = $request->request->get('yearPlan');
 
         $yearPlan = DataController::findYearPlanById($yearPlanId);
@@ -51,16 +53,16 @@ class DataController extends AbstractController {
         $user = $this->getUser();
         $userYearPlans = $user->getYearPlans();
 
-        // From POST
+// From POST
         $yearPlanId = $request->request->get('yearPlan');
         $status = $request->request->get('status');
 
         $yearPlan = DataController::findEntityById($userYearPlans, $yearPlanId);
 
         if ($yearPlan) {
-            // Change status
+// Change status
             $status == "open" ? $yearPlan->setIsClosed(true) : $yearPlan->setIsClosed(false);
-            // Save to database
+// Save to database
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
         }
@@ -205,7 +207,6 @@ class DataController extends AbstractController {
                     $entityManager = $this->getDoctrine()->getManager();
 
                     if ($form->get('remove')->isClicked()) {
-                        //DataController::deleteField($field, $entityManager);
                         $entityManager->remove($field);
                         $entityManager->flush();
                         return $this->redirectToRoute('field');
@@ -230,7 +231,47 @@ class DataController extends AbstractController {
         return $this->redirectToRoute('field');
     }
 
-    // Functions
+    /**
+     * @Route("/selectPlants", name="selectPlants")
+     */
+    public function selectPlants(Request $request) {
+
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $plantList = $this->getDoctrine()->getRepository(Plant::class)->findAll();
+        $userPlants = $user->getUserPlants();
+
+        $form = $this->createForm(UserPlantsType::class, $user, ['plantList' => $plantList, 'userPlants' => $userPlants]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            DataController::addPlantsToUser($form, $user);
+            $entityManager->flush();
+            return $this->redirectToRoute('selectPlants');
+        }
+        $parameters = [
+            'form' => $form->createView(),
+        ];
+        return $this->render('data/selectPlants.twig', $parameters);
+    }
+
+// Functions
+
+    public function addPlantsToUser($form, $user) {
+        $userPlants = $user->getUserPlants();
+        foreach ($userPlants as $userPlant) {
+            $user->removeUserPlant($userPlant);
+        }
+        $choosedPlant = $form->get('Plants')->getData();
+        foreach ($choosedPlant as $plant) {
+            $userPlant = new UserPlant();
+            $userPlant->setUser($user);
+            $userPlant->setPlant($plant);
+            $user->addUserPlant($userPlant);
+        }
+    }
+
     public function sumAreaEachField(Collection $fields) {
         $user = $this->getUser();
         $cultivatedArea = Array();
@@ -314,7 +355,7 @@ class DataController extends AbstractController {
     }
 
     public function deleteField($field, $entityManager) {
-        // with all parcels
+// with all parcels
         foreach ($field->getParcels() as $parcel) {
             $entityManager->remove($parcel);
         }

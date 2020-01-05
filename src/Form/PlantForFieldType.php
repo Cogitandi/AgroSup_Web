@@ -12,13 +12,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PlantForFieldType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        
+        $plantList = array();
+        foreach($options['userPlantList'] as $userPlant ) {
+            array_push($plantList,$userPlant->getPlant() );
+        }
         $builder
                 ->add('plant', EntityType::class,
                         [
                             'class' => 'App:Plant',
-                            'query_builder' => function (EntityRepository $er) {
-                                return $er->createQueryBuilder('p');
-                            },
+//                            'query_builder' => function (EntityRepository $er) {
+//                                return $er->createQueryBuilder('p');
+//                            },
+                            'choices' => $plantList,
                             'choice_label' => 'name',
                             'required' => false,
                             'placeholder' => 'not defined',
@@ -32,6 +38,7 @@ class PlantForFieldType extends AbstractType {
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
             'data_class' => Field::class,
+            'userPlantList' => array(),
         ]);
     }
 

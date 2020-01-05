@@ -47,9 +47,15 @@ class User implements UserInterface
      */
     private $choosedYearPlan;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserPlant", mappedBy="user", orphanRemoval=true,cascade={"persist"})
+     */
+    private $userPlants;
+
     public function __construct()
     {
         $this->yearPlans = new ArrayCollection();
+        $this->userPlants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +175,37 @@ class User implements UserInterface
     public function setChoosedYearPlan(?yearPlan $choosedYearPlan): self
     {
         $this->choosedYearPlan = $choosedYearPlan;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserPlant[]
+     */
+    public function getUserPlants(): Collection
+    {
+        return $this->userPlants;
+    }
+
+    public function addUserPlant(UserPlant $userPlant): self
+    {
+        if (!$this->userPlants->contains($userPlant)) {
+            $this->userPlants[] = $userPlant;
+            $userPlant->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPlant(UserPlant $userPlant): self
+    {
+        if ($this->userPlants->contains($userPlant)) {
+            $this->userPlants->removeElement($userPlant);
+            // set the owning side to null (unless already changed)
+            if ($userPlant->getUser() === $this) {
+                $userPlant->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+
+{% block body %}
+    <section id="content">
+        <div class="container-fluid mt-3">
+            <div class="row">
+
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4">                
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cropPlan" >Planuj uprawy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/summary" >Podsumowanie</a>
+                        </li>
+                    </ul>
+                </div> 
+
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+                        <h2 class="text-center">Podsumowanie  </h2>  
+                        x
+                    </div>
+                </div>
+                <!--- End content -->
+            </div> 
+        </div>                      
+    </section>
+{% endblock %}
