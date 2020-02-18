@@ -2,9 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiFilter(SearchFilter::class, properties={"yearPlan": "exact"})
+ * @ApiResource( 
+ * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
+ * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * normalizationContext={"groups"={"parcel:read"}} 
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\ParcelRepository")
  */
 class Parcel
@@ -13,37 +23,42 @@ class Parcel
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"parcel:read"})
      */
     private $id;
 
     /**
+     * @Groups({"parcel:read"})
      * @ORM\Column(type="string", length=10)
      */
     private $parcelNumber;
 
     /**
+     * @Groups({"parcel:read"})
      * @ORM\Column(type="integer")
      */
     private $cultivatedArea;
 
     /**
+     * @Groups({"parcel:read"})
      * @ORM\Column(type="boolean")
      */
     private $fuelApplication;
 
     /**
+     * @Groups({"parcel:read"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Operator", inversedBy="parcels")
      */
     private $ArimrOperator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\yearPlan", inversedBy="parcels")
+     * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan", inversedBy="parcels")
      * @ORM\JoinColumn(nullable=false)
      */
     private $yearPlan;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\field", inversedBy="parcels")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Field", inversedBy="parcels")
      */
     private $field;
 

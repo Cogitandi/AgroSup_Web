@@ -4,7 +4,8 @@
 
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
-
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Required meta tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,9 +34,13 @@
 
                         {% if is_granted("IS_AUTHENTICATED_FULLY") %}
                             {% if app.user.ChoosedYearPlan %}
+                                <li class="nav-item">
                                 <a class="nav-link" href="/yearPlan">Plan {{ app.user.ChoosedYearPlan.startYear }} / {{ app.user.ChoosedYearPlan.startYear+1 }}</a>
+                                </li>
                             {% else %}
+                                <li class="nav-item">
                                 <a class="nav-link" href="/yearPlan">Wybierz plan</a>
+                                </li>
 
                             {% endif %}
                             <li class="nav-item">

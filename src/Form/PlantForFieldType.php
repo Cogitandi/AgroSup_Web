@@ -30,6 +30,7 @@ class PlantForFieldType extends AbstractType {
                             'placeholder' => 'not defined',
                             'label' => false,
                 ])
+                ->add('plantVariety')
 
 
         ;

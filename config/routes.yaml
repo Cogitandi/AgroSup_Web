@@ -1,5 +1,13 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-
-# the "app_lucky_number" route name is not important yet
+    # config/routes.yaml
+    
+# api/config/routes.yaml
+authentication_token:
+    path: /api/authentication_token
+    methods: ['POST']
+api:
+    path: /api/test
+    controller: App\Controller\api\apiController::api
+    methods: ['POST']

@@ -7,14 +7,22 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource( 
+ * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
+ * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * normalizationContext={"groups"={"user:read"}} 
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-class User implements UserInterface
-{
+class User implements UserInterface {
+
     /**
+     * @Groups({"user:read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -22,6 +30,7 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Groups({"user:read"})
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -43,7 +52,7 @@ class User implements UserInterface
     private $yearPlans;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\yearPlan")
+     * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan")
      */
     private $choosedYearPlan;
 
@@ -52,24 +61,20 @@ class User implements UserInterface
      */
     private $userPlants;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->yearPlans = new ArrayCollection();
         $this->userPlants = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getEmail(): ?string
-    {
+    public function getEmail(): ?string {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
+    public function setEmail(string $email): self {
         $this->email = $email;
 
         return $this;
@@ -80,16 +85,14 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername(): string
-    {
+    public function getUsername(): string {
         return (string) $this->email;
     }
 
     /**
      * @see UserInterface
      */
-    public function getRoles(): array
-    {
+    public function getRoles(): array {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -97,8 +100,7 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
-    {
+    public function setRoles(array $roles): self {
         $this->roles = $roles;
 
         return $this;
@@ -107,13 +109,11 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
-    {
+    public function getPassword(): string {
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
+    public function setPassword(string $password): self {
         $this->password = $password;
 
         return $this;
@@ -122,16 +122,14 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getSalt()
-    {
+    public function getSalt() {
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
-    {
+    public function eraseCredentials() {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
@@ -139,13 +137,11 @@ class User implements UserInterface
     /**
      * @return Collection|YearPlan[]
      */
-    public function getYearPlans(): Collection
-    {
+    public function getYearPlans(): Collection {
         return $this->yearPlans;
     }
 
-    public function addYearPlan(YearPlan $yearPlan): self
-    {
+    public function addYearPlan(YearPlan $yearPlan): self {
         if (!$this->yearPlans->contains($yearPlan)) {
             $this->yearPlans[] = $yearPlan;
             $yearPlan->setUser($this);
@@ -154,8 +150,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeYearPlan(YearPlan $yearPlan): self
-    {
+    public function removeYearPlan(YearPlan $yearPlan): self {
         if ($this->yearPlans->contains($yearPlan)) {
             $this->yearPlans->removeElement($yearPlan);
             // set the owning side to null (unless already changed)
@@ -167,13 +162,11 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getChoosedYearPlan(): ?yearPlan
-    {
+    public function getChoosedYearPlan(): ?yearPlan {
         return $this->choosedYearPlan;
     }
 
-    public function setChoosedYearPlan(?yearPlan $choosedYearPlan): self
-    {
+    public function setChoosedYearPlan(?yearPlan $choosedYearPlan): self {
         $this->choosedYearPlan = $choosedYearPlan;
 
         return $this;
@@ -182,13 +175,11 @@ class User implements UserInterface
     /**
      * @return Collection|UserPlant[]
      */
-    public function getUserPlants(): Collection
-    {
+    public function getUserPlants(): Collection {
         return $this->userPlants;
     }
 
-    public function addUserPlant(UserPlant $userPlant): self
-    {
+    public function addUserPlant(UserPlant $userPlant): self {
         if (!$this->userPlants->contains($userPlant)) {
             $this->userPlants[] = $userPlant;
             $userPlant->setUser($this);
@@ -197,8 +188,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeUserPlant(UserPlant $userPlant): self
-    {
+    public function removeUserPlant(UserPlant $userPlant): self {
         if ($this->userPlants->contains($userPlant)) {
             $this->userPlants->removeElement($userPlant);
             // set the owning side to null (unless already changed)
@@ -209,4 +199,14 @@ class User implements UserInterface
 
         return $this;
     }
+    
+    // Api
+    
+    public function getYearPlanById($yearPlanId) {
+        foreach($this->yearPlans as $yearPlan) {
+            if($yearPlan->getId() == $yearPlanId)
+                return $yearPlan;
+        }
+    }
+
 }

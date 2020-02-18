@@ -10,23 +10,23 @@
                 <!--- Left menu -->
                 <div class="col-md-2 mb-4">  
                     <ul class="nav nav-pills flex-column">
-                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a>       
-                        <div style="padding-left: 20px">
-                            <a class="d1 nav-link collapse" href="/yearPlan" >Lista</a>
-                            <a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a>
-                        </div>
-                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a>       
-                        <div style="padding-left: 20px">
-                            <a class="d3 nav-link collapse" href="/operator" >Lista</a>
-                            <a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a>
-                        </div>
-                        <a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a>
-                        <div style="padding-left: 20px">
-                            <a class="d2 nav-link collapse" href="/field" >Lista</a>
-                            <a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a>
-                        </div>
-                        <a class="nav-link font-weight-bold" href="/parcel" >Działki</a>
-                        <a class="nav-link font-weight-bold active" href="/selectPlants" >Wybierz rośliny</a>
+                        <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a></li>       
+                        <li><ul style="padding-left: 20px; list-style: none">
+                            <li><a class="d1 nav-link collapse" href="/yearPlan" >Lista</a></li>
+                            <li><a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a></li>
+                        </ul></li>
+                        <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a></li>       
+                        <li><ul style="padding-left: 20px; list-style: none">
+                            <li><a class="d3 nav-link collapse" href="/operator" >Lista</a></li>
+                            <li><a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a></li>
+                        </ul></li>
+                        <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a></li>
+                        <li><ul style="padding-left: 20px; list-style: none">
+                            <li><a class="d2 nav-link collapse" href="/field" >Lista</a></li>
+                            <li><a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a></li>
+                        </ul></li>
+                        <li><a class="nav-link font-weight-bold" href="/parcel" >Działki</a></li>
+                        <li><a class="nav-link font-weight-bold active" href="/selectPlants" >Wybierz rośliny</a></li>
                     </ul>
                 </div>
 
@@ -34,10 +34,34 @@
                 <div class="col-md-10">
                     <div class="container-md mx-4">
                         <h2 class="text-center">Wybierz rośliny, które uprawiasz</h2>   
-                        
                         {{ form_start(form) }}
                         <button type="submit" class="float-right btn btn-primary">Zapisz</button>
+
+                        <table class="table table-hover w-25 ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Roślina</th>
+                                    <th scope="col">Uprawiam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for plant in form.Plants %}
+                                    <tr>
+                                        <td scope="row">{{ form_label(plant) }}</td>
+                                        <td>{{ form_widget(plant) }}<br/></td>
+                                    </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
                         {{ form_end(form) }}
+
+
+
+
+
+
                     </div>
                 </div>
                 <!--- End content -->

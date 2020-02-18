@@ -2,11 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiFilter(SearchFilter::class, properties={"yearPlan": "exact"})
+ * @ApiResource( 
+ * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
+ * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * normalizationContext={"groups"={"operator:read"}} 
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\OperatorRepository")
  */
 class Operator {
@@ -15,15 +25,18 @@ class Operator {
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"operator:read"})
      */
     private $id;
 
     /**
+     * @Groups({"operator:read"})
      * @ORM\Column(type="string", length=30)
      */
     private $firstName;
 
     /**
+     * @Groups({"operator:read"})
      * @ORM\Column(type="string", length=30)
      */
     private $surname;
@@ -44,7 +57,8 @@ class Operator {
     private $parcels;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\yearPlan", inversedBy="operators")
+     * @Groups("operator:read")
+     * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan", inversedBy="operators")
      * @ORM\JoinColumn(nullable=false)
      */
     private $yearPlan;

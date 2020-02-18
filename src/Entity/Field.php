@@ -2,11 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiFilter(SearchFilter::class, properties={"yearPlan": "exact"})
+ * @ApiResource( 
+ * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
+ * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * normalizationContext={"groups"={"field:read"}} 
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\FieldRepository")
  */
 class Field {
@@ -15,32 +25,38 @@ class Field {
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"field:read"})
+     * 
      */
     private $id;
 
     /**
+     * @Groups({"field:read"})
      * @ORM\Column(type="string", length=30)
      */
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\yearPlan", inversedBy="fields")
+     * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan", inversedBy="fields")
      * @ORM\JoinColumn(nullable=false)
      */
     private $yearPlan;
 
     /**
+     * @Groups("read")
      * @ORM\OneToMany(targetEntity="App\Entity\Parcel", cascade={"persist"}, mappedBy="field", orphanRemoval=true)
      */
     private $parcels;
 
     /**
+     * @Groups("read")
      * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $plantVariety;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Plant")
+     * @Groups({"read"})
      */
     private $plant;
 

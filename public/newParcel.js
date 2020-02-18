@@ -36,7 +36,7 @@ $(document).ready(function () {
 function addNewForm() {
     // getting the prototype
     // the prototype is the form itself, plain html
-   
+
     var prototype = $collectionHolder.data('prototype');
     // get the index
     // this is the index we set when the document was ready, look above for more info
@@ -46,7 +46,7 @@ function addNewForm() {
     // replace the __name__ string in the html using a regular expression with the index value
     newForm = newForm.replace(/__name__/g, index);
     // incrementing the index data and setting it again to the collectionHolder
-    $collectionHolder.data('index', index+1);
+    $collectionHolder.data('index', index + 1);
     // create the panel
     // this is the panel that will be appending to the collectionHolder
     var $panel = $('<div class="panel panel-warning"><div class="panel-heading"></div></div>');
@@ -58,7 +58,7 @@ function addNewForm() {
     addRemoveButton($panel);
     // append the panel to the addNewItem
     // we are doing it this way to that the link is always at the bottom of the collectionHolder
-     
+
     $addNewItem.before($panel);
 }
 
@@ -66,20 +66,29 @@ function addNewForm() {
  * adds a remove button to the panel that is passed in the parameter
  * @param $panel
  */
-function addRemoveButton ($panel) {
+function addRemoveButton($panel) {
+    
     // create remove button
-    var $removeButton = $('<a href="#" class="btn btn-danger">Usuń</a>');
+    var $removeButton = $('<a href="#" data-confirm="Are you sure you want to delete?" class="btn btn-danger">Usuń</a>');
     // appending the removebutton to the panel footer
     var $panelFooter = $('<div class="panel-footer"></div>').append($removeButton);
     // handle the click event of the remove button
     $removeButton.click(function (e) {
         e.preventDefault();
+        var href = $(this).attr('href');
+
+
+        if (window.confirm("Czy na pewno chcesz usunąc działke?")) {
+            $(e.target).parents('.panel').slideUp(1000, function () {
+                $(this).remove();
+            })
+        }
+
         // gets the parent of the button that we clicked on "the panel" and animates it
         // after the animation is done the element (the panel) is removed from the html
-        $(e.target).parents('.panel').slideUp(1000, function () {
-            $(this).remove();
-        })
+
     });
     // append the footer to the panel
     $panel.find('.form-inline').append($removeButton);
 }
+

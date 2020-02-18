@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ManagamentController extends AbstractController {
 
     /**
-     * @Route("/cropPlan", name="cropPlan")
+     * @Route("cropPlan", name="cropPlan")
      */
     public function cropPlan(Request $request) {
         $user = $this->getUser();
@@ -28,9 +28,6 @@ class ManagamentController extends AbstractController {
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->flush();
             }
-            foreach ($user->getUserPlants() as $item) {
-                echo $item->getPlant()->getName();
-            }
             $parameters = [
                 'yearPlan2' => ManagamentController::findMatchingPlant($yearPlan, $yearPlan2),
                 'yearPlan1' => ManagamentController::findMatchingPlant($yearPlan, $yearPlan1),
@@ -40,23 +37,138 @@ class ManagamentController extends AbstractController {
             ];
             return $this->render('managament/cropPlan.twig', $parameters);
         }
-        return $this->redirectToRoute('yearPlan');
+        return $this->redirectToRoute('chooseYearPlan');
     }
 
     /**
-     * @Route("/summary", name="summary")
+     * @Route("summary", name="summary")
      */
     public function summary() {
         $user = $this->getUser();
         $yearPlan = $user->getChoosedYearPlan();
         if ($yearPlan) {
+            $operators = $yearPlan->getOperators();
+            $plantForEachOperator = array();
 
+            foreach ($operators as $operator) {
+                $plantForEachOperator[$operator->getId()] = ManagamentController::createArrayWithPlants($operator);
+                $plantForEachOperator[$operator->getId()] = ManagamentController::addAreaToPlantsArray($operator, $plantForEachOperator[$operator->getId()]);
+            }
+            //Without payments
+            $plantForEachOperator["NonePayments"] = ManagamentController::createArrayWithPlantsForNullOperator($yearPlan);
+            $plantForEachOperator["NonePayments"] = ManagamentController::addAreaToPlantsArrayForNullOperator($yearPlan, $plantForEachOperator["NonePayments"]);
+            //Sum
+            $plantForEachOperator["Sum"] = ManagamentController::createArrayWithPlantsSum($yearPlan);
+            $plantForEachOperator["Sum"] = ManagamentController::addAreaToPlantsArraySum($yearPlan, $plantForEachOperator["Sum"]);
+//            print "<pre>";
+//            print_r($plantForEachOperator);
+//            print "</pre>";
 
             $parameters = [
+                'yearPlan' => $yearPlan,
+                'plants' => $plantForEachOperator,
             ];
             return $this->render('managament/summary.twig', $parameters);
         }
         return $this->redirectToRoute('yearPlan');
+    }
+
+    // Sum
+    public function createArrayWithPlantsSum($yearPlan) {
+        $outputArray = array();
+        foreach ($yearPlan->getFields() as $field) {
+            foreach ($field->getParcels() as $parcel) {
+                $plant = $parcel->getField()->getPlant();
+                if (ManagamentController::IsNoExistInArray($outputArray, $plant)) {
+                    $outputArray[$plant->getName()] = 0;
+                }
+            }
+        }
+        return $outputArray;
+    }
+
+    public function addAreaToPlantsArraySum($yearPlan, $plantArray) {
+        foreach ($yearPlan->getFields() as $field) {
+            foreach ($field->getParcels() as $parcel) {
+                $plant = $parcel->getField()->getPlant();
+                if ($plant) {
+                    $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
+                }
+            }
+        }
+        return $plantArray;
+    }
+
+    // None payments
+    public function createArrayWithPlantsForNullOperator($yearPlan) {
+        $outputArray = array();
+
+        foreach ($yearPlan->getFields() as $field) {
+            foreach ($field->getParcels() as $parcel) {
+                if ($parcel->getArimrOperator() == null) {
+                    $plant = $parcel->getField()->getPlant();
+                    if (ManagamentController::IsNoExistInArray($outputArray, $plant)) {
+                        $outputArray[$plant->getName()] = 0;
+                    }
+                }
+            }
+        }
+        return $outputArray;
+    }
+
+    public function addAreaToPlantsArrayForNullOperator($yearPlan, $plantArray) {
+        $plantArray['Paliwo'] = 0;
+        foreach ($yearPlan->getFields() as $field) {
+            foreach ($field->getParcels() as $parcel) {
+                if ($parcel->getArimrOperator() == null) {
+                    $plant = $parcel->getField()->getPlant();
+                    if ($plant) {
+                        $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
+                        $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+                    }
+                }
+            }
+        }
+        return $plantArray;
+    }
+
+    // Each operator
+    public function addAreaToPlantsArray($operator, $plantArray) {
+        $plantArray['EFA'] = 0;
+        $plantArray['Paliwo'] = 0;
+        foreach ($operator->getParcels() as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if ($plant) {
+                $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
+                $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+                if ($plant->getEfaNitrogen()) {
+                    $plantArray['EFA'] += $parcel->getCultivatedArea();
+                }
+            }
+        }
+        return $plantArray;
+    }
+
+    public function createArrayWithPlants($operator) {
+        $outputArray = array();
+
+        foreach ($operator->getParcels() as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if (ManagamentController::IsNoExistInArray($outputArray, $plant)) {
+                $outputArray[$plant->getName()] = 0;
+            }
+        }
+        return $outputArray;
+    }
+
+    public function IsNoExistInArray($array, $plant) {
+        if ($plant == null)
+            return false;
+        foreach ($array as $item => $value) {
+            if ($item == $plant->getName())
+                return false;
+        }
+        return true;
     }
 
     public function findYearPlanByYearBack($yearBack, YearPlan $yearPlanGiven) {

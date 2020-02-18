@@ -22,12 +22,107 @@
                 <!--- Content -->
                 <div class="col-md-10">
                     <div class="container-md mx-4">
+
                         <h2 class="text-center">Podsumowanie  </h2>  
-                        x
-                    </div>
-                </div>
-                <!--- End content -->
-            </div> 
-        </div>                      
-    </section>
-{% endblock %}
+                        <div class="d-flex flex-wrap">
+
+
+                            {% for operator in yearPlan.operators %}
+
+                                <table class="table w-auto table-hover mx-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="text-center">{{ operator.firstname ~ ' ' ~ operator.surname }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Roślina</th>
+                                            <th scope="col">Powierzchnia</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for name,area in plants[operator.id] %}
+
+                                            <!-- count sum of all area -->
+                                            {% set sum = 0 %}
+                                            {% set percentOfAll = 0 %}
+                                            {% for index,area2 in plants[operator.id] %}
+                                                {% if index != "Paliwo" and index != "EFA"%}
+                                                    {% set sum = sum+area2 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if sum %}
+                                                    {% set percentOfAll = (100/sum*area)|round(1,'ceil') %}
+                                            {% endif %}
+
+                                                <!-- END count sum of all area -->
+                                                <tr>
+                                                    {% if name != "Paliwo"%}
+                                                        <td>{{ name ~' (' ~ percentOfAll ~'%)'}} </td>
+                                                    {% else  %}
+                                                        <td>{{ name }} </td>
+                                                    {% endif %}
+                                                    <td>{{ area/100}} ha</td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                            {% endfor %}
+
+
+                                                <table class="table w-auto table-hover mx-2">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2" class="text-center">Brak dopłat</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="col">Roślina</th>
+                                                            <th scope="col">Powierzchnia</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for name,area in plants["NonePayments"] %}
+                                                            <tr>
+                                                                <td>{{ name }}</td>
+                                                                <td>{{ area/100}} ha</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+
+                                                </table>
+
+                                                <table class="table w-auto table-hover mx-2">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2" class="text-center">Całe gospodarstwo</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="col">Roślina</th>
+                                                            <th scope="col">Powierzchnia</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for name,area in plants["Sum"] %}
+                                                            <tr>
+                                                                <td>{{ name }}</td>
+                                                                <td>{{ area/100}} ha</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <!--- End content -->
+                                </div> 
+                            </div>                      
+                        </section>
+                        {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Field;
+use App\Entity\Parcel;
 use App\Entity\UserPlant;
 use App\Entity\YearPlan;
 use App\Entity\Plant;
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class DataController extends AbstractController {
 
     /**
-     * @Route("/yearPlan", name="chooseYearPlan")
+     * @Route("yearPlan", name="chooseYearPlan")
      */
     public function chooseYearPlan() {
         $user = $this->getUser();
@@ -29,7 +30,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/setYearPlan", name="setYearPlan")
+     * @Route("setYearPlan", name="setYearPlan")
      */
     public function setYearPlan(Request $request) {
         $user = $this->getUser();
@@ -47,7 +48,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/yearPlan/status", name="yearPlanStatus")
+     * @Route("yearPlan/status", name="yearPlanStatus")
      */
     public function yearPlanChangeStatus(Request $request) {
         $user = $this->getUser();
@@ -70,7 +71,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/yearPlan/add", name="addYearPlan")
+     * @Route("yearPlan/add", name="addYearPlan")
      */
     public function addYearPlan(ValidatorInterface $validator, Request $request) {
         $user = $this->getUser();
@@ -92,7 +93,7 @@ class DataController extends AbstractController {
                 DataController::deepSave($yearPlanToImport, $yearPlan);
             }
             $entityManager->flush();
-            return $this->redirectToRoute('yearPlan');
+            return $this->redirectToRoute('chooseYearPlan');
         }
 
         $parameters = [
@@ -103,7 +104,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/yearPlanList", name="yearPlanList")
+     * @Route("yearPlanList", name="yearPlanList")
      */
     public function yearPlan() {
         $user = $this->getUser();
@@ -111,7 +112,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/parcel", name="parcelList")
+     * @Route("parcel", name="parcelList")
      */
     public function parcelList(Request $request) {
         $user = $this->getUser();
@@ -133,7 +134,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/field", name="field")
+     * @Route("field", name="field")
      */
     public function field(Request $request) {
         $user = $this->getUser();
@@ -154,7 +155,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/field/add", name="addField")
+     * @Route("field/add", name="addField")
      */
     public function addField(Request $request) {
         $user = $this->getUser();
@@ -190,7 +191,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/field/edit/{id}", name="editField")
+     * @Route("field/edit/{id}", name="editField")
      */
     public function editField($id, Request $request) {
         $user = $this->getUser();
@@ -232,7 +233,7 @@ class DataController extends AbstractController {
     }
 
     /**
-     * @Route("/selectPlants", name="selectPlants")
+     * @Route("selectPlants", name="selectPlants")
      */
     public function selectPlants(Request $request) {
 

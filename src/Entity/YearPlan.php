@@ -6,13 +6,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource( 
+ * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
+ * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * normalizationContext={"groups"={"yearPlan:read"}} 
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\YearPlanRepository")
  */
 class YearPlan {
 
     /**
+     * @Groups({"yearPlan:read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -20,6 +28,7 @@ class YearPlan {
     private $id;
 
     /**
+     * @Groups({"yearPlan:read", "user:read"})
      * @ORM\Column(type="integer")
      */
     private $startYear;
@@ -35,8 +44,9 @@ class YearPlan {
     private $isClosed;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="yearPlans")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="yearPlans")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"yearPlan:read", "user:read"})
      */
     private $user;
 
@@ -213,5 +223,6 @@ class YearPlan {
 
         return $this;
     }
+    
 
 }

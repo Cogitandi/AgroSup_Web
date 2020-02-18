@@ -26,7 +26,7 @@ class NewYearPlanFormType extends AbstractType
                     'choice_label' => function ($yearPlan) {
                         return $yearPlan->getStartYear() . '/' . $yearPlan->getEndYear();
                     },
-                    'placeholder' => 'nie importuj',
+                    'placeholder' => 'dont import',
                     'required' => false,
                 ))
             ;

@@ -21,7 +21,7 @@
 
                 <!--- Content -->
                 <div class="col-md-10">
-                    <div class="container-md mx-4">
+                    <div class="container-md mx-auto">
                         {{ form_start(form) }}
                         <button type="submit" class="float-right btn btn-primary">Zapisz</button>
                         <h2 class="text-center">Uprawy {{ yearPlan.startYear }}/{{ yearPlan.endYear }}  </h2>   
@@ -34,6 +34,7 @@
                                         <th scope ="col">{{ yearPlan.startYear-2 }}/{{ yearPlan.startYear-1 }}</th>
                                         <th scope ="col">{{ yearPlan.startYear-1 }}/{{ yearPlan.startYear }}</th>
                                         <th scope ="col">{{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</th>
+                                        <th scope ="col">Odmiana</th>
                                     </tr>
                                 </thead>
                                 <tbody >
@@ -41,19 +42,24 @@
                                     {% set index = 0 %}
                                     {% for field in form.fields %}
                                         <tr>
-                                            <td> {{ field.vars.value.name }}</td>
-                                            <td>{{ yearPlanAreas[index] }}</td>
-                                            <td>{{ yearPlan2[index] }}</td>
-                                            <td>{{ yearPlan1[index] }}</td>
-                                            <td>{{ form_row(field.plant) }}</td>
+                                            <td class="align-middle"> {{ field.vars.value.name }}</td>
+                                            <td class="align-middle">{{ yearPlanAreas[index] }}</td>
+                                            <td class="align-middle">{{ yearPlan2[index] }}</td>
+                                            <td class="align-middle">{{ yearPlan1[index] }}</td>
+                                            <td class="align-middle">{{ form_widget(field.plant, {'attr': 
+                                                {'class': 'custom-select my-1 mr-sm-2',
+                                                }})}}</td>
+                                            <td class="align-middle">{{ form_widget(field.plantVariety, {'attr': {'class': 'form-control'}}) }}</td>
+
                                         </tr>
                                         {% set index = index+1 %}
                                     {% endfor %}
-                                    {{ form_end(form) }}
+                                    
 
                                 </tbody>
                             </table>
                         </div>
+                                    {{ form_end(form) }}
                     </div>
                 </div>
                 <!--- End content -->
