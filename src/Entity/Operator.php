@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiFilter(SearchFilter::class, properties={"yearPlan": "exact"})
  * @ApiResource( 
  * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
- * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * collectionOperations={"get"},
  * normalizationContext={"groups"={"operator:read"}} 
  * )
  * @ORM\Entity(repositoryClass="App\Repository\OperatorRepository")

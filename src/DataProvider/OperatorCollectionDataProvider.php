@@ -34,7 +34,7 @@ final class OperatorCollectionDataProvider implements CollectionDataProviderInte
             if ($user instanceof User) {
                 $yearPlan = $user->getYearPlanById($context['filters']['yearPlan']);
                 if ($yearPlan) {
-                    $operators = $yearPlan->getParcels();
+                    $operators = $yearPlan->getOperators();
                     foreach ($operators as $operator) {
                         yield $operator;
                     }

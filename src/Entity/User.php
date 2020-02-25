@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource( 
  * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
- * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
+ * collectionOperations={"get"},
  * normalizationContext={"groups"={"user:read"}} 
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")

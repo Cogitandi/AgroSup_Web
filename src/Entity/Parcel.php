@@ -58,6 +58,7 @@ class Parcel
     private $yearPlan;
 
     /**
+     * @Groups({"parcel:read"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Field", inversedBy="parcels")
      */
     private $field;

@@ -18,6 +18,7 @@ security:
             pattern:   ^/api
             stateless: true
             anonymous: true
+
             provider: app_user_provider
             json_login:
                 check_path: /api/authentication_token
@@ -60,6 +61,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
      - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+     - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
      - { path: ^/yearPlan, roles: ROLE_USER }
      - { path: ^/cropPlan, roles: ROLE_USER }
      - { path: ^/summary, roles: ROLE_USER }

@@ -34,6 +34,7 @@ class YearPlan {
     private $startYear;
 
     /**
+	 * @Groups({"yearPlan:read", "user:read"})
      * @ORM\Column(type="integer")
      */
     private $endYear;

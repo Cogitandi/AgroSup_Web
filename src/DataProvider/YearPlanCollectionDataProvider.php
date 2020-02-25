@@ -27,12 +27,11 @@ final class YearPlanCollectionDataProvider implements CollectionDataProviderInte
         $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user instanceof User) {
-            $yearPlan = $user->getYearPlanById($context['filters']['yearPlan']);
-            if ($yearPlan) {
-                $userYearPlans = $yearPlan->getParcels();
-                foreach ($userYearPlans as $yearPlan) {
+            $yearPlans = $user->getYearPlans();
+            if ($yearPlans) {
+				foreach($yearPlans as $yearPlan) {
                     yield $yearPlan;
-                }
+				}
             }
         }
     }
