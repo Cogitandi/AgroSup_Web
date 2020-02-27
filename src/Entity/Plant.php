@@ -14,13 +14,12 @@ class Plant {
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups("read")
+     * @Groups({"field:read"})
      */
     private $name;
 

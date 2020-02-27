@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiFilter(SearchFilter::class, properties={"yearPlan": "exact"})
  * @ApiResource( 
- * itemOperations={"get"={"security"="is_granted('ROLE_ADMIN')"}},
+ * itemOperations={"get"},
  * collectionOperations={"get"={"security"="is_granted('ROLE_USER')"}},
  * normalizationContext={"groups"={"field:read"}} 
  * )
@@ -49,14 +49,14 @@ class Field {
     private $parcels;
 
     /**
-     * @Groups("read")
+     * @Groups({"field:read"})
      * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $plantVariety;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Plant")
-     * @Groups({"read"})
+     * @Groups({"field:read"})
      */
     private $plant;
 

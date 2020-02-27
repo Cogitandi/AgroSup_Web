@@ -88,8 +88,13 @@ class ManagamentController extends AbstractController {
     }
 
     public function addAreaToPlantsArraySum($yearPlan, $plantArray) {
+        $plantArray['Paliwo'] = 0;
         foreach ($yearPlan->getFields() as $field) {
             foreach ($field->getParcels() as $parcel) {
+                if($parcel->getFuelApplication() ) {
+                    $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+                                                   
+                }
                 $plant = $parcel->getField()->getPlant();
                 if ($plant) {
                     $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
@@ -121,10 +126,13 @@ class ManagamentController extends AbstractController {
         foreach ($yearPlan->getFields() as $field) {
             foreach ($field->getParcels() as $parcel) {
                 if ($parcel->getArimrOperator() == null) {
+                    if($parcel->getFuelApplication() ) {
+                    $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+                                                   
+                }
                     $plant = $parcel->getField()->getPlant();
                     if ($plant) {
                         $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
-                        $plantArray['Paliwo'] += $parcel->getCultivatedArea();
                     }
                 }
             }
@@ -137,10 +145,13 @@ class ManagamentController extends AbstractController {
         $plantArray['EFA'] = 0;
         $plantArray['Paliwo'] = 0;
         foreach ($operator->getParcels() as $parcel) {
+            if($parcel->getFuelApplication() ) {
+                    $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+                                                   
+                }
             $plant = $parcel->getField()->getPlant();
             if ($plant) {
                 $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
-                $plantArray['Paliwo'] += $parcel->getCultivatedArea();
                 if ($plant->getEfaNitrogen()) {
                     $plantArray['EFA'] += $parcel->getCultivatedArea();
                 }

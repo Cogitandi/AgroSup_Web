@@ -23,7 +23,9 @@ body  {
     background-color: yellow;
 
 }
-
+#content {
+	min-height: 600px;
+}
 #crops tbody .detail {
     display: none;
 }
