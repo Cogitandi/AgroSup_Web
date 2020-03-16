@@ -29,9 +29,9 @@ final class YearPlanCollectionDataProvider implements CollectionDataProviderInte
         if ($user instanceof User) {
             $yearPlans = $user->getYearPlans();
             if ($yearPlans) {
-				foreach($yearPlans as $yearPlan) {
+                foreach ($yearPlans as $yearPlan) {
                     yield $yearPlan;
-				}
+                }
             }
         }
     }

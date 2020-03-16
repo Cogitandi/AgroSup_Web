@@ -24,19 +24,25 @@ final class ParcelCollectionDataProvider implements CollectionDataProviderInterf
     }
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Generator {
-        if (array_key_exists('filters', $context)) {
-            $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-            if ($user instanceof User) {
-                $yearPlan = $user->getYearPlanById($context['filters']['yearPlan']);
-                if ($yearPlan) {
-                    $parcels = $yearPlan->getParcels();
-                    foreach ($parcels as $parcel) {
-                        yield $parcel;
-                    }
+        if ($user instanceof User) {
+            foreach ($user->getYearPlans() as $yearplan) {
+                foreach ($yearplan->getParcels() as $parcel) {
+                    yield $parcel;
                 }
             }
         }
+
+//            if ($user instanceof User) {
+//                $yearPlan = $user->getYearPlanById($context['filters']['yearPlan']);
+//                if ($yearPlan) {
+//                    $parcels = $yearPlan->getParcels();
+//                    foreach ($parcels as $parcel) {
+//                        yield $parcel;
+//                    }
+//                }
+//            }
     }
 
 }

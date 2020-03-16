@@ -28,18 +28,21 @@ final class OperatorCollectionDataProvider implements CollectionDataProviderInte
     }
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Generator {
-        if (array_key_exists('filters', $context)) {
-            $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-            if ($user instanceof User) {
-                $yearPlan = $user->getYearPlanById($context['filters']['yearPlan']);
-                if ($yearPlan) {
-                    $operators = $yearPlan->getOperators();
-                    foreach ($operators as $operator) {
-                        yield $operator;
-                    }
+        if ($user instanceof User) {
+            foreach ($user->getYearPlans() as $yearplan) {
+                foreach ($yearplan->getOperators() as $operator) {
+                    yield $operator;
                 }
             }
+//                $yearPlan = $user->getYearPlanById($context['filters']['yearPlan']);
+//                if ($yearPlan) {
+//                    $operators = $yearPlan->getOperators();
+//                    foreach ($operators as $operator) {
+//                        yield $operator;
+//                    }
+//                }
         }
     }
 

@@ -39,11 +39,11 @@ class Field {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan", inversedBy="fields")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"field:read"})
      */
     private $yearPlan;
 
     /**
-     * @Groups("read")
      * @ORM\OneToMany(targetEntity="App\Entity\Parcel", cascade={"persist"}, mappedBy="field", orphanRemoval=true)
      */
     private $parcels;

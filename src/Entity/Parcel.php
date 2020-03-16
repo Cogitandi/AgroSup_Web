@@ -52,6 +52,7 @@ class Parcel
     private $ArimrOperator;
 
     /**
+     * @Groups({"parcel:read"})
      * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan", inversedBy="parcels")
      * @ORM\JoinColumn(nullable=false)
      */
