@@ -32,7 +32,7 @@ final class FieldCollectionDataProvider implements CollectionDataProviderInterfa
 
         if ($user instanceof User) {
             foreach ($user->getYearPlans() as $yearplan) {
-                foreach ($yearplan->getFieds() as $field) {
+                foreach ($yearplan->getFields() as $field) {
                     yield $field;
                 }
             }
