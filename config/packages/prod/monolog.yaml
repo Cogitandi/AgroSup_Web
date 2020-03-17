@@ -7,7 +7,7 @@ monolog:
             excluded_http_codes: []
         nested:
             type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            path: "%kernel.logs_dir%/%kernel.environment%-sys.log"
             level: debug
         console:
             type: console
