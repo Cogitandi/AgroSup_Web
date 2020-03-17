@@ -7,7 +7,3 @@
 authentication_token:
     path: /api/authentication_token
     methods: ['POST']
-api:
-    path: /api/test
-    controller: App\Controller\api\apiController::api
-    methods: ['POST']
