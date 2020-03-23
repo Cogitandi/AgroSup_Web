@@ -213,7 +213,7 @@ class Operator {
             }
         }
         $percent = 100 / $this->getTotalArea() * $area / 100;
-        return $percent;
+        return round($percent,1,PHP_ROUND_HALF_UP);
     }
 
     public function NotEstabilishedPlantArea() {
@@ -221,7 +221,7 @@ class Operator {
         foreach ($this->parcels as $parcel) {
             $plant = $parcel->getField()->getPlant();
             if (!$plant) {
-                $area += $parcel->getCultivatedArea();
+                $totalSize += $parcel->getCultivatedArea();
             }
         }
         return $totalSize / 100;
