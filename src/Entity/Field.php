@@ -141,6 +141,4 @@ class Field {
 
         return $this;
     }
-
-
 }

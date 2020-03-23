@@ -70,5 +70,6 @@ security:
      - { path: ^/field, roles: ROLE_USER }
      - { path: ^/parcel, roles: ROLE_USER }
      - { path: ^/selectPlants, roles: ROLE_USER }
+     - { path: ^/treatments, roles: ROLE_USER }
 
 #     

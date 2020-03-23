@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {% endblock %}
+{# add this at the beginning of your template #}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{# this alternative theme is also available #}
+{# {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %} #}
+{% block body %}
+    <section id="content">
+        <div class="container-fluid mt-3">
+            <div class="row">
+
+                <!--- Left menu -->
+                <div class="col-md-2 mb-4">                
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cropPlan" >Planuj uprawy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/summary" >Podsumowanie</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/treatments" >Zabiegi</a>
+                        </li>
+                    </ul>
+                </div> 
+
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+
+                        <h2 class="text-center">Zabiegi  </h2>  
+                        <div class="d-flex flex-wrap">
+                            {{ form_start(form ,{ 'attr' : { 'class': 'form-inline' } })}}
+                            {% for key,child in form %}
+                                {{ form_row(child,{ 'attr' : { 'class': 'mx-2' } }) }}
+                            {% endfor %}
+                            <input type="submit" class="btn-primary btn form-inline" value="Dodaj zabieg" />
+                            {{ form_end(form) }}
+
+
+                        </div>
+                    </div>
+                    <!--- End content -->
+                </div> 
+            </div>                      
+    </section>
+
+
+    <script>
+        $(document).ready(function () {
+            choosedKind();
+
+        })
+        function choosedKind() {    
+            var $token = $('#treatment__token');
+            var $kind = $('#treatment_kind');
+
+            $kind.change(function () {
+                // ... retrieve the corresponding form.
+                var $form = $(this).closest('form');
+                // Simulate form data, but only include the selected sport value.
+                var data = {};
+                data[$kind.attr('name')] = $kind.val();
+                data[$token.attr('name')] = $token.val();
+                // Submit data via AJAX to the form's action path.
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: data,
+                    success: function (html) {
+                        $('form[name="treatment"]').replaceWith($(html).find('form[name="treatment"]'));
+                        choosedKind();
+                        choosedField();
+                        // Position field now displays the appropriate positions.
+                    }
+                });
+            });
+        }
+        function choosedField() {
+            var $token = $('#treatment__token');
+            var $kind = $('#treatment_kind');
+            var $data = $('#treatment_data');
+            var $field = $('#treatment_field');
+
+            $field.change(function () {
+                // ... retrieve the corresponding form.
+                var $form = $(this).closest('form');
+                // Simulate form data, but only include the selected sport value.
+                var data = {};
+                data[$token.attr('name')] = $token.val();
+                data[$kind.attr('name')] = $kind.val();
+                data[$data.attr('name')] = $data.val();
+                data[$field.attr('name')] = $field.val();
+                // Submit data via AJAX to the form's action path.
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: data,
+                    success: function (html) {
+                        $('form[name="treatment"]').replaceWith($(html).find('form[name="treatment"]'));
+                        choosedKind();
+                        choosedField();
+                        
+                        // Position field now displays the appropriate positions.
+                    }
+                });
+            });
+        }
+
+
+
+
+    </script>
+
+{% endblock %}

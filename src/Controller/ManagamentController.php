@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\YearPlan;
+use App\Entity\Treatment;
 use App\Form\CropPlanType;
+use App\Form\TreatmentType;
+use App\Form\SprayingTreatmentType;
+use App\Form\SeedingTreatmentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\Collection;
@@ -73,6 +77,38 @@ class ManagamentController extends AbstractController {
         return $this->redirectToRoute('yearPlan');
     }
 
+    /**
+     * @Route("treatments", name="treatments")
+     */
+    public function treatments(Request $request) {
+
+        //$treatment = new Treatment();
+        $form = $this->createForm(TreatmentType::class);
+        
+        
+        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            // $form->getData() holds the submitted values
+//            // but, the original `$task` variable has also been updated
+//            //$task = $form->getData();
+//
+//            // ... perform some action, such as saving the task to the database
+//            // for example, if Task is a Doctrine entity, save it!
+//            // $entityManager = $this->getDoctrine()->getManager();
+//            // $entityManager->persist($task);
+//            // $entityManager->flush();
+//
+//            //eturn $this->redirectToRoute('task_success');
+//        }
+
+
+
+        $parameters = [
+            'form' => $form->createView(),
+        ];
+        return $this->render('managament/treatments.twig', $parameters);
+    }
+
     // Sum
     public function createArrayWithPlantsSum($yearPlan) {
         $outputArray = array();
@@ -91,9 +127,8 @@ class ManagamentController extends AbstractController {
         $plantArray['Paliwo'] = 0;
         foreach ($yearPlan->getFields() as $field) {
             foreach ($field->getParcels() as $parcel) {
-                if($parcel->getFuelApplication() ) {
+                if ($parcel->getFuelApplication()) {
                     $plantArray['Paliwo'] += $parcel->getCultivatedArea();
-                                                   
                 }
                 $plant = $parcel->getField()->getPlant();
                 if ($plant) {
@@ -126,10 +161,9 @@ class ManagamentController extends AbstractController {
         foreach ($yearPlan->getFields() as $field) {
             foreach ($field->getParcels() as $parcel) {
                 if ($parcel->getArimrOperator() == null) {
-                    if($parcel->getFuelApplication() ) {
-                    $plantArray['Paliwo'] += $parcel->getCultivatedArea();
-                                                   
-                }
+                    if ($parcel->getFuelApplication()) {
+                        $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+                    }
                     $plant = $parcel->getField()->getPlant();
                     if ($plant) {
                         $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
@@ -145,10 +179,9 @@ class ManagamentController extends AbstractController {
         $plantArray['EFA'] = 0;
         $plantArray['Paliwo'] = 0;
         foreach ($operator->getParcels() as $parcel) {
-            if($parcel->getFuelApplication() ) {
-                    $plantArray['Paliwo'] += $parcel->getCultivatedArea();
-                                                   
-                }
+            if ($parcel->getFuelApplication()) {
+                $plantArray['Paliwo'] += $parcel->getCultivatedArea();
+            }
             $plant = $parcel->getField()->getPlant();
             if ($plant) {
                 $plantArray[$plant->getName()] += $parcel->getCultivatedArea();
