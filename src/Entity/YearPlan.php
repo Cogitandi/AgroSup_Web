@@ -34,7 +34,7 @@ class YearPlan {
     private $startYear;
 
     /**
-	 * @Groups({"yearPlan:read", "user:read"})
+     * @Groups({"yearPlan:read", "user:read"})
      * @ORM\Column(type="integer")
      */
     private $endYear;
@@ -224,6 +224,25 @@ class YearPlan {
 
         return $this;
     }
-    
+
+    /**
+     * @return Collection|Plant[]
+     */
+    public function getPlants(): Collection {
+        $plants = new ArrayCollection();
+        foreach ($this->fields as $field) {
+            $plant = $field->getPlant();
+            if (!$plant)
+                continue;
+            if (!($plants->contains($plant))) {
+                $plants->add($plant);
+            }
+        }
+        return $plants;
+    }
+
+    public function getFieldAmount() {
+        return $this->fields->count();
+    }
 
 }

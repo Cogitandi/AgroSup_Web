@@ -141,4 +141,8 @@ class Field {
 
         return $this;
     }
+    
+    public function getParcelAmount() {
+        return $this->parcels->count();
+    }
 }

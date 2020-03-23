@@ -61,6 +61,7 @@
                                         <td class="align-middle">
                                             <select id="arimrFilter">
                                                 <option selected="selected" value="all">Wszyscy</option>
+                                                <option value="Brak">Brak</option>
                                                 {% for operator in yearPlan.getOperators %}
                                                     <option value="{{ operator.getFirstName}}">{{ operator.getFirstName}}</option>
                                                 {% endfor %}
@@ -69,8 +70,10 @@
                                         <td class="align-middle">
                                             <select id="cropFilter">
                                                 <option selected="selected" value="all">Wszystkie</option>
-                                                <option value="Tak">Tak</option>
-                                                <option value="Nie">Nie</option>
+                                                <option value="Brak">Brak</option>
+                                                {% for plant in yearPlan.getPlants %} 
+                                                    <option value="{{ plant.getName }}">{{ plant.getName }}</option>
+                                                {% endfor %}
                                             </select>
                                         </td>
                                     </tr>
@@ -82,10 +85,6 @@
                                     {% for field in yearPlan.getFields %}
                                         <!-- Count amount of parcels -->
                                         {% set counter = 0 %}
-                                        {% set parcelAmount = 0 %}
-                                        {% for parcel in field.getParcels %}
-                                            {% set parcelAmount=parcelAmount+1 %}
-                                        {% endfor %}
                                         <!-- Display each parcel
                                         {% for item in field.getParcels %}
                                             <!-- Fuel status -->
@@ -108,15 +107,15 @@
 
                                                 <td class="align-middle" >{{ item.Field.name }}</td>
 
-<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ parcelAmount }}">{{ item.Field.name }}</td> {% endif %}-->
+<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ item.Field.getParcelAmount }}">{{ item.Field.name }}</td> {% endif %}-->
                                                 <td class="align-middle">{{ item.parcelNumber }}</td>
                                                 <td class="align-middle">{{ item.getCultivatedAreaHa }}</td>
                                                 <td name ="fuel" class="align-middle">{{ fuel }}</td>
                                                 <td name ="arimr" class="align-middle">{{ operator }}</td>
 
-                                                <td class="align-middle" >{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td>
+                                                <td name ="crop" class="align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %} brak {% endif %}</td>
 
-<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ parcelAmount }}">{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td> {% endif %}-->
+<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ item.Field.getParcelAmount }}">{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td> {% endif %}-->
                                             </tr>
                                             {% set licznik = licznik+1 %}
                                             {% set counter = counter+1 %}
@@ -138,49 +137,54 @@
     </section>
     <script>
         $(document).ready(function () {
-            fuelFilter();
-            arimrFilter();
+            var $fuelSelect = $('#fuelFilter');
+            var $arimrSelect = $('#arimrFilter');
+            var $cropSelect = $('#cropFilter');
+
+            $fuelSelect.change(function () {
+                checkAllRows();
+            });
+            $arimrSelect.change(function () {
+                checkAllRows();
+            });
+            $cropSelect.change(function () {
+                checkAllRows();
+            });
+
         });
 
-        function fuelFilter() {
-            var $fuelSelect = $('#fuelFilter');
-            $fuelSelect.change(function () {
-                var $filterOption = $fuelSelect.val();
-                $('tbody').find("tr").each(function () {
-                    $rowOption = $(this).find("td[name=fuel").text();
-
-                    if ($filterOption == $rowOption) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                    if ($filterOption == 'all')
-                        $(this).show();
-                });
-
+        function checkAllRows($select) {
+            $('tbody').find("tr").each(function () {
+                $parcelFuel = $(this).find("td[name=fuel").text();
+                $parcelArimr = $(this).find("td[name=arimr").text();
+                $parcelCrop = $(this).find("td[name=crop").text();
+                $filterFuel = $('#fuelFilter').val();
+                $filterArimr = $('#arimrFilter').val();
+                $filterCrop = $('#cropFilter').val();
+                if (isRowMatched($filterFuel, $parcelFuel) &&
+                        isRowMatched($filterArimr, $parcelArimr) &&
+                        isRowMatched($filterCrop, $parcelCrop)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
             });
         }
-        function arimrFilter() {
-            var $arimrSelect = $('#arimrFilter');
-            $arimrSelect.change(function () {
-                var $filterOption = $arimrSelect.val();
-                $('tbody').find("tr").each(function () {
-                    $rowOption = $(this).find("td[name=arimr").text();
-                    console.log($rowOption);
-                    console.log($filterOption);
-                    console.log("end");
-                    if ($filterOption == $rowOption) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                    if ($filterOption == 'all')
-                        $(this).show();
-                });
 
-            });
+        function isRowMatched($filterOption, $rowValue) {
+            if ($filterOption == 'all')
+                return true;
 
+            if ($filterOption == $rowValue) {
+                return true;
+            } else {
+                return false;
+            }
 
         }
+
+
+
+
     </script>
 {% endblock %}
