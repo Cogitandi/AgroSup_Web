@@ -159,9 +159,72 @@ class Operator {
 
     public function setYearPlan(?yearPlan $yearPlan): self {
         $this->yearPlan = $yearPlan;
-
         return $this;
     }
 
+    public function getCropedPlants() {
+        $plants = new ArrayCollection();
+        foreach ($this->parcels as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if (!$plant)
+                continue;
+            if (!($plants->contains($plant))) {
+                $plants->add($plant);
+            }
+        }
+        return $plants;
+    }
+
+    public function getCropArea($plant) {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            if ($parcel->getField()->getPlant() == $plant)
+                $totalSize += $parcel->getCultivatedArea();
+        }
+        return $totalSize / 100;
+    }
+
+    public function getTotalArea() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $totalSize += $parcel->getCultivatedArea();
+        }
+        return $totalSize / 100;
+    }
+
+    public function getFuelArea() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            if ($parcel->getFuelApplication())
+                $totalSize += $parcel->getCultivatedArea();
+        }
+        return $totalSize / 100;
+    }
+
+    public function getEfaPercent() {
+        $area = 0;
+        $percent = 0;
+        foreach ($this->parcels as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if ($plant) {
+                if ($plant->getEfaNitrogen()) {
+                    $area += $parcel->getCultivatedArea();
+                }
+            }
+        }
+        $percent = 100 / $this->getTotalArea() * $area / 100;
+        return $percent;
+    }
+
+    public function NotEstabilishedPlantArea() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if (!$plant) {
+                $area += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
 
 }

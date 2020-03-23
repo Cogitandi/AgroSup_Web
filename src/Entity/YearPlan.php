@@ -245,4 +245,117 @@ class YearPlan {
         return $this->fields->count();
     }
 
+    public function getTotalArea() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $totalSize += $parcel->getCultivatedArea();
+        }
+        return $totalSize / 100;
+    }
+
+    public function getCropArea($checkedPlant) {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if ($plant == $checkedPlant) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
+    public function getFuelArea() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $fuel = $parcel->getFuelApplication();
+            if ($fuel) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
+    public function NotEstabilishedPlantArea() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            if (!$plant) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
+    public function isFieldWithoutOperator($field) {
+        foreach ($field->getParcels() as $parcel) {
+            $operator = $parcel->getArimrOperator();
+            if (!$operator)
+                return true;
+        }
+        return false;
+    }
+
+    public function getPlantsWithoutOperator(): Collection {
+        $plants = new ArrayCollection();
+        foreach ($this->fields as $field) {
+            $plant = $field->getPlant();
+            if (!$plant)
+                continue;
+            if (!$this->isFieldWithoutOperator($field))
+                continue;
+
+            if (!($plants->contains($plant))) {
+                $plants->add($plant);
+            }
+        }
+        return $plants;
+    }
+
+    public function getCropAreaWithoutOperator($checkedPlant) {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $plant = $parcel->getField()->getPlant();
+            $operator = $parcel->getArimrOperator();
+            if ($plant == $checkedPlant && !$operator) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
+    public function getTotalAreaWithoutOperator() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $operator = $parcel->getArimrOperator();
+            if (!$operator) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
+    public function getFuelAreaWithoutOperator() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $operator = $parcel->getArimrOperator();
+            $fuel = $parcel->getFuelApplication();
+            if (!$operator && $fuel) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
+    public function NotEstabilishedPlantAreaWithoutOperator() {
+        $totalSize = 0;
+        foreach ($this->parcels as $parcel) {
+            $operator = $parcel->getArimrOperator();
+            $plant = $parcel->getField()->getPlant();
+            if (!$plant && !$operator) {
+                $totalSize += $parcel->getCultivatedArea();
+            }
+        }
+        return $totalSize / 100;
+    }
+
 }

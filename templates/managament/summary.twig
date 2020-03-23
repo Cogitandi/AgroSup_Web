@@ -22,7 +22,8 @@
                 <!--- Content -->
                 <div class="col-md-10">
                     <div class="container-md mx-4">
-
+                        {#{% set op = yearPlan.getFields().get(0).getParcels().get(0).getArimrOperator() %}
+                        {{ yearPlan.getTotalAreaByOperator(op) }}#}
                         <h2 class="text-center">Podsumowanie  </h2>  
                         <div class="d-flex flex-wrap">
 
@@ -41,88 +42,131 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for name,area in plants[operator.id] %}
+                                        {% for plant in operator.getCropedPlants()  %}
+                                            {% set percentOfAll = (100/operator.getTotalArea*operator.getCropArea(plant))|round(1,'ceil') %}
+                                            <tr>
+                                                <td>{{ plant.getName()}}</td>
+                                                <td>{{ operator.getCropArea(plant)~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td>EFA</td>
+                                            <td>{{ operator.getEfaPercent }} %</td>
 
-                                            <!-- count sum of all area -->
-                                            {% set sum = 0 %}
-                                            {% set percentOfAll = 0 %}
-                                            {% for index,area2 in plants[operator.id] %}
-                                                {% if index != "Paliwo" and index != "EFA"%}
-                                                    {% set sum = sum+area2 %}
-                                                {% endif %}
-                                            {% endfor %}
-                                            {% if sum %}
-                                                    {% set percentOfAll = (100/sum*area)|round(1,'ceil') %}
+                                        </tr>
+                                        {% if operator.NotEstabilishedPlantArea() != 0 %}
+                                            <tr>
+                                                <td>Nie zaplanowano</td>
+                                                <td> {{ operator.NotEstabilishedPlantArea() }} ha</td>
+                                            <tr>
                                             {% endif %}
 
-                                                <!-- END count sum of all area -->
-                                                <tr>
-                                                    {% if name != "Paliwo"%}
-                                                        <td>{{ name ~' (' ~ percentOfAll ~'%)'}} </td>
-                                                    {% else  %}
-                                                        <td>{{ name }} </td>
-                                                    {% endif %}
-                                                    <td>{{ area/100}} ha</td>
-                                                </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
+                                            <td>Razem</td>
+                                            <td>{{ operator.getTotalArea }} ha</td>
 
-                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            {% set percentOfAll = (100/operator.getTotalArea()*operator.getFuelArea())|round(1,'ceil') %}
+                                            <td>Paliwo</td>
+                                            <td>{{ operator.getFuelArea()~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            {% endfor %}
 
 
-                                                <table class="table w-auto table-hover mx-2">
-                                                    <thead>
-                                                        <tr>
-                                                            <th colspan="2" class="text-center">Brak dopłat</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="col">Roślina</th>
-                                                            <th scope="col">Powierzchnia</th>
+                            <table class="table w-auto table-hover mx-2">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center">Brak dopłat</th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Roślina</th>
+                                        <th scope="col">Powierzchnia</th>
 
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for name,area in plants["NonePayments"] %}
-                                                            <tr>
-                                                                <td>{{ name }}</td>
-                                                                <td>{{ area/100}} ha</td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                    </tbody>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plant in yearPlan.getPlantsWithoutOperator()  %}
+                                        {% set percentOfAll = (100/yearPlan.getTotalAreaWithoutOperator()*yearPlan.getCropAreaWithoutOperator(plant))|round(1,'ceil') %}
+                                        <tr>
+                                            <td>{{ plant.getName() }}</td>
+                                            <td>{{ yearPlan.getCropAreaWithoutOperator(plant)~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% if yearPlan.NotEstabilishedPlantAreaWithoutOperator() != 0 %}
+                                        {% set percentOfAll = (100/yearPlan.getTotalAreaWithoutOperator()*yearPlan.NotEstabilishedPlantAreaWithoutOperator())|round(1,'ceil') %}
+                                        <tr>
+                                            <td>Nie zaplanowano</td>
+                                            <td> {{ yearPlan.NotEstabilishedPlantAreaWithoutOperator() ~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                        <tr>
+                                        {% endif %}
+                                    <tr>
+                                        <td>Razem</td>
+                                        <td>{{ yearPlan.getTotalAreaWithoutOperator() }} ha</td>
 
-                                                </table>
+                                    </tr>
+                                    <tr>
+                                        {% set percentOfAll = (100/yearPlan.getTotalAreaWithoutOperator()*yearPlan.getFuelAreaWithoutOperator())|round(1,'ceil') %}
+                                        <td>Paliwo</td>
+                                        <td>{{ yearPlan.getFuelAreaWithoutOperator()~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                    </tr>
+                                </tbody>
 
-                                                <table class="table w-auto table-hover mx-2">
-                                                    <thead>
-                                                        <tr>
-                                                            <th colspan="2" class="text-center">Całe gospodarstwo</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="col">Roślina</th>
-                                                            <th scope="col">Powierzchnia</th>
-
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for name,area in plants["Sum"] %}
-                                                            <tr>
-                                                                <td>{{ name }}</td>
-                                                                <td>{{ area/100}} ha</td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                            </table>
 
 
 
+                            <table class="table w-auto table-hover mx-2">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center">Całe gospodarstwo</th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Roślina</th>
+                                        <th scope="col">Powierzchnia</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plant in yearPlan.getPlants()  %}
+                                        {% set percentOfAll = (100/yearPlan.getTotalArea*yearPlan.getCropArea(plant))|round(1,'ceil') %}
+                                        <tr>
+                                            <td>{{ plant.getName() }}</td>
+                                            <td>{{ yearPlan.getCropArea(plant) ~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% if yearPlan.NotEstabilishedPlantArea() != 0 %}
+                                        {% set percentOfAll = (100/yearPlan.getTotalArea*yearPlan.NotEstabilishedPlantArea())|round(1,'ceil') %}
+                                        <tr>
+                                            <td>Nie zaplanowano</td>
+                                            <td> {{ yearPlan.NotEstabilishedPlantArea() ~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                        <tr>
+                                        {% endif %}
+                                    <tr>
+                                        <td>Razem</td>
+                                        <td>{{ yearPlan.getTotalArea() }} ha</td>
+
+                                    </tr>
+                                    <tr>
+                                        {% set percentOfAll = (100/yearPlan.getTotalArea()*yearPlan.getFuelArea())|round(1,'ceil') %}
+                                        <td>Paliwo</td>
+                                        <td>{{ yearPlan.getFuelArea()~ 'ha ('~ percentOfAll~'%)' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
 
-                                        </div>
-                                    </div>
-                                    <!--- End content -->
-                                </div> 
-                            </div>                      
-                        </section>
-                        {% endblock %}
+
+
+
+                    </div>
+                </div>
+                <!--- End content -->
+            </div> 
+        </div>                      
+    </section>
+{% endblock %}
