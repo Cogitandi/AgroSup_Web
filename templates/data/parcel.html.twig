@@ -12,19 +12,19 @@
                     <ul class="nav nav-pills flex-column">
                         <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a></li>       
                         <li><ul style="padding-left: 20px; list-style: none">
-                            <li><a class="d1 nav-link collapse" href="/yearPlan" >Lista</a></li>
-                            <li><a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a></li>
-                        </ul></li>
+                                <li><a class="d1 nav-link collapse" href="/yearPlan" >Lista</a></li>
+                                <li><a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a></li>
+                            </ul></li>
                         <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a></li>       
                         <li><ul style="padding-left: 20px; list-style: none">
-                            <li><a class="d3 nav-link collapse" href="/operator" >Lista</a></li>
-                            <li><a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a></li>
-                        </ul></li>
+                                <li><a class="d3 nav-link collapse" href="/operator" >Lista</a></li>
+                                <li><a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a></li>
+                            </ul></li>
                         <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a></li>
                         <li><ul style="padding-left: 20px; list-style: none">
-                            <li><a class="d2 nav-link collapse" href="/field" >Lista</a></li>
-                            <li><a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a></li>
-                        </ul></li>
+                                <li><a class="d2 nav-link collapse" href="/field" >Lista</a></li>
+                                <li><a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a></li>
+                            </ul></li>
                         <li><a class="nav-link font-weight-bold active" href="/parcel" >Działki</a></li>
                         <li><a class="nav-link font-weight-bold" href="/selectPlants" >Wybierz rośliny</a></li>
                     </ul>
@@ -35,44 +35,96 @@
                     <div class="container-md mx-4">
                         <h2 class="text-center">Działki w sezonie {{ start }}/{{ start+1 }} </h2>   
                         <div class="table-responsive">
-                            <table id="axs" class="text-center table w-75 mx-auto table-striped table-hover">
+                            <table id="axs" class="text-center table w-75 mx-auto table-bordered">
                                 <thead>
                                     <tr>
                                         <th scope ="col">#</th>
-                                        <th scope ="col">Numer</th>
+                                        <th scope ="col">Pole</th>
+                                        <th scope ="col">Numer działki</th>
                                         <th scope ="col">Powierzchnia[ha]</th>
                                         <th scope ="col">Paliwo</th>
                                         <th scope ="col">Dopłaty</th>
-                                        <th scope ="col">Pole</th>
                                         <th scope ="col">Uprawa</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle"></td>
+                                        <td class="align-middle"></td>
+                                        <td class="align-middle"></td>
+                                        <td class="align-middle"></td>
+                                        <td class="align-middle">
+                                            <select id="fuelFilter">
+                                                <option selected="selected" value="all">Wszystkie</option>
+                                                <option value="Tak">Tak</option>
+                                                <option value="Nie">Nie</option>
+                                            </select>
+                                        </td>
+                                        <td class="align-middle">
+                                            <select id="arimrFilter">
+                                                <option selected="selected" value="all">Wszyscy</option>
+                                                {% for operator in yearPlan.getOperators %}
+                                                    <option value="{{ operator.getFirstName}}">{{ operator.getFirstName}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td class="align-middle">
+                                            <select id="cropFilter">
+                                                <option selected="selected" value="all">Wszystkie</option>
+                                                <option value="Tak">Tak</option>
+                                                <option value="Nie">Nie</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                 </thead>
                                 <tbody >
+
+
                                     {% set licznik = 1 %}
-                                    {% for item in parcels %}
-                                        {% if item.fuelApplication == 1 %}
-                                            {% set fuel = "TAK" %}
-                                        {% else %}
-                                            {% set fuel = "NIE" %}
-                                        {% endif %}
+                                    {% for field in yearPlan.getFields %}
+                                        <!-- Count amount of parcels -->
+                                        {% set counter = 0 %}
+                                        {% set parcelAmount = 0 %}
+                                        {% for parcel in field.getParcels %}
+                                            {% set parcelAmount=parcelAmount+1 %}
+                                        {% endfor %}
+                                        <!-- Display each parcel
+                                        {% for item in field.getParcels %}
+                                            <!-- Fuel status -->
+                                            {% if item.fuelApplication == 1 %}
+                                                {% set fuel = "Tak" %}
+                                            {% else %}
+                                                {% set fuel = "Nie" %}
+                                            {% endif %}
 
-                                        {% if item.arimrOperator == NULL %}
-                                            {% set operator = "Brak" %}
-                                        {% else %}
-                                            {% set operator = item.arimrOperator.firstname  %}
-                                        {% endif %}
-                                        <tr>
-                                            <td class="align-middle">{{ licznik }}</td>
-                                            <td class="align-middle">{{ item.parcelNumber }}</td>
-                                            <td class="align-middle">{{ item.getCultivatedAreaHa }}</td>
-                                            <td class="align-middle">{{ fuel }}</td>
-                                            <td class="align-middle">{{ operator }}</td>
-                                            <td class="align-middle">{{ item.Field.name }}</td>
-                                            <td class="align-middle">{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td>
-                                        </tr>
-                                        {% set licznik = licznik+1 %}
+                                            <!-- Arimr status -->
+                                            {% if item.arimrOperator == NULL %}
+                                                {% set operator = "Brak" %}
+                                            {% else %}
+                                                {% set operator = item.arimrOperator.firstname  %}
+                                            {% endif %}
 
+
+                                            <tr>
+                                                <td class="align-middle">{{ licznik }}</td>
+
+                                                <td class="align-middle" >{{ item.Field.name }}</td>
+
+<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ parcelAmount }}">{{ item.Field.name }}</td> {% endif %}-->
+                                                <td class="align-middle">{{ item.parcelNumber }}</td>
+                                                <td class="align-middle">{{ item.getCultivatedAreaHa }}</td>
+                                                <td name ="fuel" class="align-middle">{{ fuel }}</td>
+                                                <td name ="arimr" class="align-middle">{{ operator }}</td>
+
+                                                <td class="align-middle" >{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td>
+
+<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ parcelAmount }}">{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td> {% endif %}-->
+                                            </tr>
+                                            {% set licznik = licznik+1 %}
+                                            {% set counter = counter+1 %}
+                                        {% endfor %}
+                                        {% set counter = 0 %}
                                     {% endfor %}
+
+
 
                                 </tbody>
                             </table>
@@ -84,4 +136,51 @@
             </div>
         </div>                   
     </section>
+    <script>
+        $(document).ready(function () {
+            fuelFilter();
+            arimrFilter();
+        });
+
+        function fuelFilter() {
+            var $fuelSelect = $('#fuelFilter');
+            $fuelSelect.change(function () {
+                var $filterOption = $fuelSelect.val();
+                $('tbody').find("tr").each(function () {
+                    $rowOption = $(this).find("td[name=fuel").text();
+
+                    if ($filterOption == $rowOption) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                    if ($filterOption == 'all')
+                        $(this).show();
+                });
+
+            });
+        }
+        function arimrFilter() {
+            var $arimrSelect = $('#arimrFilter');
+            $arimrSelect.change(function () {
+                var $filterOption = $arimrSelect.val();
+                $('tbody').find("tr").each(function () {
+                    $rowOption = $(this).find("td[name=arimr").text();
+                    console.log($rowOption);
+                    console.log($filterOption);
+                    console.log("end");
+                    if ($filterOption == $rowOption) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                    if ($filterOption == 'all')
+                        $(this).show();
+                });
+
+            });
+
+
+        }
+    </script>
 {% endblock %}

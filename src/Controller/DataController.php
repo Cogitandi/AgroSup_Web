@@ -119,13 +119,14 @@ class DataController extends AbstractController {
         $yearPlan = $user->getChoosedYearPlan();
 
         if ($yearPlan) { // If found yearPlan
-            $parcels = $yearPlan->getParcels();
-            $orderBy = (Criteria::create())->orderBy([
-                'field' => Criteria::ASC,
-            ]);
-            $parcels = $parcels->matching($orderBy)->toArray();
+              $fields = $yearPlan->getFields();
+//            $parcels = $yearPlan->getParcels();
+//            $orderBy = (Criteria::create())->orderBy([
+//                'field' => Criteria::ASC,
+//            ]);
+//            $parcels = $parcels->matching($orderBy)->toArray();
             $parameters = [
-                'parcels' => $parcels,
+                'yearPlan' => $yearPlan,
                 'start' => $yearPlan->getStartYear()
             ];
             return $this->render('data/parcel.html.twig', $parameters);

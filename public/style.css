@@ -17,15 +17,15 @@ body  {
 #nav .nav-link {
     color: #fff;
 }
-.table-hover > tbody > tr:hover > th,
+#content {
+    min-height: 600px;
+}
+/*.table-hover > tbody > tr:hover > th,
 .table-hover > tbody > tr:hover > td
 {
     background-color: yellow;
 
-}
-#content {
-	min-height: 600px;
-}
+}*/
 #crops tbody .detail {
     display: none;
 }
@@ -35,12 +35,6 @@ body  {
 }
 #fields tbody {
     white-space: pre-line;
-}
-
-
-#aside-nav {
-
-
 }
 
 footer {

@@ -10,7 +10,7 @@ city_reg = /^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]{2,20}$/; //reg miasto
 adres_reg = /^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]{2,40}$/; //reg adres
 message_reg = /^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]{10,40}$/; //reg text
 
-FieldName_reg = /^([a-żA-Ż0-9_()\s]+)$/;
+FieldName_reg = /^([a-żA-Ż0-9_-()\s]+)$/;
 arimrNumber_reg = /^[0-9]{11}$/;
 parcelNumber_reg = /^[0-9|/]+$/;
 cultivatedArea_reg = /^[0-9]+$/;
