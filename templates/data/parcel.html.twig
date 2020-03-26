@@ -34,11 +34,11 @@
                     <div class="container-md mx-4">
                         <h2 class="text-center">Działki w sezonie {{ start }}/{{ start+1 }} </h2>   
                         <div class="table-responsive">                     
-                            <table id="axs" class="text-center table w-75 mx-auto table-bordered">
+                            <table id="parcels" class="text-center table w-75 mx-auto table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th scope ="col">#</th>
                                         <th scope ="col">Pole</th>
+                                        <th scope ="col">#</th>
                                         <th scope ="col">Numer działki</th>
                                         <th scope ="col">Powierzchnia[ha]</th>
                                         <th scope ="col">Paliwo</th>
@@ -102,26 +102,33 @@
 
 
                                             <tr>
-                                                <td class="align-middle">{{ licznik }}</td>
 
-                                                <td class="align-middle" >{{ item.Field.name }}</td>
 
-<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ item.Field.getParcelAmount }}">{{ item.Field.name }}</td> {% endif %}-->
+                                                <td name="fieldName" class="align-middle" >{{ item.Field.getName() ~ ' ('~ item.Field.getFieldArea()~' ha)'}}</td>
+                                                <td name="counter" class="align-middle">{{ licznik }}</td>
+
                                                 <td class="align-middle">{{ item.parcelNumber }}</td>
-                                                <td class="align-middle">{{ item.getCultivatedAreaHa }}</td>
+                                                <td name ="area" class="align-middle">{{ item.getCultivatedAreaHa }}</td>
                                                 <td name ="fuel" class="align-middle">{{ fuel }}</td>
                                                 <td name ="arimr" class="align-middle">{{ operator }}</td>
 
                                                 <td name ="crop" class="align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %} brak {% endif %}</td>
 
-<!--{% if counter == 0 %}<td class="align-middle" rowspan="{{ item.Field.getParcelAmount }}">{% if item.field.plant %} {{ item.Field.plant.name }} {% else %} brak {% endif %}</td> {% endif %}-->
                                             </tr>
                                             {% set licznik = licznik+1 %}
                                             {% set counter = counter+1 %}
                                         {% endfor %}
                                         {% set counter = 0 %}
                                     {% endfor %}
-
+                                    <tr name="summary">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="font-weight-bold">Razem</td>
+                                        <td class="font-weight-bold" id="areaSum"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
 
 
                                 </tbody>
@@ -149,14 +156,18 @@
             $cropSelect.change(function () {
                 checkAllRows();
             });
+            countArea();
+            scaleRow();
 
         });
 
         function checkAllRows($select) {
             $('tbody').find("tr").each(function () {
-                $parcelFuel = $(this).find("td[name=fuel").text();
-                $parcelArimr = $(this).find("td[name=arimr").text();
-                $parcelCrop = $(this).find("td[name=crop").text();
+                if ($(this).attr('name') == 'summary')
+                    return;
+                $parcelFuel = $(this).find("td[name=fuel]").text();
+                $parcelArimr = $(this).find("td[name=arimr]").text();
+                $parcelCrop = $(this).find("td[name=crop]").text();
                 $filterFuel = $('#fuelFilter').val();
                 $filterArimr = $('#arimrFilter').val();
                 $filterCrop = $('#cropFilter').val();
@@ -167,7 +178,10 @@
                 } else {
                     $(this).hide();
                 }
+
             });
+            countArea();
+            scaleRow();
         }
 
         function isRowMatched($filterOption, $rowValue) {
@@ -181,6 +195,100 @@
             }
 
         }
+        function countArea() {
+            $area = 0;
+            $('tbody').find("tr").each(function () {
+                if ($(this).is(":visible") && ($(this).attr('id') != 'summary')) {
+                    $area += +$(this).find("td[name=area]").text() * 100;
+                }
+
+            })
+            $('#areaSum').html($area / 100 + ' ha');
+        }
+        function scaleRow() {
+            $firstFieldRow = null;
+            $firstFieldName = null;
+            $rowFieldName = null;
+            $parcelCounter = 1;
+            $size = getLength();
+            $counter = 1;
+
+            // Find all rows
+            $('tbody').find("tr").each(function () {
+
+                // Only displayed row
+                if (isRowVisible($(this))) {
+                    // Initialize first fieldName
+                    if ($firstFieldRow == null) {
+                        $(this).find("td[name=fieldName]").show();
+                        $firstFieldRow = $(this);
+                        $counter++;
+                        return true;
+                    }
+
+                    $rowFieldName = $(this).find("td[name=fieldName]").text();
+                    $firstFieldName = $firstFieldRow.find("td[name=fieldName]").text();
+                    if ($firstFieldName == $(this).find("td[name=fieldName]").text()) {
+                        // that same field
+                        if ($firstFieldRow != $(this)) {
+                            $parcelCounter++;
+                            $(this).find("td[name=fieldName]").hide();
+
+
+                            if ($counter == $size) {
+                                // last iterate
+                                spanRow($firstFieldRow, $parcelCounter);
+                            }
+                        }
+                    } else {
+                        $(this).find("td[name=fieldName]").show();
+                        spanRow($firstFieldRow, $parcelCounter);
+                        // new field
+                        $parcelCounter = 1;
+                        $firstFieldRow = $(this);
+                    }
+
+
+
+                    $counter++;
+                }
+            })
+
+        }
+
+        function hidea($arg) {
+            //console.log("ukrywam" + $thidTd.text());
+            $td = $arg.find("td[name=fieldName]");
+            $td.css('background-color', 'red');
+            console.log($td);
+            //$td.hide();
+            //$arg.hide();
+        }
+        function isRowVisible($row) {
+            if ($row.is(":visible") && ($row.attr('name') != 'summary')) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        function spanRow($firstParcelRow, $count) {
+            $firstParcelRow.find("td[name=fieldName").attr('rowspan', $count);
+        }
+        function getLength() {
+            $amount = 0;
+
+            $('tbody').find("tr").each(function () {
+                // Only displayed row
+                if (isRowVisible($(this))) {
+
+                    $amount++;
+                }
+            })
+
+            return $amount;
+        }
+
 
 
 

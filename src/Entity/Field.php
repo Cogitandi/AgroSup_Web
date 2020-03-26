@@ -60,7 +60,6 @@ class Field {
      */
     private $plant;
 
-
     public function __construct() {
         $this->parcels = new ArrayCollection();
     }
@@ -118,31 +117,36 @@ class Field {
         return $this;
     }
 
-    public function getPlantVariety(): ?string
-    {
+    public function getPlantVariety(): ?string {
         return $this->plantVariety;
     }
 
-    public function setPlantVariety(?string $plant_variety): self
-    {
+    public function setPlantVariety(?string $plant_variety): self {
         $this->plantVariety = $plant_variety;
 
         return $this;
     }
 
-    public function getPlant(): ?Plant
-    {
+    public function getPlant(): ?Plant {
         return $this->plant;
     }
 
-    public function setPlant(?Plant $plant): self
-    {
+    public function setPlant(?Plant $plant): self {
         $this->plant = $plant;
 
         return $this;
     }
-    
+
     public function getParcelAmount() {
         return $this->parcels->count();
     }
+
+    public function getFieldArea() {
+        $area = 0;
+        foreach ($this->parcels as $parcel) {
+            $area += $parcel->getCultivatedArea();
+        }
+        return $area/100;
+    }
+
 }

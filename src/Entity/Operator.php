@@ -213,7 +213,7 @@ class Operator {
             }
         }
         $percent = 100 / $this->getTotalArea() * $area / 100;
-        return round($percent,1,PHP_ROUND_HALF_UP);
+        return round($percent,1,PHP_ROUND_HALF_DOWN);
     }
 
     public function NotEstabilishedPlantArea() {
