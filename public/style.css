@@ -37,7 +37,16 @@ body  {
     white-space: pre-line;
 }
 
+	
+
 footer {
     background-color: black;
     color: #fff;
+}
+
+#parcels tr:hover td[hover] {
+    background-color: #F4A460;
+}
+td[name=fieldName],td[name=crop] {
+     pointer-events: none;
 }
