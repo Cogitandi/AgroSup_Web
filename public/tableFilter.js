@@ -67,12 +67,23 @@ function addFilteredTBody() {
 }
 function amountOfParcelsByFieldName($fieldName) {
     $counter = 0;
-    $counter = $('tbody[filteredTable]').find('td[name=fieldName]:contains('+ $fieldName +')').length;
+	$('tbody[filteredTable]').find('tr').each(function() {
+		if( $(this).find('td[name=fieldName]').text() == $fieldName ) {
+			$counter = $counter+1;
+	}
+		})
+	
     return $counter;
+	
 }
 function amountOfParcelsByPlantName($plantName) {
     $counter = 0;
-    $counter = $('tbody[filteredTable]').find('td[name=plantName]:contains('+ $plantName +')').length;
+	$('tbody[filteredTable]').find('tr').each(function() {
+		if( $(this).find('td[name=plantName]').text() == $plantName ) {
+			$counter = $counter+1;
+	}
+		})
+	
     return $counter;
 }
 function scaleFieldNames() {
@@ -147,14 +158,14 @@ function getFieldArea($fieldName) {
         }
         
     })
-    return $area/100;
+    return ($area/100).toFixed(2);
 }
 function getTotalArea() {
     $area = 0;
     $('tbody[filteredTable]').find('td[name=area]').each(function() {
         $area += $(this).text()*100;
     })
-    return $area/100;
+    return ($area/100).toFixed(2);
 }
 function addSummaryRow() {
     $html = '<tr>';
