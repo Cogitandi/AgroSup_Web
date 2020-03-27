@@ -51,14 +51,14 @@
                                         <td class="align-middle"></td>
                                         <td class="align-middle"></td>
                                         <td class="align-middle">
-                                            <select class="form-control" id="fuelFilter">
+                                            <select class="form-control" id="fuelSelect">
                                                 <option selected="selected" value="all">Wszystkie</option>
                                                 <option value="Tak">Tak</option>
                                                 <option value="Nie">Nie</option>
                                             </select>
                                         </td>
                                         <td class="align-middle">
-                                            <select class="form-control" id="arimrFilter">
+                                            <select class="form-control" id="arimrOperatorSelect">
                                                 <option selected="selected" value="all">Wszyscy</option>
                                                 <option value="Brak">Brak</option>
                                                 {% for operator in yearPlan.getOperators %}
@@ -67,7 +67,7 @@
                                             </select>
                                         </td>
                                         <td class="align-middle">
-                                            <select class="form-control" id="cropFilter">
+                                            <select class="form-control" id="plantNameSelect">
                                                 <option selected="selected" value="all">Wszystkie</option>
                                                 <option value="Brak">Brak</option>
                                                 {% for plant in yearPlan.getPlants %} 
@@ -77,7 +77,7 @@
                                         </td>
                                     </tr>
                                 </thead>
-                                <tbody >
+                                <tbody data style="display: none;">
 
 
                                     {% set licznik = 1 %}
@@ -110,9 +110,9 @@
                                                 <td hover class="align-middle">{{ item.parcelNumber }}</td>
                                                 <td hover name ="area" class="align-middle">{{ item.getCultivatedAreaHa }}</td>
                                                 <td hover name ="fuel" class="align-middle">{{ fuel }}</td>
-                                                <td hover name ="arimr" class="align-middle">{{ operator }}</td>
+                                                <td hover name ="arimrOperator" class="align-middle">{{ operator }}</td>
 
-                                                <td name ="crop" class="no-hover align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %} brak {% endif %}</td>
+                                                <td name ="plantName" class="no-hover align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %} brak {% endif %}</td>
 
                                             </tr>
                                             {% set licznik = licznik+1 %}
@@ -120,15 +120,7 @@
                                         {% endfor %}
                                         {% set counter = 0 %}
                                     {% endfor %}
-                                    <tr name="summary">
-                                        <td></td>
-                                        <td></td>
-                                        <td class="font-weight-bold">Razem</td>
-                                        <td class="font-weight-bold" id="areaSum"></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+
 
 
                                 </tbody>
