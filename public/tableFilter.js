@@ -2,7 +2,7 @@ $(document).ready(function() {
     var $fuelSelect = $('#fuelSelect');
     var $arimrSelect = $('#arimrOperatorSelect');
     var $cropSelect = $('#plantNameSelect');
-    
+
     $fuelSelect.change(function () {
         tableActions();
     });
@@ -13,25 +13,36 @@ $(document).ready(function() {
         tableActions();
     });
     tableActions();
-    
+
 })
 
 function tableActions() {
-    removeOldTableIfExist();
+    removeOldTableIfExist() 
     addFilteredTBody();
+
+    $filteredTBody = $('#filteredTable');
+    $filteredTR = $('#filteredTable').find('tr');
+    $filteredFieldsNameTD = $filteredTR.find('td[name=fieldName]');
+    $filteredPlantNameTD = $filteredTR.find('td[name=plantName]');
+
     scaleFieldNames();
     scalePlantNames();
+
     colorFields();
+    colorPlants()
+    renumerate();
     addSummaryRow();
     addAreaToFields();
-    renumerate();
 }
+
+
 function removeOldTableIfExist() {
-    $oldTable = $('#parcels').find('tbody[filteredTable]')
-     if( $oldTable.length ) {
-        $oldTable.remove();
+    $filteredTBody = $('#filteredTable');
+    if( $filteredTBody.length) {
+        $filteredTBody.remove() // remove old table
     }
 }
+
 function isValueMatched($required, $value) {
     if($required == 'all') return true;
     if($required == $value) 
@@ -39,10 +50,8 @@ function isValueMatched($required, $value) {
     return false
 }
 function getFilteredTBody($isFuel, $arimrOperator, $plantName) {
-    removeOldTableIfExist();
-    
-    $data = $('#parcels').find('tbody[data]');
-    $outputTable = '<tbody filteredTable>';
+    $data = $('#rawTable');
+    $outputTable = '<tbody id=filteredTable>';
 
     $data.find('tr').each( function() {
         $rowFuel = $(this).find('td[name=fuel]').text();
@@ -56,113 +65,140 @@ function getFilteredTBody($isFuel, $arimrOperator, $plantName) {
     })
     $outputTable += '</tbody>';
     return $outputTable;
-    
+
 }
 function addFilteredTBody() {
-        $choosedFuel = $('#fuelSelect').val();
-        $choosedArimr = $('#arimrOperatorSelect').val();
-        $choosedCrop = $('#plantNameSelect').val();
-        $newTBody = getFilteredTBody($choosedFuel,$choosedArimr,$choosedCrop);
-        $('#parcels > tbody').after($newTBody);
-}
-function amountOfParcelsByFieldName($fieldName) {
-    $counter = 0;
-	$('tbody[filteredTable]').find('tr').each(function() {
-		if( $(this).find('td[name=fieldName]').text() == $fieldName ) {
-			$counter = $counter+1;
-	}
-		})
-	
-    return $counter;
-	
-}
-function amountOfParcelsByPlantName($plantName) {
-    $counter = 0;
-	$('tbody[filteredTable]').find('tr').each(function() {
-		if( $(this).find('td[name=plantName]').text() == $plantName ) {
-			$counter = $counter+1;
-	}
-		})
-	
-    return $counter;
+    $choosedFuel = $('#fuelSelect').val();
+    $choosedArimr = $('#arimrOperatorSelect').val();
+    $choosedCrop = $('#plantNameSelect').val();
+    $newTBody = getFilteredTBody($choosedFuel,$choosedArimr,$choosedCrop);
+    $('#rawTable').after($newTBody);
 }
 function scaleFieldNames() {
-    $fieldsTD = $('tbody[filteredTable]').find('td[name=fieldName]');
-    $previousFieldName = null;
-    $fieldsTD.each(function() {
-        $thisFieldNameTD = $(this);
-        if($previousFieldName == $thisFieldNameTD.text()) {
-            $(this).hide();
+    $firstFieldNameTD = $filteredFieldsNameTD.first();
+    $counter = 0;
+    $filteredFieldsNameTD.each(function() {
+        if( $firstFieldNameTD.text() == $(this).text() ) {
+            $counter = $counter + 1;
+
+            if($counter != 1) {
+                $(this).hide();
+            }
+
+            if($(this).is($filteredFieldsNameTD.last()) ) {
+                $firstFieldNameTD.attr('rowspan', $counter);
+                return;
+            }
+
+
         } else {
-            $thisFieldNameTD.attr('rowspan', amountOfParcelsByFieldName($thisFieldNameTD.text()));
-            $previousFieldName = $thisFieldNameTD.text();
+            $firstFieldNameTD.attr('rowspan', $counter);
+            $firstFieldNameTD = $(this);
+            $counter = 1;
         }
-        
-        
+
     })
 }
 function scalePlantNames() {
-    $plantsTD = $('tbody[filteredTable]').find('td[name=plantName]');
-    $previousPlantName = null;
-    $plantsTD.each(function() {
-        $thisPlantNameTD = $(this);
-        if($previousPlantName == $thisPlantNameTD.text()) {
-            $(this).remove();
+    $firstPlantNameTD = $filteredPlantNameTD.first();
+    $counter = 0;
+    $filteredPlantNameTD.each(function() {
+        if( $firstPlantNameTD.text() == $(this).text() ) {
+            $counter = $counter + 1;
+
+            if($counter != 1) {
+                $(this).hide();
+            }
+
+            if($(this).is($filteredPlantNameTD.last()) ) {
+                $firstPlantNameTD.attr('rowspan', $counter);
+                return;
+            }
+
+
         } else {
-            $thisPlantNameTD.attr('rowspan', amountOfParcelsByPlantName($thisPlantNameTD.text()));
-            $previousPlantName = $thisPlantNameTD.text();
+            $firstPlantNameTD.attr('rowspan', $counter);
+            $firstPlantNameTD = $(this);
+            $counter = 1;
         }
-        
-        
+
     })
 }
 function getArrayWithFieldNames() {
-    $fieldsTD = $('tbody[filteredTable]').find('td[name=fieldName]'); 
     $fields = [];
-    $fieldsTD.each(function() {
-                   $fieldName = $(this).text();
+    $filteredFieldsNameTD.each(function() {
+        $fieldName = $(this).text();
         if($.inArray($fieldName,$fields) == -1) {
             $fields.push($fieldName);
         }}
-    )
+                              )
     return $fields;
 }
+function getArrayWithPlantNames() {
+    $plantNames = [];
+    $filteredPlantNameTD.each(function() {
+        $plantName = $(this).text();
+        if($.inArray($plantName,$plantNames) == -1) {
+            $plantNames.push($plantName);
+        }}
+                             )
+    return $plantNames;
+}
 function colorFields() {
-    $TDfields = $('tbody[filteredTable]');
     $even = false;
     $fields = getArrayWithFieldNames();
-    
+
     for(i=0;i<$fields.length;i++) {
+        $found = false;
         if($even) {        
             // Even row
-            $TDfields.find('td[name=fieldName]:contains('+$fields[i]+')').each(function() {
-                $(this).closest('tr').css('background-color', '#E8E8E8');
+            $filteredTR.each(function() {
+                if( $(this).find('td[name=fieldName]').text() == $fields[i] ) {
+                    $(this).css('background-color', '#E8E8E8');
+                    $found = true;
+                } else {
+                    if($found) return false;
+                }
             })
             $even = false;
         } else {
             // Odd row
-            $TDfields.find('td[name=fieldName]:contains('+$fields[i]+')').each(function() {
-                //$(this).closest('tr').css('background-color', '#FFF');
-            })
             $even = true;
         }
-           
-        }
+
     }
+}
+function colorPlants() {
+    $plantNames = getArrayWithPlantNames();
+
+    for(i=0;i<$plantNames.length;i++) {
+        $color = generateColor();
+        $filteredPlantNameTD.each(function() {
+            if( $(this).text() == $plantNames[i] ) {
+                $(this).css('background-color', $color);
+            } 
+        })
+    }
+
+}
 function getFieldArea($fieldName) {
     $area = 0;
-    //console.log($('tbody[filteredTable]').find('td[name=fieldName]:contains('+$fieldName+')').siblings()); 
-    $('tbody[filteredTable]').find('tr').each(function() {
-        if( $(this).find('td[name=fieldName]').text() == $fieldName) {
-            $area += $(this).find('td[name=area]').text()*100;
+    $found = false;
+    $filteredTR.find('td[name=fieldName]:contains('+$fieldName+')').each(function() {
+
+        if( $(this).text() == $fieldName) {
+            $found = true;
+            $area += $(this).closest('tr').find('td[name=area]').text()*100;
+
+        } else {
+            if($found) return false;
         }
-        
     })
     return ($area/100).toFixed(2);
 }
 function getTotalArea() {
     $area = 0;
-    $('tbody[filteredTable]').find('td[name=area]').each(function() {
+    $filteredTR.find('td[name=area]').each(function() {
         $area += $(this).text()*100;
     })
     return ($area/100).toFixed(2);
@@ -177,21 +213,26 @@ function addSummaryRow() {
     $html += '<td></td>';
     $html += '<td></td>';
     $html += '</tr>';
-    $('tbody[filteredTable]').append($html);
+    $filteredTBody.append($html);
 }
 function addAreaToFields() {
-    $('tbody[filteredTable]').find('td[name=fieldName]').each(function() {
+    $filteredFieldsNameTD.each(function() {
         $(this).append('<br />['+getFieldArea($(this).text())+' ha]');
     })
 }
 function renumerate() {
     $counter = 1;
-    $('tbody[filteredTable]').find('td[name=no]').each(function() {
-        $(this).html($counter);
+    $filteredTR.find('td[name=no]').each(function() {
+        $(this).text($counter);
         $counter = $counter + 1;
     })
 }
-    
+function generateColor() {
+    var colorR = Math.floor((Math.random() * 256));
+    var colorG = Math.floor((Math.random() * 256));
+    var colorB = Math.floor((Math.random() * 256));
+    return "rgb(" + colorR + "," + colorG + "," + colorB + ")";
+}
 
 //    
 //    $fieldsTD.each(function() {
