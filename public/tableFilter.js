@@ -29,7 +29,7 @@ function tableActions() {
     scalePlantNames();
 
     colorFields();
-    colorPlants()
+    colorPlants();
     renumerate();
     addSummaryRow();
     addAreaToFields();
@@ -184,8 +184,7 @@ function colorPlants() {
 function getFieldArea($fieldName) {
     $area = 0;
     $found = false;
-    $filteredTR.find('td[name=fieldName]:contains('+$fieldName+')').each(function() {
-
+    $filteredTR.find(':contains('+$fieldName+')').each(function() {
         if( $(this).text() == $fieldName) {
             $found = true;
             $area += $(this).closest('tr').find('td[name=area]').text()*100;
@@ -195,6 +194,22 @@ function getFieldArea($fieldName) {
         }
     })
     return ($area/100).toFixed(2);
+}
+function fieldsWithArea() {
+    $fieldNames = getArrayWithFieldNames();
+    $fieldsWithArea = {};
+    for(i=0;i<$fieldNames.length;i++) {
+        $fieldsWithArea[$fieldNames[i]] = 0;
+    }
+    $filteredTR.each(function() {
+        $fieldName = $(this).find('td[name=fieldName]').text();
+        $area = $(this).find('td[name=area]').text()*100;
+        $fieldsWithArea[$fieldName] += $area;
+
+    })
+    return $fieldsWithArea;
+
+
 }
 function getTotalArea() {
     $area = 0;
@@ -216,9 +231,14 @@ function addSummaryRow() {
     $filteredTBody.append($html);
 }
 function addAreaToFields() {
+    $fieldsWithArea = fieldsWithArea();
+
     $filteredFieldsNameTD.each(function() {
-        $(this).append('<br />['+getFieldArea($(this).text())+' ha]');
+        $area = ( $fieldsWithArea[$(this).text()]/100 ).toFixed(2);
+        $(this).append('<br />['+$area+' ha]');
     })
+
+
 }
 function renumerate() {
     $counter = 1;
