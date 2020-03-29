@@ -24,6 +24,7 @@ function tableActions() {
     $filteredTR = $('#filteredTable').find('tr');
     $filteredFieldsNameTD = $filteredTR.find('td[name=fieldName]');
     $filteredPlantNameTD = $filteredTR.find('td[name=plantName]');
+    $fieldsWithArea = fieldsWithArea();
 
     scaleFieldNames();
     scalePlantNames();
@@ -107,7 +108,7 @@ function scalePlantNames() {
             $counter = $counter + 1;
 
             if($counter != 1) {
-                $(this).hide();
+                $(this).remove();
             }
 
             if($(this).is($filteredPlantNameTD.last()) ) {
@@ -231,14 +232,16 @@ function addSummaryRow() {
     $filteredTBody.append($html);
 }
 function addAreaToFields() {
-    $fieldsWithArea = fieldsWithArea();
-
     $filteredFieldsNameTD.each(function() {
-        $area = ( $fieldsWithArea[$(this).text()]/100 ).toFixed(2);
-        $(this).append('<br />['+$area+' ha]');
+        $thisFieldName = $(this).text();
+
+        if( Object.keys($fieldsWithArea).length==0) return false;
+
+        if( $fieldsWithArea[ $thisFieldName ] === undefined) return true;
+
+        $(this).append('<br />['+($fieldsWithArea[$thisFieldName]/100).toFixed(2)+' ha]');
+        delete $fieldsWithArea[ $thisFieldName ];
     })
-
-
 }
 function renumerate() {
     $counter = 1;
@@ -251,7 +254,7 @@ function generateColor() {
     var colorR = Math.floor((Math.random() * 256));
     var colorG = Math.floor((Math.random() * 256));
     var colorB = Math.floor((Math.random() * 256));
-    return "rgb(" + colorR + "," + colorG + "," + colorB + ")";
+    return "rgb(" + colorR + "," + colorG + "," + colorB + ",0.5)";
 }
 
 //    
