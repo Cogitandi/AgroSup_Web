@@ -30,7 +30,7 @@ function tableActions() {
     scalePlantNames();
 
     colorFields();
-    //colorPlants();
+    colorPlants();
     renumerate();
     addSummaryRow();
     addAreaToFields();
