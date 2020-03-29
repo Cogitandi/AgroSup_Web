@@ -47,6 +47,6 @@ footer {
 #parcels tr:hover td[hover] {
     background-color: #F4A460;
 }
-td[name=fieldName],td[name=crop] {
+td[name=fieldName],td[name=plantName] {
      pointer-events: none;
 }

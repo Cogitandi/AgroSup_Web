@@ -30,7 +30,7 @@ function tableActions() {
     scalePlantNames();
 
     colorFields();
-    colorPlants();
+    //colorPlants();
     renumerate();
     addSummaryRow();
     addAreaToFields();
@@ -155,7 +155,11 @@ function colorFields() {
             // Even row
             $filteredTR.each(function() {
                 if( $(this).find('td[name=fieldName]').text() == $fields[i] ) {
-                    $(this).css('background-color', '#E8E8E8');
+                    $(this).children().each(function() {
+                        if($(this).attr('name=plantName')) return true;
+                        
+                        $(this).css('background-color', '#E8E8E8');
+                    })
                     $found = true;
                 } else {
                     if($found) return false;
