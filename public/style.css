@@ -1,3 +1,4 @@
+
 body  { 
     padding-bottom: 70px;
 }
@@ -45,8 +46,9 @@ footer {
 }
 
 #parcels tr:hover td[hover] {
-    background-color: #F4A460;
+    background-color: #F5F5DC !important;
 }
-td[name=fieldName],td[name=plantName] {
+
+td[name=fieldName],td[name=plantName],td[name=fieldNumber] {
      pointer-events: none;
 }

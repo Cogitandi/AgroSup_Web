@@ -34,7 +34,13 @@ class Field {
      * @Groups({"field:read"})
      * @ORM\Column(type="string", length=100)
      */
+    
     private $name;
+    
+        /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $number;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\YearPlan", inversedBy="fields")
@@ -147,6 +153,18 @@ class Field {
             $area += $parcel->getCultivatedArea();
         }
         return $area/100;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
+
+        return $this;
     }
 
 }

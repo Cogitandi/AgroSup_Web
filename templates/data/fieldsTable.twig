@@ -24,8 +24,8 @@
                                 <li><a class="d2 nav-link collapse" href="/field" >Lista</a></li>
                                 <li><a class="d2 nav-link collapse" href="/field/add" >Stwórz nowe pole</a></li>
                             </ul></li>
-                        <li><a class="nav-link font-weight-bold active" href="/parcel" >Lista działek</a></li>
-                        <li><a class="nav-link font-weight-bold" href="/fieldsTable" >Lista pól</a></li>
+                        <li><a class="nav-link font-weight-bold" href="/parcel" >Lista działek</a></li>
+                        <li><a class="nav-link font-weight-bold active" href="/fieldsTable" >Lista pól</a></li>
                         <li><a class="nav-link font-weight-bold" href="/selectPlants" >Wybierz rośliny</a></li>
                     </ul>
                 </div>
@@ -34,20 +34,19 @@
                 <div class="col-md-10">
                     <div class="container-md mx-4">
                         <button class="float-right btn btn-primary" onClick="createPDF();">Drukuj</button>
-                        <h2 class="text-center">Działki w sezonie {{ start }}/{{ start+1 }} </h2>   
-                        
+                        <h2 class="text-center">Pola w sezonie {{ yearPlan.startYear }}/{{ yearPlan.endYear }} </h2>   
+
                         <div class="table-responsive">    
-                            
+
                             <table id="parcels" class="text-center table w-75 mx-auto">
-                                
+
                                 <thead style="background-color: #32CD32">
-                                    
+
                                     <tr>
+                                        <th scope ="col">Numer pola</th>
                                         <th scope ="col">Pole</th>
-                                        <th scope ="col">#</th>
                                         <th scope ="col">Numer działki</th>
                                         <th scope ="col">Powierzchnia[ha]</th>
-                                        <th scope ="col">Paliwo</th>
                                         <th scope ="col">Dopłaty</th>
                                         <th scope ="col">Uprawa</th>
                                     </tr>
@@ -56,13 +55,6 @@
                                         <td class="align-middle"></td>
                                         <td class="align-middle"></td>
                                         <td class="align-middle"></td>
-                                        <td class="align-middle">
-                                            <select class="form-control" id="fuelSelect">
-                                                <option selected="selected" value="all">Wszystkie</option>
-                                                <option value="Tak">Tak</option>
-                                                <option value="Nie">Nie</option>
-                                            </select>
-                                        </td>
                                         <td class="align-middle">
                                             <select class="form-control" id="arimrOperatorSelect">
                                                 <option selected="selected" value="all">Wszyscy</option>
@@ -108,14 +100,13 @@
 
 
                                             <tr>
-
+                                                <td name="fieldNumber" class="align-middle">{{ item.field.getNumber() }}</td>
 
                                                 <td name="fieldName" class="no-hover align-middle" >{{ item.Field.getName() }}</td>
-                                                <td hover name="no" class="align-middle">{{ licznik }}</td>
+
 
                                                 <td hover class="align-middle">{{ item.parcelNumber }}</td>
                                                 <td hover name ="area" class="align-middle">{{ item.getCultivatedAreaHa }}</td>
-                                                <td hover name ="fuel" class="align-middle">{{ fuel }}</td>
                                                 <td hover name ="arimrOperator" class="align-middle">{{ operator }}</td>
 
                                                 <td name ="plantName" class="no-hover align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %} brak {% endif %}</td>
@@ -139,46 +130,47 @@
             </div>
         </div>                   
     </section>
-    <script src="tableFilter.js"></script>
+    <script src="fieldsTableFilter.js"></script>
     <script src="generatePDF.js"></script>
-    
-<script>
-    function createPDF() {
-        var header = document.getElementsByTagName('h2')[0].textContent
-        var arimr = document.getElementById('arimrOperatorSelect').value;
-        if(arimr == 'all') arimr = 'Całość'
-        var data = document.getElementById('filteredTable');
-        var rowsLength = data.rows.length-1;
-        data.deleteRow(rowsLength);
-        
-        var before = '<h2>' + header + '- ' + arimr + '</h2>';
-        data = data.innerHTML;
-        var style = "<style>";
-        style = style + "th {background-color: 	#32CD32}";
-        style = style + "table {border-spacing: 0px;width: 100%;font: 17px Calibri;}";
-        style = style + "table, th, td {border: solid 0.1px rgba(0, 0, 0, 0.5);";
-        style = style + "padding: 2px 3px;text-align: center;}";
-        style = style + "</style>";
 
-        // CREATE A WINDOW OBJECT.
-        var win = window.open('', '', 'height=700,width=700');
+    <script>
+                                function createPDF() {
+                                    var header = document.getElementsByTagName('h2')[0].textContent
+                                    var arimr = document.getElementById('arimrOperatorSelect').value;
+                                    if (arimr == 'all')
+                                        arimr = 'Całość'
+                                    var data = document.getElementById('filteredTable');
+                                    var rowsLength = data.rows.length - 1;
+                                    data.deleteRow(rowsLength);
 
-        win.document.write('<html><head>');
-        win.document.write('<title>Profile</title>');   // <title> FOR PDF HEADER.
-        win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
-        win.document.write('</head>');
-        win.document.write('<body>');
-        win.document.write('<table><tr><th scope = col colspan=7>'+before+'</th><tr><th scope ="col">Pole</th><th scope ="col">#</th><th scope ="col">Numer działki</th><th scope ="col">Powierzchnia[ha]</th><th scope ="col">Paliwo</th><th scope ="col">Dopłaty</th><th scope ="col">Uprawa</th></tr>');
-        win.document.write('<tbody>');  
-        win.document.write(data);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
-        win.document.write('</tbody>');  
-        win.document.write('</table');
-        win.document.write('</body></html>');
+                                    var before = '<h2>' + header + '- ' + arimr + '</h2>';
+                                    data = data.innerHTML;
+                                    var style = "<style>";
+                                    style = style + "th {background-color: 	#32CD32}";
+                                    style = style + "table {border-spacing: 0px;width: 100%;font: 17px Calibri;}";
+                                    style = style + "table, th, td {border: solid 0.1px rgba(0, 0, 0, 0.5);";
+                                    style = style + "padding: 2px 3px;text-align: center;}";
+                                    style = style + "</style>";
 
-        win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+                                    // CREATE A WINDOW OBJECT.
+                                    var win = window.open('', '', 'height=700,width=700');
 
-        win.print();    // PRINT THE CONTENTS.
-    }
-</script>
-        
+                                    win.document.write('<html><head>');
+                                    //win.document.write('<title>Profile</title>');   // <title> FOR PDF HEADER.
+                                    win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
+                                    win.document.write('</head>');
+                                    win.document.write('<body>');
+                                    win.document.write('<table><tr><th scope = col colspan=7>' + before + '</th><tr><th scope ="col">Pole</th><th scope ="col">#</th><th scope ="col">Numer działki</th><th scope ="col">Powierzchnia[ha]</th><th scope ="col">Dopłaty</th><th scope ="col">Uprawa</th></tr>');
+                                    win.document.write('<tbody>');
+                                    win.document.write(data);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
+                                    win.document.write('</tbody>');
+                                    win.document.write('</table');
+                                    win.document.write('</body></html>');
+
+                                    win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+
+                                    win.print();    // PRINT THE CONTENTS.
+                                }
+    </script>
+
 {% endblock %}

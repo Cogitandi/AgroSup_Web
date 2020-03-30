@@ -119,12 +119,7 @@ class DataController extends AbstractController {
         $yearPlan = $user->getChoosedYearPlan();
 
         if ($yearPlan) { // If found yearPlan
-              $fields = $yearPlan->getFields();
-//            $parcels = $yearPlan->getParcels();
-//            $orderBy = (Criteria::create())->orderBy([
-//                'field' => Criteria::ASC,
-//            ]);
-//            $parcels = $parcels->matching($orderBy)->toArray();
+            $fields = $yearPlan->getFields();
             $parameters = [
                 'yearPlan' => $yearPlan,
                 'start' => $yearPlan->getStartYear()
@@ -132,6 +127,20 @@ class DataController extends AbstractController {
             return $this->render('data/parcel.html.twig', $parameters);
         }
         return $this->redirectToRoute('chooseYearPlan');
+    }
+
+    /**
+     * @Route("fieldsTable", name="fieldsTable")
+     */
+    public function fieldsTable(Request $request) {
+        $user = $this->getUser();
+        $yearPlan = $user->getChoosedYearPlan();
+
+        // if Not choosed
+        if (!$yearPlan)
+            return $this->redirectToRoute('chooseYearPlan');
+
+        return $this->render('data/fieldsTable.twig', ['yearPlan' => $yearPlan]);
     }
 
     /**

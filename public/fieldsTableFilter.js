@@ -22,6 +22,7 @@ function tableActions() {
 
     $filteredTBody = $('#filteredTable');
     $filteredTR = $('#filteredTable').find('tr');
+    $filteredFieldsNumberTD = $filteredTR.find('td[name=fieldNumber]');
     $filteredFieldsNameTD = $filteredTR.find('td[name=fieldName]');
     $filteredPlantNameTD = $filteredTR.find('td[name=plantName]');
     $fieldsWithArea = fieldsWithArea();
@@ -29,8 +30,10 @@ function tableActions() {
     colorFields();
     colorPlants();
     
+    scaleFieldNumbers();
     scaleFieldNames();
     scalePlantNames();
+    
 
     
     renumerate();
@@ -52,15 +55,14 @@ function isValueMatched($required, $value) {
         return true;
     return false
 }
-function getFilteredTBody($isFuel, $arimrOperator, $plantName) {
+function getFilteredTBody($arimrOperator, $plantName) {
     $data = $('#rawTable');
     $outputTable = '<tbody id=filteredTable>';
 
     $data.find('tr').each( function() {
-        $rowFuel = $(this).find('td[name=fuel]').text();
         $rowArimrOperator = $(this).find('td[name=arimrOperator]').text();
         $rowPlantName = $(this).find('td[name=plantName]').text();
-        if(isValueMatched($isFuel,$rowFuel) &&
+        if(
            isValueMatched($arimrOperator,$rowArimrOperator) &&
            isValueMatched($plantName,$rowPlantName)) {
             $outputTable += '<tr>'+$(this).html()+'</tr>';
@@ -71,11 +73,35 @@ function getFilteredTBody($isFuel, $arimrOperator, $plantName) {
 
 }
 function addFilteredTBody() {
-    $choosedFuel = $('#fuelSelect').val();
     $choosedArimr = $('#arimrOperatorSelect').val();
     $choosedCrop = $('#plantNameSelect').val();
-    $newTBody = getFilteredTBody($choosedFuel,$choosedArimr,$choosedCrop);
+    $newTBody = getFilteredTBody($choosedArimr,$choosedCrop);
     $('#rawTable').after($newTBody);
+}
+function scaleFieldNumbers() {
+    $firstFieldNumberTD = $filteredFieldsNumberTD.first();
+    $counter = 0;
+    $filteredFieldsNumberTD.each(function() {
+        if( $firstFieldNumberTD.text() == $(this).text() ) {
+            $counter = $counter + 1;
+
+            if($counter != 1) {
+                $(this).remove();
+            }
+
+            if($(this).is($filteredFieldsNumberTD.last()) ) {
+                $firstFieldNumberTD.attr('rowspan', $counter);
+                return;
+            }
+
+
+        } else {
+            $firstFieldNumberTD.attr('rowspan', $counter);
+            $firstFieldNumberTD = $(this);
+            $counter = 1;
+        }
+
+    })
 }
 function scaleFieldNames() {
     $firstFieldNameTD = $filteredFieldsNameTD.first();

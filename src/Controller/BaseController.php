@@ -12,9 +12,6 @@ class BaseController extends AbstractController {
      * @Route("/", name="main")
      */
     public function main() {
-        $session = new Session();
-        $session->start();
-        $session->set('yP', '56');
         return $this->render('pages/main.html.twig', []);
     }
 

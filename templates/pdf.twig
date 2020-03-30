@@ -1,0 +1,322 @@
+<head>
+
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+		
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Required meta tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/style.css">
+
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Lora&display=swap" rel="stylesheet">
+
+    </head>
+
+
+
+{% block body %}
+    <section id="content">
+        <div class="container-fluid mt-3">
+            <div class="row">
+             
+
+                <!--- Content -->
+                <div class="col-md-10">
+                    <div class="container-md mx-4">
+                        <h2 class="text-center">Działki w sezonie 2015/2016 </h2>   
+                        <div class="table-responsive">                     
+                            <table id="parcels" class="text-center table-bordered w-75 mx-auto">
+                                <thead>
+                                    <tr>
+                                        <th scope ="col">Pole</th>
+                                        <th scope ="col">#</th>
+                                        <th scope ="col">Numer działki</th>
+                                        <th scope ="col">Powierzchnia[ha]</th>
+                                        <th scope ="col">Paliwo</th>
+                                        <th scope ="col">Dopłaty</th>
+                                        <th scope ="col">Uprawa</th>
+                                    </tr>
+                                </thead>
+                                
+                                
+                                <tbody id="filteredTable"><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle" rowspan="6">za domem pojedyncze<br>[1.84 ha]</td>
+                                                <td hover="" name="no" class="align-middle">1</td>
+
+                                                <td hover="" class="align-middle">123</td>
+                                                <td hover="" name="area" class="align-middle">0.64</td>
+                                                <td hover="" name="fuel" class="align-middle">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" rowspan="7" style="background-color: rgba(60, 120, 144, 0.5);">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">2</td>
+
+                                                <td hover="" class="align-middle">334</td>
+                                                <td hover="" name="area" class="align-middle">0.03</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(60, 120, 144, 0.5); display: none;">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">3</td>
+
+                                                <td hover="" class="align-middle">664</td>
+                                                <td hover="" name="area" class="align-middle">0.02</td>
+                                                <td hover="" name="fuel" class="align-middle">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(60, 120, 144, 0.5); display: none;">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">4</td>
+
+                                                <td hover="" class="align-middle">1</td>
+                                                <td hover="" name="area" class="align-middle">0.45</td>
+                                                <td hover="" name="fuel" class="align-middle">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(60, 120, 144, 0.5); display: none;">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">5</td>
+
+                                                <td hover="" class="align-middle">6</td>
+                                                <td hover="" name="area" class="align-middle">0.05</td>
+                                                <td hover="" name="fuel" class="align-middle">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(60, 120, 144, 0.5); display: none;">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">6</td>
+
+                                                <td hover="" class="align-middle">8</td>
+                                                <td hover="" name="area" class="align-middle">0.65</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(60, 120, 144, 0.5); display: none;">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle" rowspan="1" style="background-color: rgb(232, 232, 232);">pojedyncze<br>[4.43 ha]</td>
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">7</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">23</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">4.43</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(60, 120, 144, 0.5); display: none;">bobik(EFA)</td>
+
+                                            </tr><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle" rowspan="3">podwojne<br>[6.55 ha]</td>
+                                                <td hover="" name="no" class="align-middle">8</td>
+
+                                                <td hover="" class="align-middle">123</td>
+                                                <td hover="" name="area" class="align-middle">5.43</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" rowspan="13" style="background-color: rgba(154, 136, 8, 0.5);"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">9</td>
+
+                                                <td hover="" class="align-middle">124</td>
+                                                <td hover="" name="area" class="align-middle">0.12</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">10</td>
+
+                                                <td hover="" class="align-middle">11</td>
+                                                <td hover="" name="area" class="align-middle">1</td>
+                                                <td hover="" name="fuel" class="align-middle">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle" rowspan="5" style="background-color: rgb(232, 232, 232);">las<br>[36.04 ha]</td>
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">11</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">25</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">35.34</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">12</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">34534</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">0.04</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">13</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">4</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">0.04</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">14</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">4185</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">0.08</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">15</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">6</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">0.54</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle" rowspan="3">hektary<br>[3.95 ha]</td>
+                                                <td hover="" name="no" class="align-middle">16</td>
+
+                                                <td hover="" class="align-middle">4</td>
+                                                <td hover="" name="area" class="align-middle">0.05</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">Brak</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">17</td>
+
+                                                <td hover="" class="align-middle">1174/3</td>
+                                                <td hover="" name="area" class="align-middle">3.45</td>
+                                                <td hover="" name="fuel" class="align-middle">Tak</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                
+                                                <td hover="" name="no" class="align-middle">18</td>
+
+                                                <td hover="" class="align-middle">443</td>
+                                                <td hover="" name="area" class="align-middle">0.45</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle" rowspan="1" style="background-color: rgb(232, 232, 232);">hektary testr<br>[0.23 ha]</td>
+                                                <td hover="" name="no" class="align-middle" style="background-color: rgb(232, 232, 232);">19</td>
+
+                                                <td hover="" class="align-middle" style="background-color: rgb(232, 232, 232);">123</td>
+                                                <td hover="" name="area" class="align-middle" style="background-color: rgb(232, 232, 232);">0.23</td>
+                                                <td hover="" name="fuel" class="align-middle" style="background-color: rgb(232, 232, 232);">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle" style="background-color: rgb(232, 232, 232);">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr>
+
+
+                                                <td name="fieldName" class="no-hover align-middle">hektary(1)<br>[0.11 ha]</td>
+                                                <td hover="" name="no" class="align-middle">20</td>
+
+                                                <td hover="" class="align-middle">11</td>
+                                                <td hover="" name="area" class="align-middle">0.11</td>
+                                                <td hover="" name="fuel" class="align-middle">Nie</td>
+                                                <td hover="" name="arimrOperator" class="align-middle">tomek</td>
+
+                                                <td name="plantName" class="no-hover align-middle" style="background-color: rgba(154, 136, 8, 0.5); display: none;"> brak </td>
+
+                                            </tr><tr><td></td><td></td><td class="font-weight-bold">Razem</td><td class="font-weight-bold">53.15</td><td></td><td></td><td></td></tr></tbody>
+                                
+                                
+                            </table>
+                        </div>  
+                    </div>
+                </div>
+                <!--- End content -->
+
+            </div>
+        </div>                   
+    </section>
+    <script src="tableFilter.js"/>
+{% endblock %}
