@@ -139,7 +139,15 @@
                                     var arimr = document.getElementById('arimrOperatorSelect').value;
                                     if (arimr == 'all')
                                         arimr = 'Całość'
-                                    var data = document.getElementById('filteredTable');
+                                    var data = document.getElementById('filteredTable').cloneNode(true);
+                                    var td = data.querySelectorAll("td[name=arimrOperator]");
+                                    for(i=0;i<td.length;i++) {
+                                        //console.log(  td[i]+"asd");
+                                        td[i].remove();
+                                    }
+                                    console.log(data);
+                                    
+                                    
                                     var rowsLength = data.rows.length - 1;
                                     data.deleteRow(rowsLength);
 
@@ -160,7 +168,8 @@
                                     win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
                                     win.document.write('</head>');
                                     win.document.write('<body>');
-                                    win.document.write('<table><tr><th scope = col colspan=7>' + before + '</th><tr><th scope ="col">Pole</th><th scope ="col">#</th><th scope ="col">Numer działki</th><th scope ="col">Powierzchnia[ha]</th><th scope ="col">Dopłaty</th><th scope ="col">Uprawa</th></tr>');
+                                    win.document.write('<table><tr><th scope = col colspan=7>' + before + '</th><tr><th scope ="col">Pole</th><th scope ="col">#</th><th scope ="col">Numer działki</th><th scope ="col">Powierzchnia[ha]</th><th scope ="col">Uprawa</th></tr>');
+                                    //win.document.write('<table><tr><th scope = col colspan=7>' + before + '</th><tr><th scope ="col">Pole</th><th scope ="col">#</th><th scope ="col">Numer działki</th><th scope ="col">Powierzchnia[ha]</th><th scope ="col">Dopłaty</th><th scope ="col">Uprawa</th></tr>');
                                     win.document.write('<tbody>');
                                     win.document.write(data);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
                                     win.document.write('</tbody>');

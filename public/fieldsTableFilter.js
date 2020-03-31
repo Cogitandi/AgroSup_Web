@@ -34,8 +34,6 @@ function tableActions() {
     scaleFieldNames();
     scalePlantNames();
     
-
-    
     renumerate();
     addSummaryRow();
     addAreaToFields();
