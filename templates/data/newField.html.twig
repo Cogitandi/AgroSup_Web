@@ -50,6 +50,13 @@
                                 {%endfor%}
                             {%endfor%}
                         {%endif%}
+                        <label  for="inlineFormInputNumber">Numer pola</label>
+                        {{ form_widget(newFieldForm.number, {'attr': 
+                    {'class': 'form-control mb-2 mr-sm-2',
+                    'placeholder': 'numer pola',
+                    'onblur':   'sprawdzPole("edit_field_form_name",inputFieldName_reg)',
+                    }
+                    })}}
                         <input type="hidden" name='yearPlan' value={{ yearPlan.id }}/>
                         <label  for="inputFieldName">Nazwa pola</label>
                         {{ form_widget(newFieldForm.name, {'attr': 

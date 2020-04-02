@@ -176,7 +176,9 @@ class DataController extends AbstractController {
             $entityManager = $this->getDoctrine()->getManager();
 
             $field = new Field();
+            
             $field->setYearPlan($yearPlan);
+            $field->setNewNumber();
             $form = $this->createForm(NewFieldFormType::class, $field, ['operators' => $operators]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {

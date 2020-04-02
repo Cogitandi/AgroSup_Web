@@ -16,6 +16,7 @@ class NewFieldFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+                ->add('number')
                 ->add('name', TextType::class, [
                     'constraints' => [
                         new NotBlank([

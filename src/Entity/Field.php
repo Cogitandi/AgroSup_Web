@@ -166,5 +166,17 @@ class Field {
 
         return $this;
     }
+        public function setNewNumber(): self
+    {
+         $fields = $this->yearPlan->getFields();
+         $max = 1;
+         foreach($fields as $field) {
+             $current = $field->getNumber();
+             $max = $current > $max ? $current : $max; 
+         }
+         $this->number = $max+1;
+         return $this;
+        
+    }
 
 }
