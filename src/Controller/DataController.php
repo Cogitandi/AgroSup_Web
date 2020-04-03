@@ -176,12 +176,17 @@ class DataController extends AbstractController {
             $entityManager = $this->getDoctrine()->getManager();
 
             $field = new Field();
-            
+
             $field->setYearPlan($yearPlan);
             $field->setNewNumber();
             $form = $this->createForm(NewFieldFormType::class, $field, ['operators' => $operators]);
             $form->handleRequest($request);
+
+            $errors = $form->getErrors(true);
+
+
             if ($form->isSubmitted() && $form->isValid()) {
+
                 $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało utworzone');
                 $entityManager->persist($field);
                 DataController::addYearToParcels($field, $entityManager);
@@ -192,10 +197,12 @@ class DataController extends AbstractController {
                 $field = new Field();
                 $form = $this->createForm(NewFieldFormType::class, $field, ['operators' => $operators]);
             }
+
             $parameters = [
                 'yearPlan' => $yearPlan,
                 'newFieldForm' => $form->createView(),
-                'operators' => $operators
+                'operators' => $operators,
+                'errors' => $errors,
             ];
             return $this->render('data/newField.html.twig', $parameters);
         }
@@ -215,7 +222,7 @@ class DataController extends AbstractController {
             if ($field) {
                 $form = $this->createForm(NewFieldFormType::class, $field, array('operators' => $operators));
                 $form->handleRequest($request);
-
+                $errors = $form->getErrors(true);
                 if ($form->isSubmitted() && $form->isValid()) {
                     $entityManager = $this->getDoctrine()->getManager();
 
@@ -229,13 +236,14 @@ class DataController extends AbstractController {
 
                     $entityManager->persist($field);
                     $entityManager->flush();
-                    $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikwoane');
+                    $this->addFlash('success', 'Pole ' . $field->getName() . ' zostało zmodyfikowane');
                 }
 
                 $parameters = [
                     'yearPlan' => $yearPlan,
                     'editFieldForm' => $form->createView(),
-                    'operators' => $operators
+                    'operators' => $operators,
+                    'errors' => $errors,
                 ];
 
                 return $this->render('data/editField.html.twig', $parameters);

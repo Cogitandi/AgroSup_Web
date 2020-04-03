@@ -34,11 +34,21 @@
                 <div class="col-md-10">
                     <div class="container-md mx-4">
                         <h2 class="text-center">Pole w sezonie {{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</h2>  
+                       
+                        
+                        <!--- Success messages -->
                         {% for message in app.flashes('success') %}
                             <div class="alert alert-success">
                                 {{ message }}
                             </div>
                         {% endfor %}
+
+                        <!--- Validation error messages -->
+                        {% for error in errors %}
+                            <div class="alert alert-danger">{{error.message}}</div>
+                        {% endfor %}
+                        
+                        
                         {{ form_start(editFieldForm) }}
                         
                         <label  for="inlineFormInputNumber">Numer pola</label>

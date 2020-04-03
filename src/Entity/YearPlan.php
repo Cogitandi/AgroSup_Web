@@ -58,6 +58,7 @@ class YearPlan {
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Field", mappedBy="yearPlan")
+     * @ORM\OrderBy({"number" = "ASC"})
      */
     private $fields;
 
@@ -148,12 +149,7 @@ class YearPlan {
      * @return Collection|Field[]
      */
     public function getFields(): Collection {
-//        $out = new ArrayCollection();
-//        foreach ($this->fields as $field) {
-//            if ($field->getDisabled() == NULL) {
-//                $out . add($field);
-//            }
-//        }
+        
         return $this->fields;
     }
 

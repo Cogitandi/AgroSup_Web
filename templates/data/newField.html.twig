@@ -12,19 +12,19 @@
                     <ul class="nav nav-pills flex-column">
                         <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d1" href="#" >Plany roczne</a></li>       
                         <li><ul style="padding-left: 20px; list-style: none">
-                            <li><a class="d1 nav-link collapse" href="/yearPlanList" >Lista</a></li>
-                            <li><a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a></li>
-                        </ul></li>
+                                <li><a class="d1 nav-link collapse" href="/yearPlanList" >Lista</a></li>
+                                <li><a class="d1 nav-link collapse" href="/yearPlan/add" >Stwórz nowy plan</a></li>
+                            </ul></li>
                         <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d3" href="#" >Osoby</a></li>       
                         <li><ul style="padding-left: 20px; list-style: none">
-                            <li><a class="d3 nav-link collapse" href="/operator" >Lista</a></li>
-                            <li><a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a></li>
-                        </ul></li>
+                                <li><a class="d3 nav-link collapse" href="/operator" >Lista</a></li>
+                                <li><a class="d3 nav-link collapse" href="/operator/add" >Dodaj</a></li>
+                            </ul></li>
                         <li><a class="nav-link font-weight-bold" data-toggle="collapse" data-target=".d2" href="#" >Pola</a></li>
                         <li><ul style="padding-left: 20px; list-style: none">
-                            <li><a class="d2 nav-link" href="/field" >Lista</a></li>
-                            <li><a class="d2 nav-link active" href="/field/add" >Stwórz nowe pole</a></li>
-                        </ul></li>
+                                <li><a class="d2 nav-link" href="/field" >Lista</a></li>
+                                <li><a class="d2 nav-link active" href="/field/add" >Stwórz nowe pole</a></li>
+                            </ul></li>
                         <li><a class="nav-link font-weight-bold" href="/parcel" >Lista działek</a></li>
                         <li><a class="nav-link font-weight-bold" href="/fieldsTable" >Lista pól</a></li>
                         <li><a class="nav-link font-weight-bold" href="/selectPlants" >Wybierz rośliny</a></li>
@@ -35,25 +35,26 @@
                 <div class="col-md-10">
                     <div class="container-md mx-4">
                         <h2 class="text-center">Pole w sezonie {{ yearPlan.startYear }}/{{ yearPlan.startYear+1 }}</h2>  
+
+
+                        <!--- Success messages -->
                         {% for message in app.flashes('success') %}
                             <div class="alert alert-success">
                                 {{ message }}
                             </div>
                         {% endfor %}
+
+                        <!--- Validation error messages -->
+                        {% for error in errors %}
+                            <div class="alert alert-danger">{{error.message}}</div>
+                        {% endfor %}
+
                         {{ form_start(newFieldForm) }}
-                        {% if not newFieldForm.vars.valid %}
-                            {# Loop through every form item #}
-                            {% for child in newFieldForm.children %}
-                                {# Display the errors of the form item #}
-                                {%for error in child.vars.errors%}
-                                    <div class="alert alert-danger">{{error.message}}</div>
-                                {%endfor%}
-                            {%endfor%}
-                        {%endif%}
+
                         <label  for="inlineFormInputNumber">Numer pola</label>
                         {{ form_widget(newFieldForm.number, {'attr': 
                     {'class': 'form-control mb-2 mr-sm-2',
-                    'placeholder': 'numer pola',
+                    'placeholder': 'field number',
                     'onblur':   'sprawdzPole("edit_field_form_name",inputFieldName_reg)',
                     }
                     })}}

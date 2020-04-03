@@ -9,6 +9,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiFilter(SearchFilter::class, properties={"yearPlan": "exact"})
@@ -20,6 +24,33 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\FieldRepository")
  */
 class Field {
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata) {
+
+        $metadata->addPropertyConstraint('number', new NotBlank());
+        $metadata->addPropertyConstraint('name', new NotBlank());
+
+        $metadata->addPropertyConstraint('number', new Assert\Type([
+                    'type' => 'integer',
+                    'message' => 'The field number is incorrect.',
+        ]));
+
+        $metadata->addPropertyConstraint('name', new Assert\Regex([
+                    'pattern' => '/^([a-żA-Ż0-9_\-()\s]+)$/',
+                    'match' => true,
+                    'message' => 'Field name can contain only characters,digits, -,(,) and _',
+        ]));
+
+        $metadata->addConstraint(new UniqueEntity([
+                    'fields' => ['number', 'yearPlan'],
+                    'message' => 'Field with that number exist',
+        ]));
+
+        $metadata->addConstraint(new UniqueEntity([
+                    'fields' => ['name', 'yearPlan'],
+                    'message' => 'Field with that name exist',
+        ]));
+    }
 
     /**
      * @ORM\Id()
@@ -34,11 +65,10 @@ class Field {
      * @Groups({"field:read"})
      * @ORM\Column(type="string", length=100)
      */
-    
     private $name;
-    
-        /**
-     * @ORM\Column(type="integer", nullable=true)
+
+    /**
+     * @ORM\Column(type="integer")
      */
     private $number;
 
@@ -152,31 +182,28 @@ class Field {
         foreach ($this->parcels as $parcel) {
             $area += $parcel->getCultivatedArea();
         }
-        return $area/100;
+        return $area / 100;
     }
 
-    public function getNumber(): ?int
-    {
+    public function getNumber(): ?int {
         return $this->number;
     }
 
-    public function setNumber(int $number): self
-    {
+    public function setNumber(int $number): self {
         $this->number = $number;
 
         return $this;
     }
-        public function setNewNumber(): self
-    {
-         $fields = $this->yearPlan->getFields();
-         $max = 1;
-         foreach($fields as $field) {
-             $current = $field->getNumber();
-             $max = $current > $max ? $current : $max; 
-         }
-         $this->number = $max+1;
-         return $this;
-        
+
+    public function setNewNumber(): self {
+        $fields = $this->yearPlan->getFields();
+        $max = 1;
+        foreach ($fields as $field) {
+            $current = $field->getNumber();
+            $max = $current > $max ? $current : $max;
+        }
+        $this->number = $max + 1;
+        return $this;
     }
 
 }
