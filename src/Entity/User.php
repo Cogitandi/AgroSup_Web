@@ -179,6 +179,14 @@ class User implements UserInterface {
         return $this->userPlants;
     }
 
+    public function getUserPlantsPlant(): Collection {
+        $plants = new ArrayCollection();
+        foreach ($this->userPlants as $userPlant) {
+            $plants->add($userPlant->getPlant());
+        }
+        return $plants;
+    }
+
     public function addUserPlant(UserPlant $userPlant): self {
         if (!$this->userPlants->contains($userPlant)) {
             $this->userPlants[] = $userPlant;
@@ -199,12 +207,12 @@ class User implements UserInterface {
 
         return $this;
     }
-    
+
     // Api
-    
+
     public function getYearPlanById($yearPlanId) {
-        foreach($this->yearPlans as $yearPlan) {
-            if($yearPlan->getId() == $yearPlanId)
+        foreach ($this->yearPlans as $yearPlan) {
+            if ($yearPlan->getId() == $yearPlanId)
                 return $yearPlan;
         }
     }

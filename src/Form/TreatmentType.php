@@ -19,24 +19,27 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TreatmentType extends AbstractType {
 
     private $security;
+    private $entityManager;
 
-    public function __construct(Security $security) {
+    public function __construct(Security $security, EntityManagerInterface $entityManager) {
         $this->security = $security;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $preSubmit = function (FormEvent $event) {
+        $preSubmitKindChoosed = function (FormEvent $event) {
             $data = $event->getData();
             $form = $event->getForm();
-           // print_r($data);
-            if (!isset($data['kind']))
+
+            // if kind not choosed return
+            if (!isset($data['kind']) || $data['kind'] == "") {
                 return;
-            if (!$data['kind'])
-                return;
+            }
             $choosedYP = $this->security->getUser()->getChoosedYearPlan()->getId();
             $form
                     ->add('data', DateType::class, [
@@ -48,37 +51,131 @@ class TreatmentType extends AbstractType {
                         'query_builder' => function(EntityRepository $er) use ($choosedYP) {
                             return $er->createQueryBuilder('u')->where('u.yearPlan = ' . $choosedYP);
                         }]);
-            ;
-            if (!isset($data['field']))
+        };
+
+        $seedKind = function (FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            // if kind not choosed return
+            if (!isset($data['kind']) || $data['kind'] == "") {
                 return;
-            if (!$data['field'])
+            }
+            // if field not choosed return
+            if (!isset($data['field']) || $data['field'] == "") {
                 return;
+            }
+            // if seed is not seed return
+            if ($data['kind'] != 'seed') {
+                return;
+            }
+
             $fieldId = $data['field'];
+            $field = $this->entityManager->getRepository(Field::class)->find($fieldId);
+            $plantOnField = $field->getPlant();
             $form
                     ->add('plant', EntityType::class, [
-                        'class' => UserPlant::class,
-                        'choice_label' => function ($category) {
-                            return $category->getPlant()->getName();
-                        },
-                        'query_builder' => function(EntityRepository $er) {
-                            return $er->createQueryBuilder('p');
+                        'class' => Plant::class,
+                        'choices' => $this->security->getUser()->getUserPlantsPlant(),
+                        'preferred_choices' => [$plantOnField],
+                        'choice_label' => function ($userPlant) {
+                            return $userPlant->getName();
                         }
                     ])
-                    ->add('variety', EntityType::class, [
-                        'class' => Field::class,
-                        'choice_label' => function ($category) {
-                            return $category->getPlantVariety();
-                        },
-                        'query_builder' => function(EntityRepository $er) use ($fieldId) {
-                            return $er->createQueryBuilder('f')
-                                    ->where('f.id = ' . $fieldId);
-                        }
+                    ->add('variety', TextType::class, [
+                        'empty_data' => $field->getPlantVariety(),
+                        'required' => false,
                     ])
-                    ->add('dosePerHa', NumberType::class)
+                    ->add('dosePerHa', NumberType::class, [
+                        'required' => false
+                    ])
             ;
-            //->add('variety', TextType::class);
-            //echo $data->getField()->getId();
         };
+        $fertilizerKind = function(FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            // if kind not choosed return
+            if (!isset($data['kind']) || $data['kind'] == "") {
+                return;
+            }
+            // if field not choosed return
+            if (!isset($data['field']) || $data['field'] == "") {
+                return;
+            }
+            // if seed is not seed return
+            if ($data['kind'] != 'fertilizer') {
+                return;
+            }
+
+            $fieldId = $data['field'];
+            $field = $this->entityManager->getRepository(Field::class)->find($fieldId);
+            $plantOnField = $field->getPlant();
+            $form
+                    ->add('fertilizerName', TextType::class, [
+                        'required' => false,
+                    ])
+                    ->add('dosePerHa', NumberType::class, [
+                        'required' => false
+                    ])
+            ;
+        };
+        $sprayerKind = function(FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            // if kind not choosed return
+            if (!isset($data['kind']) || $data['kind'] == "") {
+                return;
+            }
+            // if field not choosed return
+            if (!isset($data['field']) || $data['field'] == "") {
+                return;
+            }
+            // if seed is not seed return
+            if ($data['kind'] != 'sprayer') {
+                return;
+            }
+
+            $fieldId = $data['field'];
+            $field = $this->entityManager->getRepository(Field::class)->find($fieldId);
+            $plantOnField = $field->getPlant();
+            $form
+                    ->add('components', TextType::class, [
+                        'required' => false,
+                    ])
+                    ->add('dosePerHa', NumberType::class, [
+                        'required' => false
+                    ])
+            ;
+        };
+        $cultivationKind = function(FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            // if kind not choosed return
+            if (!isset($data['kind']) || $data['kind'] == "") {
+                return;
+            }
+            // if field not choosed return
+            if (!isset($data['field']) || $data['field'] == "") {
+                return;
+            }
+            // if seed is not seed return
+            if ($data['kind'] != 'cultivation') {
+                return;
+            }
+
+            $fieldId = $data['field'];
+            $field = $this->entityManager->getRepository(Field::class)->find($fieldId);
+            $form
+                    ->add('machineName', TextType::class, [
+                        'required' => false,
+                    ])
+            ;
+        };
+
+
 
         $builder
                 ->add('kind', ChoiceType::class, [
@@ -89,68 +186,11 @@ class TreatmentType extends AbstractType {
                         'Oprysk' => "sprayer",
                         'Uprawa' => "cultivation",
             ]])
-                ->addEventListener(FormEvents::PRE_SUBMIT, $preSubmit);
-        ;
-
-        //$this->choosedKind($builder);
-        //print_r("wynik".$builder->has('kind'));
-    }
-
-    public function choosedKind(FormBuilderInterface $builder) {
-
-        $builder->get('kind')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-            $form = $event->getForm();
-            $kind = $form->getData();
-            if ($kind == "")
-                return;
-
-            $choosedYP = $this->security->getUser()->getChoosedYearPlan()->getId();
-            $form->getParent()
-                    ->add('data', DateType::class, [
-                        'widget' => 'single_text'])
-                    ->add('field', EntityType::class, [
-                        'class' => Field::class,
-                        'placeholder' => "Wybierz pole",
-                        'choice_label' => 'name',
-                        'query_builder' => function(EntityRepository $er) use ($choosedYP) {
-                            return $er->createQueryBuilder('u')->where('u.yearPlan = ' . $choosedYP);
-                        }]);
-            ;
-            switch ($kind) {
-                case "seed":
-                    $this->seedKind($form);
-                    break;
-                case "fertilizer":
-                    $form->getParent()
-                            ->add('dosePerHa', NumberType::class);
-                    break;
-                case "sprayer":
-                    $form->getParent()
-                            ->add('reasonForUse', TextType::class)
-                            ->add('notes', TextType::class);
-                    break;
-                case "cultivation":
-                    $form->getParent()
-                            ->add('machineName', TextType::class);
-                    break;
-            }
-        });
-    }
-
-    public function seedKind($form) {
-        $form->getParent()
-                ->add('dosePerHa', NumberType::class)
-                ->add('plant', EntityType::class, [
-                    'class' => UserPlant::class,
-                    'choice_label' => function ($category) {
-                        return $category->getPlant()->getName();
-                    },
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('u')
-                                ->where('u.user = ' . $this->security->getUser()->getId());
-                    }
-                ])
-                ->add('variety', TextType::class);
+                ->addEventListener(FormEvents::PRE_SUBMIT, $preSubmitKindChoosed)
+                ->addEventListener(FormEvents::PRE_SUBMIT, $seedKind)
+                ->addEventListener(FormEvents::PRE_SUBMIT, $fertilizerKind)
+                ->addEventListener(FormEvents::PRE_SUBMIT, $sprayerKind)
+                ->addEventListener(FormEvents::PRE_SUBMIT, $cultivationKind);
     }
 
     public function configureOptions(OptionsResolver $resolver) {
