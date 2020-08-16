@@ -225,6 +225,7 @@ class ManagamentController extends AbstractController {
         return null;
     }
 
+	// $searchedYP - plan in with we looking for a corresponding plant from soughtYP
     public function findMatchingPlant(YearPlan $soughtYP, $searchedYP) {
         $soughtFields = $soughtYP->getFields();
         $plantArray = Array();
@@ -238,14 +239,14 @@ class ManagamentController extends AbstractController {
         $searchedFields = $searchedYP->getFields();
         foreach ($soughtFields as $soughtField) {
             foreach ($searchedFields as $searchedField) {
-                if ($searchedField->getPlant() == NULL) {
-                    array_push($plantArray, "Brak danych");
-                    break;
-                }
-                if ($searchedField->getName() == $soughtField->getName() && $searchedField->getPlant() != NULL) {
-                    array_push($plantArray, $searchedField->getPlant()->getName());
-                    break;
-                }
+				if( $searchedField->getName()== $soughtField->getName() && $searchedField->getPlant() != NULL) {
+					// found corresponding field
+					array_push($plantArray, $searchedField->getPlant()->getName());
+					break;
+				}
+				if($searchedField == $searchedFields->last()) {
+					array_push($plantArray, "Brak danych");
+				}
             }
         }
         return $plantArray;
