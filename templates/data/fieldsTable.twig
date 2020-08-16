@@ -67,7 +67,7 @@
                                         <td class="align-middle">
                                             <select class="form-control" id="plantNameSelect">
                                                 <option selected="selected" value="all">Wszystkie</option>
-                                                <option value="Brak">Brak</option>
+                                                <option value="Nie ustalono">Nie ustalono</option>
                                                 {% for plant in yearPlan.getPlants %} 
                                                     <option value="{{ plant.getName }}">{{ plant.getName }}</option>
                                                 {% endfor %}
@@ -109,7 +109,7 @@
                                                 <td hover name ="area" class="align-middle">{{ item.getCultivatedAreaHa }}</td>
                                                 <td hover name ="arimrOperator" class="align-middle">{{ operator }}</td>
 
-                                                <td name ="plantName" class="no-hover align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %} brak {% endif %}</td>
+                                                <td name ="plantName" class="no-hover align-middle" >{% if item.Field.plant %}{{ item.Field.plant.name }}{% else %}Nie ustalono{% endif %}</td>
 
                                             </tr>
                                             {% set licznik = licznik+1 %}
