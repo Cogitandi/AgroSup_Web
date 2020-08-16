@@ -169,6 +169,25 @@ class DataController extends AbstractController {
         return $this->redirectToRoute('field');
     }
 
+        /**
+     * @Route("fieldRenumerate", name="fieldRenumerate")
+     */
+    public function fieldRenumerate(Request $request) {
+        $user = $this->getUser();
+        $yearPlan = $user->getChoosedYearPlan();
+
+        if ($yearPlan) { // If found yearPlan
+            $entityManager = $this->getDoctrine()->getManager();
+            $number = 1;
+            foreach($yearPlan->getFields() as $field) {
+                    $field->setNumber($number++);
+                }
+            }
+            $entityManager->persist($yearPlan);
+            $entityManager->flush();
+            return $this->redirectToRoute('field');
+        }
+
 
     /**
      * @Route("field", name="field")
