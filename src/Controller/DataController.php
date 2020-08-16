@@ -143,6 +143,33 @@ class DataController extends AbstractController {
         return $this->render('data/fieldsTable.twig', ['yearPlan' => $yearPlan]);
     }
 
+
+    /**
+     * @Route("fieldNewOrder", name="fieldNewOrder")
+     */
+    public function fieldNewOrder(Request $request) {
+        $user = $this->getUser();
+        $yearPlan = $user->getChoosedYearPlan();
+
+        if ($yearPlan) { // If found yearPlan
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach($yearPlan->getFields() as $field) {
+                if($field->getNumber() >100) {
+                    $number = (int) ($field->getNumber()/10);
+                    $yearPlan->insertField($number,$field);
+                    break;
+                }
+            
+            }
+            
+            $entityManager->persist($yearPlan);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('field');
+    }
+
+
     /**
      * @Route("field", name="field")
      */

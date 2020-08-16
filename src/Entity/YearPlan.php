@@ -353,5 +353,21 @@ class YearPlan {
         }
         return $totalSize / 100;
     }
+    public function insertField($afterThatNumber, Field $insertedField) {
+        $increaseNumbers = false;
+
+        foreach($this->fields as $field) {
+
+            if($increaseNumbers == true && $field->getNumber() >9 && $field->getNumber() <100 ) {
+                $newNumber = $field->getNumber()+1;
+                $field->setNumber($newNumber);
+            }
+            if($afterThatNumber+1 == $field->getNumber() ) {
+                $increaseNumbers=true;
+                $field->setNumber($afterThatNumber+2);
+            }
+        }
+        $insertedField->setNumber($afterThatNumber+1);
+    }
 
 }

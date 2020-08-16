@@ -240,7 +240,7 @@ class ManagamentController extends AbstractController {
         foreach ($soughtFields as $soughtField) {
             foreach ($searchedFields as $searchedField) {
 				if( $searchedField->getName()== $soughtField->getName() && $searchedField->getPlant() != NULL) {
-					// found corresponding field
+                    // found corresponding field
 					array_push($plantArray, $searchedField->getPlant()->getName());
 					break;
 				}
