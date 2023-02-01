@@ -7,7 +7,7 @@
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.2",
         "doctrine/doctrine-bundle": "^2.0",
-        "dompdf/dompdf": "^0.8.5",
+        "dompdf/dompdf": "^2.0.2",
         "lexik/jwt-authentication-bundle": "^2.6",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/apache-pack": "^1.0",
